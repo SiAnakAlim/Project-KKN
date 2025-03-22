@@ -40,7 +40,6 @@ Berikut adalah langkah-langkah untuk menjalankan project ini di komputer lokal A
 2. **Clone repository**:
 
      ```bash
-    Copy
     npm install
      ```
 
@@ -103,8 +102,6 @@ Jika Anda memiliki pertanyaan atau masukan, silakan hubungi:
 Nama: SiAnakAlim
 
 Email: aryamuktisatria@gmail.com
-
-Copy
 
 ---
 
