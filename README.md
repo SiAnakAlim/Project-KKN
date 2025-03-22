@@ -64,13 +64,11 @@ Buat file .env di root folder dan isi dengan konfigurasi berikut:
 Untuk menjalankan WhatsApp Bot:
 
 ```bash
-Copy
 cd wa-bot
 node index.js
 ```
 Untuk menjalankan website display:
 ```bash
-Copy
 cd web-display-node
 node app.js
 ```
