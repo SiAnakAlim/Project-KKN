@@ -75,11 +75,14 @@ node app.js
 6. **Akses aplikasi**:
 
 WhatsApp Bot: Scan QR code yang muncul di terminal.
+
 Website Display: Buka browser dan akses http://localhost:3001.
+
+*pastikan xampp bagian apache dan mysql dalam kondisi start
 
 ---
 
-🤝 Kontribusi
+## 🤝 Kontribusi
 Jika Anda ingin berkontribusi pada project ini, silakan ikuti langkah-langkah berikut:
 
 Fork repository ini.
@@ -94,7 +97,7 @@ Buat Pull Request.
 
 ---
 
-📞 Kontak
+## 📞 Kontak
 Jika Anda memiliki pertanyaan atau masukan, silakan hubungi:
 
 Nama: SiAnakAlim
