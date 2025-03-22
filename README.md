@@ -1,4 +1,4 @@
-# Project KKN
+# SojiwanBot: Otomatisasi Surat Desa dengan WhatsApp Bot & Web
 
 ![Logo](image/logokebondalem.png) <!-- Logo project -->
 
@@ -100,7 +100,7 @@ Buat Pull Request.
 ## 📞 Kontak
 Jika Anda memiliki pertanyaan atau masukan, silakan hubungi:
 
-Nama: SiAnakAlim
+Nama: Aryamukti Satria Hendrayana
 
 Email: aryamuktisatria@gmail.com
 
