@@ -45,9 +45,9 @@ Berikut adalah langkah-langkah untuk menjalankan project ini di komputer lokal A
 
 3. **Setup Database**:
 
-Buat database MySQL dengan nama surat_desa.
+- Buat database MySQL dengan nama surat_desa.
 
-Import file SQL dengan nama surat_desa
+- Import file SQL dengan nama surat_desa
 
 4. **Konfigurasi environment**:
 
@@ -74,9 +74,9 @@ node app.js
 ```
 6. **Akses aplikasi**:
 
-WhatsApp Bot: Scan QR code yang muncul di terminal.
+- WhatsApp Bot: Scan QR code yang muncul di terminal.
 
-Website Display: Buka browser dan akses http://localhost:3001.
+- Website Display: Buka browser dan akses http://localhost:3001.
 
 *pastikan xampp bagian apache dan mysql dalam kondisi start
 
@@ -85,15 +85,15 @@ Website Display: Buka browser dan akses http://localhost:3001.
 ## 🤝 Kontribusi
 Jika Anda ingin berkontribusi pada project ini, silakan ikuti langkah-langkah berikut:
 
-Fork repository ini.
+- Fork repository ini.
 
-Buat branch baru (git checkout -b fitur-baru).
+- Buat branch baru (git checkout -b fitur-baru).
 
-Commit perubahan Anda (git commit -m 'Menambahkan fitur baru').
+- Commit perubahan Anda (git commit -m 'Menambahkan fitur baru').
 
-Push ke branch (git push origin fitur-baru).
+- Push ke branch (git push origin fitur-baru).
 
-Buat Pull Request.
+- Buat Pull Request.
 
 ---
 
