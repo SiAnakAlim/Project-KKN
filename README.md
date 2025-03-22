@@ -1,8 +1,8 @@
-# SojiwanBot: Otomatisasi Surat Desa dengan WhatsApp Bot & Web
+# SojiwanBot : Otomatisasi Surat Desa dengan WhatsApp Bot & Web
 
 ![Logo](image/logokebondalem.png) <!-- Logo project -->
 
-**Project KKN** adalah sebuah project yang menggabungkan **WhatsApp Bot** dengan **Website** untuk menghasilkan surat-surat resmi desa, seperti surat pengantar dan surat keterangan belum menikah. Project ini bertujuan untuk memudahkan warga desa dalam mengajukan dan mengelola surat-surat penting secara digital.
+**SojiwanBot** adalah sebuah project yang menggabungkan **WhatsApp Bot** dengan **Website** untuk menghasilkan surat-surat resmi desa, seperti surat pengantar dan surat keterangan belum menikah. Project ini bertujuan untuk memudahkan warga desa dalam mengajukan dan mengelola surat-surat penting secara digital.
 
 ---
 
