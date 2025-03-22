@@ -80,7 +80,7 @@ node app.js
 WhatsApp Bot: Scan QR code yang muncul di terminal.
 
 Website Display: Buka browser dan akses http://localhost:3001.
-
+---
 
 🤝 Kontribusi
 Jika Anda ingin berkontribusi pada project ini, silakan ikuti langkah-langkah berikut:
@@ -94,6 +94,8 @@ Commit perubahan Anda (git commit -m 'Menambahkan fitur baru').
 Push ke branch (git push origin fitur-baru).
 
 Buat Pull Request.
+
+---
 
 📞 Kontak
 Jika Anda memiliki pertanyaan atau masukan, silakan hubungi:
