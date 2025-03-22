@@ -37,7 +37,7 @@ Berikut adalah langkah-langkah untuk menjalankan project ini di komputer lokal A
    git clone https://github.com/SiAnakAlim/Project-KKN.git
    cd Project-KKN
    ```
-2. **Clone repository**:
+2. **Install dependencies**:
 
      ```bash
     npm install
