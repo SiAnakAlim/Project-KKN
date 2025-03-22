@@ -78,8 +78,8 @@ node app.js
 6. **Akses aplikasi**:
 
 WhatsApp Bot: Scan QR code yang muncul di terminal.
-
 Website Display: Buka browser dan akses http://localhost:3001.
+
 ---
 
 🤝 Kontribusi
