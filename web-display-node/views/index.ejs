@@ -1,0 +1,87 @@
+<!-- web-display-node/views/index.ejs -->
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daftar Surat Desa</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+        .table-container {
+            overflow-x: auto;
+            margin: 20px 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 800px;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #f4f4f4;
+            color: #333;
+            font-weight: bold;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+    </style>
+</head>
+<body>
+    <h2>Daftar Surat Desa</h2>
+    <div class="table-container">
+        <table>
+            <tr>
+                <th>ID</th>
+                <th>Nomor Surat</th>
+                <th>Nama</th>
+                <th>Tempat & Tanggal Lahir</th>
+                <th>Kewarganegaraan & Agama</th>
+                <th>Pekerjaan</th>
+                <th>Tempat Domisili</th>
+                <th>Daerah Asal</th>
+                <th>Surat Bukti Diri</th>
+                <th>Keperluan</th>
+                <th>Tujuan</th>
+                <th>Jenis Surat</th>
+                <th>Tanggal Permohonan</th>
+                <th>Status</th>
+            </tr>
+            <% surat.forEach((row) => { %>
+            <tr>
+                <td><%= row.id %></td>
+                <td><%= row.nomor_surat %></td>
+                <td><%= row.nama %></td>
+                <td><%= row.tempat_tanggal_lahir %></td>
+                <td><%= row.kewarganegaraan_agama %></td>
+                <td><%= row.pekerjaan %></td>
+                <td><%= row.tempat_domisili %></td>
+                <td><%= row.daerah_asal %></td>
+                <td><%= row.surat_bukti_diri %></td>
+                <td><%= row.keperluan %></td>
+                <td><%= row.tujuan %></td>
+                <td><%= row.jenis_surat %></td>
+                <td><%= new Date(row.tanggal_permohonan).toLocaleDateString('id-ID') %></td>
+                <td><%= row.status %></td>
+            </tr>
+            <% }) %>
+        </table>
+    </div>
+</body>
+</html>
