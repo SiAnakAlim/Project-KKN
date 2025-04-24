@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FAQ - Surat Menyurat Desa</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #fff2cc;
+      margin: 0;
+      padding: 40px 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    .faq-container {
+      width: 90%;
+      max-width: 1000px;
+      background-color: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+      padding: 30px;
+      position: relative;
+    }
+
+    .faq-title {
+      font-size: 2.5em;
+      color: #b08b00;
+      text-align: center;
+      font-weight: bold;
+      margin-bottom: 30px;
+      animation: fadeInDown 0.8s ease-out;
+    }
+
+    .faq-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+    }
+
+    .faq-item {
+      border-left: 4px solid #d4a900;
+      background-color: #fff2cc;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+      transition: transform 0.3s ease;
+      animation: fadeInUp 0.6s ease-out;
+    }
+
+    .faq-item:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+    }
+
+    .faq-question-box {
+      padding: 15px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: 600;
+      color: #b08b00;
+      cursor: pointer;
+    }
+
+    .faq-question-box i {
+      transition: transform 0.3s ease;
+    }
+
+    .faq-question-box.active i {
+      transform: rotate(180deg);
+    }
+
+    .faq-answer {
+      padding: 0 20px;
+      font-size: 0.95em;
+      color: #4b5563;
+      max-height: 0;
+      overflow: hidden;
+      line-height: 1.6;
+      text-align: justify;
+      transition: max-height 0.4s ease-in-out, padding 0.4s ease-in-out;
+      background-color: #fff9e6;
+    }
+
+    .faq-answer.open {
+      padding: 15px 20px 20px;
+      max-height: 500px;
+    }
+
+    /* Animations */
+    @keyframes fadeInDown {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .faq-title {
+        font-size: 2em;
+      }
+      .faq-answer {
+        font-size: 0.9em;
+      }
+    }
+
+    .back-button {
+      position: absolute;
+      bottom: -60px;
+      left: 0;
+      background-color: #b08b00;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: background-color 0.3s ease, transform 0.3s ease;
+    }
+
+    .back-button:hover {
+      background-color: #a37f00;
+      transform: translateX(4px);
+    }
+  </style>
+</head>
+<body>
+  <div class="faq-container">
+    <h2 class="faq-title"><i class="fas fa-question-circle"></i> Pertanyaan Seputar Surat Menyurat Desa</h2>
+
+    <div class="faq-grid">
+      <!-- FAQ Item 1 -->
+      <div class="faq-item" onclick="toggleFAQ(this)">
+        <div class="faq-question-box">
+          <span><i class="fas fa-envelope-open-text mr-2"></i> Bagaimana cara mengajukan surat keterangan domisili?</span>
+          <i class="fas fa-chevron-down"></i>
+        </div>
+        <div class="faq-answer">
+          Untuk mengajukan surat keterangan domisili, Anda harus membawa KTP dan KK (asli dan fotokopi) ke kantor desa. Isi formulir permohonan dan ikuti prosedur yang diarahkan petugas.
+        </div>
+      </div>
+
+      <!-- FAQ Item 2 -->
+      <div class="faq-item" onclick="toggleFAQ(this)">
+        <div class="faq-question-box">
+          <span><i class="fas fa-clock mr-2"></i> Berapa lama proses pembuatan surat pengantar?</span>
+          <i class="fas fa-chevron-down"></i>
+        </div>
+        <div class="faq-answer">
+          Biasanya proses selesai dalam hari yang sama, tergantung pada kelengkapan berkas dan jumlah antrean pelayanan di kantor desa.
+        </div>
+      </div>
+
+      <!-- FAQ Item 3 -->
+      <div class="faq-item" onclick="toggleFAQ(this)">
+        <div class="faq-question-box">
+          <span><i class="fas fa-money-bill-wave mr-2"></i> Apakah ada biaya pembuatan surat di desa?</span>
+          <i class="fas fa-chevron-down"></i>
+        </div>
+        <div class="faq-answer">
+          Umumnya gratis, tapi untuk beberapa jenis surat mungkin dikenakan biaya administrasi kecil sesuai peraturan desa.
+        </div>
+      </div>
+
+      <!-- FAQ Item 4 -->
+      <div class="faq-item" onclick="toggleFAQ(this)">
+        <div class="faq-question-box">
+          <span><i class="fas fa-briefcase mr-2"></i> Apa saja syarat membuat surat keterangan usaha?</span>
+          <i class="fas fa-chevron-down"></i>
+        </div>
+        <div class="faq-answer">
+          Anda perlu membawa KTP, KK, dan surat pengantar dari RT/RW. Sertakan izin usaha seperti SIUP mikro jika tersedia.
+        </div>
+      </div>
+
+      <!-- FAQ Item 5 -->
+      <div class="faq-item" onclick="toggleFAQ(this)">
+        <div class="faq-question-box">
+          <span><i class="fas fa-house-user mr-2"></i> Apakah bisa mengurus surat secara online?</span>
+          <i class="fas fa-chevron-down"></i>
+        </div>
+        <div class="faq-answer">
+          Beberapa desa menyediakan layanan online melalui website atau aplikasi. Silakan cek informasi pada papan pengumuman atau tanyakan langsung ke petugas.
+        </div>
+      </div>
+
+      <!-- FAQ Item 6 -->
+      <div class="faq-item" onclick="toggleFAQ(this)">
+        <div class="faq-question-box">
+          <span><i class="fas fa-id-card mr-2"></i> Bisakah orang lain mewakili pengurusan surat?</span>
+          <i class="fas fa-chevron-down"></i>
+        </div>
+        <div class="faq-answer">
+          Bisa, asalkan membawa surat kuasa bermaterai dari pihak yang diwakili, serta dokumen pendukung lainnya.
+        </div>
+      </div>
+
+      <!-- FAQ Item 7 -->
+      <div class="faq-item" onclick="toggleFAQ(this)">
+        <div class="faq-question-box">
+          <span><i class="fas fa-calendar-check mr-2"></i> Jam operasional kantor desa?</span>
+          <i class="fas fa-chevron-down"></i>
+        </div>
+        <div class="faq-answer">
+          Umumnya Senin–Jumat pukul 08.00–15.00 WIB. Namun jadwal bisa berbeda di tiap desa, pastikan cek di papan informasi setempat.
+        </div>
+      </div>
+
+      <!-- FAQ Item 8 -->
+      <div class="faq-item" onclick="toggleFAQ(this)">
+        <div class="faq-question-box">
+          <span><i class="fas fa-file-signature mr-2"></i> Bagaimana mendapatkan surat kuasa?</span>
+          <i class="fas fa-chevron-down"></i>
+        </div>
+        <div class="faq-answer">
+          Surat kuasa bisa Anda buat sendiri dengan mencantumkan data pemberi dan penerima kuasa serta keperluan. Tanda tangan di atas materai, lalu dilampirkan saat pengurusan surat.
+        </div>
+      </div>
+
+       <!-- FAQ Item 9 -->
+       <div class="faq-item" onclick="toggleFAQ(this)">
+        <div class="faq-question-box">
+        <span><i class="fas fa-map-marker-alt mr-2"></i> Bagaimana cara mengetahui batas wilayah desa?</span>
+        <i class="fas fa-chevron-down"></i>
+        </div>
+       <div class="faq-answer">
+         Informasi mengenai batas wilayah desa biasanya tercantum dalam peta desa yang tersedia di kantor desa. Anda juga bisa bertanya langsung kepada perangkat desa atau melihat pada plang batas desa yang terpasang.
+        </div>
+        </div>
+    </div>
+
+    <a href="/" class="back-button"><i class="fas fa-arrow-left"></i> Kembali</a>
+  </div>
+
+  <script>
+    function toggleFAQ(faqItem) {
+      const answer = faqItem.querySelector('.faq-answer');
+      const icon = faqItem.querySelector('.faq-question-box i:last-child');
+      const questionBox = faqItem.querySelector('.faq-question-box');
+
+      const opened = document.querySelector('.faq-answer.open');
+      const activeIcon = document.querySelector('.faq-question-box.active i');
+      const activeBox = document.querySelector('.faq-question-box.active');
+
+      if (opened && opened !== answer) {
+        opened.classList.remove('open');
+        activeIcon?.classList.remove('active');
+        activeBox?.classList.remove('active');
+      }
+
+      answer.classList.toggle('open');
+      icon.classList.toggle('active');
+      questionBox.classList.toggle('active');
+    }
+  </script>
+</body>
+</html>

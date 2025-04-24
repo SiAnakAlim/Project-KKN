@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Kebijakan Privasi - Sistem Surat Desa</title>
+    <link rel="stylesheet" href="/style.css">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #fff2cc; /* Tone warna 1 */
+            color: #b08b00; /* Tone warna 2 */
+            padding: 2rem;
+            line-height: 1.7;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start; /* Align items ke atas */
+            min-height: 100vh;
+            margin: 0;
+            overflow-y: auto; /* Aktifkan scrolling jika konten panjang */
+        }
+
+        .privacy-container {
+            max-width: 850px;
+            background-color: #fff; /* Latar belakang kontainer */
+            border-radius: 20px;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.05);
+            padding: 30px;
+            margin-bottom: 60px; /* Ruang untuk tombol kembali */
+            position: relative; /* Untuk memposisikan tombol kembali */
+        }
+
+        h1, h2 {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            color: #b08b00;
+            font-weight: 600;
+        }
+
+        .section {
+            margin-top: 2rem;
+            border-left: 4px solid #d4a900; /* Tone warna 3 */
+            padding-left: 1rem;
+        }
+
+        .section i {
+            font-size: 1.5rem;
+            margin-right: 0.5rem;
+            color: #5a5a5a; /* Warna ikon */
+        }
+
+        .section h3 {
+            display: flex;
+            align-items: center;
+            color: #b08b00; /* Tone warna 2 */
+            font-weight: 600;
+            margin-bottom: 0.7rem;
+        }
+
+        ul {
+            padding-left: 1.5rem;
+            color: #333; /* Warna teks list */
+        }
+
+        ul li {
+            margin-bottom: 0.7rem;
+        }
+
+        .back-home {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #fff2cc;
+            color: #b08b00;
+            border: 2px solid #d4a900;
+            padding: 10px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 600;
+            text-decoration: none;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .back-home:hover {
+            background-color: #d4a900;
+            color: #fff;
+        }
+
+        @media screen and (max-width: 600px) {
+            .back-home {
+                padding: 8px 16px;
+                font-size: 0.9rem;
+                border-radius: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="privacy-container">
+        <h1>Kebijakan Privasi - Sistem Surat Desa</h1>
+        <p>Kebijakan Privasi ini menjelaskan bagaimana Sistem Surat Desa ("Sistem") mengumpulkan, menggunakan, dan melindungi informasi pribadi Anda saat Anda mengakses dan menggunakan Sistem ini.</p>
+
+        <div class="section">
+            <h3><i class="ph ph-user-circle"></i> Informasi yang Kami Kumpulkan</h3>
+            <p>Kami dapat mengumpulkan informasi pribadi berikut dari Anda:</p>
+            <ul>
+                <li><strong>Informasi Identifikasi Pribadi:</strong> Nama lengkap, Nomor Induk Kependudukan (NIK), alamat, tanggal lahir, jenis kelamin, agama, status perkawinan, pekerjaan, dan informasi lain yang tercantum dalam dokumen identifikasi.</li>
+                <li><strong>Informasi Kontak:</strong> Alamat email, nomor telepon.</li>
+                <li><strong>Informasi Keluarga:</strong> Data anggota keluarga (jika diperlukan untuk pengajuan surat tertentu).</li>
+                <li><strong>Informasi Perangkat dan Log:</strong> Alamat IP, jenis browser, sistem operasi, informasi perangkat keras, tanggal dan waktu akses, halaman yang dikunjungi, dan data log lainnya.</li>
+                <li><strong>Informasi Penggunaan Sistem:</strong> Catatan pengajuan surat, riwayat transaksi, dan interaksi Anda dengan fitur-fitur Sistem.</li>
+                <li><strong>Informasi Lokasi (jika diaktifkan):</strong> Data lokasi perangkat Anda jika Anda memberikan izin untuk fitur berbasis lokasi.</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h3><i class="ph ph-lock"></i> Penggunaan Informasi</h3>
+            <p>Informasi yang kami kumpulkan digunakan untuk tujuan berikut:</p>
+            <ul>
+                <li>Memfasilitasi proses pengajuan dan penerbitan surat-surat desa yang Anda ajukan.</li>
+                <li>Memverifikasi identitas Anda dan memastikan keakuratan informasi yang Anda berikan.</li>
+                <li>Mengelola akun pengguna Anda dan memberikan akses ke fitur-fitur Sistem.</li>
+                <li>Menyediakan dukungan teknis dan membantu Anda dalam menggunakan Sistem.</li>
+                <li>Menganalisis penggunaan Sistem untuk meningkatkan kualitas layanan dan pengembangan fitur baru.</li>
+                <li>Mengirimkan pemberitahuan terkait status pengajuan surat, informasi penting, atau pembaruan Sistem (jika Anda memberikan izin).</li>
+                <li>Mematuhi kewajiban hukum dan peraturan perundang-undangan yang berlaku.</li>
+                <li>Mencegah aktivitas penipuan atau penyalahgunaan Sistem.</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h3><i class="ph ph-cookie"></i> Cookies dan Teknologi Pelacakan Serupa</h3>
+            <p>Sistem dapat menggunakan cookies dan teknologi pelacakan serupa untuk mengumpulkan informasi tentang aktivitas browsing Anda. Cookies membantu kami mengingat preferensi Anda, memahami cara Anda berinteraksi dengan Sistem, dan meningkatkan pengalaman pengguna. Anda dapat mengatur preferensi cookie melalui pengaturan browser Anda, namun menonaktifkan cookie dapat mempengaruhi fungsionalitas Sistem.</p>
+        </div>
+
+        <div class="section">
+            <h3><i class="ph ph-shield-check"></i> Keamanan Data</h3>
+            <p>Kami berkomitmen untuk melindungi informasi pribadi Anda. Kami menerapkan berbagai langkah keamanan teknis dan organisasi untuk mencegah akses yang tidak sah, perubahan, pengungkapan, atau penghapusan data Anda. Langkah-langkah ini termasuk enkripsi data, penggunaan protokol keamanan, pembatasan akses ke informasi pribadi, dan pelatihan staf mengenai praktik keamanan data.</p>
+            <p>Meskipun kami berusaha semaksimal mungkin untuk melindungi informasi Anda, tidak ada metode transmisi data melalui internet atau metode penyimpanan elektronik yang sepenuhnya aman. Oleh karena itu, kami tidak dapat menjamin keamanan mutlak informasi Anda.</p>
+        </div>
+
+        <div class="section">
+            <h3><i class="ph ph-user-gear"></i> Hak Pengguna</h3>
+            <p>Sesuai dengan peraturan perundang-undangan yang berlaku, Anda mungkin memiliki hak-hak tertentu terkait informasi pribadi Anda, termasuk:</p>
+            <ul>
+                <li>Hak untuk mengakses informasi pribadi Anda yang kami miliki.</li>
+                <li>Hak untuk mengoreksi informasi pribadi Anda yang tidak akurat atau tidak lengkap.</li>
+                <li>Hak untuk menghapus informasi pribadi Anda dalam kondisi tertentu.</li>
+                <li>Hak untuk membatasi pemrosesan informasi pribadi Anda.</li>
+                <li>Hak untuk mengajukan keberatan terhadap pemrosesan informasi pribadi Anda.</li>
+                <li>Hak untuk menerima informasi pribadi Anda dalam format yang terstruktur, umum digunakan, dan dapat dibaca oleh mesin (hak atas portabilitas data).</li>
+                <li>Hak untuk menarik persetujuan Anda terkait pemrosesan informasi pribadi Anda (jika pemrosesan didasarkan pada persetujuan).</li>
+            </ul>
+            <p>Untuk menggunakan hak-hak Anda, silakan hubungi kami melalui informasi kontak yang disediakan di bawah.</p>
+        </div>
+
+        <div class="section">
+            <h3><i class="ph ph-handshake"></i> Pembagian Informasi dengan Pihak Ketiga</h3>
+            <p>Kami dapat membagikan informasi pribadi Anda kepada pihak ketiga dalam kondisi berikut:</p>
+            <ul>
+                <li>Kepada instansi pemerintah desa atau pihak berwenang lainnya jika diperlukan untuk proses penerbitan surat atau sesuai dengan kewajiban hukum.</li>
+                <li>Kepada penyedia layanan pihak ketiga yang membantu kami dalam mengoperasikan Sistem (misalnya, penyedia hosting, penyedia layanan email). Pihak ketiga ini terikat oleh kewajiban kerahasiaan.</li>
+                <li>Jika Anda memberikan persetujuan eksplisit untuk pembagian tersebut.</li>
+                <li>Dalam rangka melindungi hak, properti, atau keamanan kami, pengguna Sistem, atau pihak lain.</li>
+            </ul>
+            <p>Kami tidak akan menjual atau menyewakan informasi pribadi Anda kepada pihak ketiga untuk tujuan pemasaran tanpa persetujuan Anda.</p>
+        </div>
+
+        <div class="section">
+            <h3><i class="ph ph-calendar-check"></i> Retensi Data</h3>
+            <p>Kami akan menyimpan informasi pribadi Anda selama diperlukan untuk tujuan yang ditetapkan dalam Kebijakan Privasi ini, atau selama diwajibkan oleh hukum yang berlaku. Setelah periode retensi berakhir, kami akan menghapus atau menganonimkan informasi pribadi Anda dengan aman.</p>
+        </div>
+
+        <div class="section">
+            <h3><i class="ph ph-child"></i> Privasi Anak-Anak</h3>
+            <p>Sistem tidak ditujukan untuk digunakan oleh anak-anak di bawah usia yang ditentukan oleh hukum yang berlaku. Kami tidak secara sadar mengumpulkan informasi pribadi dari anak-anak. Jika Anda adalah orang tua atau wali dan yakin bahwa anak Anda telah memberikan informasi pribadi kepada kami, harap hubungi kami agar kami dapat mengambil tindakan yang sesuai.</p>
+        </div>
+
+        <div class="section">
+            <h3><i class="ph ph-envelope-simple"></i> Kontak</h3>
+            <p>Jika Anda memiliki pertanyaan, komentar, atau permintaan terkait Kebijakan Privasi ini atau praktik privasi kami, silakan hubungi kami melalui:</p>
+            <p>Email: <strong>[Alamat Email Kontak Desa]</strong></p>
+            <p>Alamat Kantor Desa: <strong>[Alamat Lengkap Kantor Desa]</strong></p>
+            <p>Nomor Telepon Kantor Desa: <strong>[Nomor Telepon Kantor Desa]</strong></p>
+        </div>
+
+        <div class="section">
+            <h3><i class="ph ph-wrench"></i> Perubahan Kebijakan Privasi</h3>
+            <p>Kami dapat memperbarui Kebijakan Privasi ini sewaktu-waktu untuk mencerminkan perubahan dalam praktik informasi kami atau perubahan dalam peraturan perundang-undangan. Kami akan memposting Kebijakan Privasi yang diperbarui di Sistem dan dapat memberitahu Anda mengenai perubahan penting melalui email atau pengumuman di Sistem. Kami mendorong Anda untuk meninjau Kebijakan Privasi ini secara berkala.</p>
+            <p>Dengan terus menggunakan Sistem setelah adanya perubahan pada Kebijakan Privasi ini, Anda dianggap telah menyetujui perubahan tersebut.</p>
+        </div>
+    </div>
+
+    <a href="/" class="back-home"><i class="ph ph-arrow-left mr-2"></i>Kembali</a>
+</body>
+</html>

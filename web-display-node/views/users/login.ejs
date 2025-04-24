@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login - SojiwanBot</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        function togglePassword(id, iconId) {
+            const input = document.getElementById(id);
+            const icon = document.getElementById(iconId);
+            if (input.type === "password") {
+                input.type = "text";
+                icon.innerHTML = eyeOff;
+            } else {
+                input.type = "password";
+                icon.innerHTML = eye;
+            }
+        }
+
+        const eye = `<svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24"
+            stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M2.458 12C3.732 7.943 7.522 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.478 0-8.268-2.943-9.542-7z" />
+        </svg>`;
+
+        const eyeOff = `<svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24"
+            stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.542-7a9.964 9.964 0 012.174-3.338M9.88 9.88a3 3 0 004.24 4.24" />
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3l18 18" />
+        </svg>`;
+    </script>
+</head>
+
+<body class="bg-yellow-100 min-h-screen flex items-center justify-center">
+
+    <div class="w-full md:w-10/12 lg:w-9/12 bg-white shadow-lg rounded-lg overflow-hidden flex flex-col md:flex-row">
+
+        <div class="md:w-1/2 p-8 md:p-12 fade-in-up">
+            <h1 class="text-4xl font-extrabold text-[#d4a900] text-center mb-2">SojiwanBot</h1>
+            <p class="text-center text-sm text-gray-600 mb-6 italic">Disusun oleh Tim KKN Sowan Sojiwan 2025</p>
+
+            <h2 class="text-xl font-semibold mb-1 text-gray-800 text-center">Login Akun</h2>
+            <p class="text-center text-sm text-gray-500 mb-6">Silakan login untuk memulai aplikasi</p>
+
+            <% if (messages.error) { %>
+                <p class="text-red-500 text-sm mb-4 text-center">
+                    <%= messages.error %>
+                </p>
+                <% } %>
+
+                    <form action="/login" method="POST" class="space-y-4">
+
+                        <div class="relative">
+                            <label for="email" class="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                            <div class="relative">
+                                <span class="absolute inset-y-0 left-0 flex items-center pl-2 text-gray-400">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2"
+                                        viewBox="0 0 24 24">
+                                        <path d="M16 12l-4-4-4 4m8 0v4a2 2 0 002 2H6a2 2 0 01-2-2v-4" />
+                                    </svg>
+                                </span>
+                                <input type="email" name="email" id="email" placeholder="Masukkan email Anda" required
+                                    class="pl-9 pr-4 py-2 w-full border rounded-md focus:outline-none focus:border-[#b08b00]" />
+                            </div>
+                        </div>
+
+                        <div class="relative">
+                            <label for="password" class="block text-sm font-medium text-gray-700 mb-2">Password</label>
+                            <div class="relative">
+                                <span class="absolute inset-y-0 left-0 flex items-center pl-2 text-gray-400">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2"
+                                        viewBox="0 0 24 24">
+                                        <path d="M12 11c0-1.104.896-2 2-2s2 .896 2 2v4H8v-4c0-1.104.896-2 2-2s2 .896 2 2z" />
+                                        <path d="M4 8v12h16V8H4z" />
+                                    </svg>
+                                </span>
+                                <input type="password" name="password" id="password" placeholder="Masukkan password Anda"
+                                    required
+                                    class="pl-9 pr-10 py-2 w-full border rounded-md focus:outline-none focus:border-[#b08b00]" />
+                                <button type="button" class="absolute right-2 top-2 text-gray-500"
+                                    onclick="togglePassword('password','icon1')">
+                                    <span id="icon1">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M2.458 12C3.732 7.943 7.522 5 12 5c4.478 0 8.268 2.943 9.542 7" />
+                                        </svg>
+                                    </span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center">
+                                <input id="remember" name="remember" type="checkbox"
+                                    class="h-4 w-4 text-[#d4a900] focus:ring-[#b08b00] border-gray-300 rounded">
+                                <label for="remember" class="ml-2 block text-sm text-gray-900">
+                                    Ingat Saya
+                                </label>
+                            </div>
+                        </div>
+
+                        <button type="submit"
+                            class="w-full bg-[#d4a900] text-white py-2 rounded-md hover:bg-[#b08b00] transition duration-300 shadow-md">
+                            Login
+                        </button>
+                    </form>
+
+                    <p class="text-center mt-4 text-sm">
+                        Belum punya akun?
+                        <a href="/register" class="text-[#d4a900] hover:underline">Register</a>
+                    </p>
+        </div>
+
+        <div class="md:w-1/2 hidden md:block bg-cover bg-center"
+            style="background-image: url('/image/bg-login.jpg');">
+            <div class="w-full h-full bg-black bg-opacity-20"></div>
+        </div>
+    </div>
+
+</body>
+
+</html>

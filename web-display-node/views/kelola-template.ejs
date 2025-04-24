@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kelola Template Surat</title>
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+    <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            text-align: center;
+        }
+        .container {
+            width: 80%;
+            margin: 50px auto;
+            background: white;
+            padding: 30px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        #editor {
+            height: 400px;
+            border: 1px solid #ccc;
+            background: white;
+            margin-bottom: 20px;
+        }
+        .button-group {
+            text-align: right;
+            margin-top: 20px;
+        }
+        button {
+            padding: 10px 15px;
+            margin-left: 10px;
+            border: none;
+            background: #007bff;
+            color: white;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        .back-btn {
+            background: #6c757d;
+        }
+        .back-btn:hover {
+            background: #5a6268;
+        }
+        .preview {
+            margin-top: 30px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            text-align: left;
+        }
+        .preview h3 {
+            margin-top: 0;
+            color: #333;
+        }
+        .preview-content {
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        .placeholder {
+            font-weight: bold;
+            color: #007bff;
+        }
+        .signature-block {
+            margin-top: 40px;
+            text-align: left;
+        }
+        .signature-name {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+        .signature-position {
+            font-style: italic;
+            font-size: 0.9em;
+        }
+        .desa-logo {
+            max-width: 80px;
+            height: auto;
+            margin-bottom: 10px;
+        }
+        .kop-surat {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .alamat-desa {
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+        .nomor-surat {
+            margin-top: 20px;
+            text-align: left;
+        }
+        .isi-surat {
+            margin-top: 20px;
+            text-align: justify;
+        }
+        .tanggal-surat {
+            text-align: right;
+            margin-top: 40px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Kelola Template Surat Pengantar</h1>
+        <div id="editor">
+            </div>
+        <div class="button-group">
+            <button type="button" id="saveTemplateBtn">Simpan Template</button>
+            <button type="button" id="previewBtn">Preview Template</button>
+            <a href="/"><button type="button" class="back-btn">Kembali ke Dashboard</button></a>
+        </div>
+
+        <div class="preview" id="templatePreview" style="display: none;">
+            <h3>Preview Template</h3>
+            <div id="previewContent" class="preview-content">
+                </div>
+        </div>
+    </div>
+
+    <script>
+        var quill = new Quill('#editor', {
+            theme: 'snow',
+            modules: {
+                toolbar: [
+                    ['bold', 'italic', 'underline', 'strike'],
+                    [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                    [{ 'script': 'sub'}, { 'script': 'super' }],
+                    [{ 'size': ['small', false, 'large', 'huge'] }],
+                    [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+                    ['blockquote', 'code-block'],
+                    [{ 'color': [] }, { 'background': [] }],
+                    ['link', 'image'],
+                    ['clean']
+                ]
+            }
+        });
+
+        // Placeholder untuk data dinamis
+        const placeholders = {
+            nama: '<span class="placeholder">[NAMA]</span>',
+            tempat_tanggal_lahir: '<span class="placeholder">[TEMPAT TANGGAL LAHIR]</span>',
+            kewarganegaraan_agama: '<span class="placeholder">[KEWARGANEGARAAN AGAMA]</span>',
+            pekerjaan: '<span class="placeholder">[PEKERJAAN]</span>',
+            tempat_domisili: '<span class="placeholder">[TEMPAT DOMISILI]</span>',
+            daerah_asal: '<span class="placeholder">[DAERAH ASAL]</span>',
+            surat_bukti_diri: '<span class="placeholder">[SURAT BUKTI DIRI]</span>',
+            keperluan: '<span class="placeholder">[KEPERLUAN]</span>',
+            tujuan: '<span class="placeholder">[TUJUAN]</span>',
+            nomor_surat: '<span class="placeholder">[NOMOR SURAT]</span>',
+            tanggal_permohonan: '<span class="placeholder">[TANGGAL PERMOHONAN]</span>',
+            tanggal_surat: '<span class="placeholder">[TANGGAL SURAT]</span>',
+            nama_kepala_desa: '<span class="placeholder">[NAMA KEPALA DESA]</span>',
+            jabatan_kepala_desa: '<span class="placeholder">[JABATAN KEPALA DESA]</span>',
+            nama_sekretaris_desa: '<span class="placeholder">[NAMA SEKRETARIS DESA]</span>',
+            jabatan_sekretaris_desa: '<span class="placeholder">[JABATAN SEKRETARIS DESA]</span>',
+            logo_desa: '<img src="/images/logo_desa.png" class="desa-logo" alt="Logo Desa">',
+            alamat_desa_1: 'Sekretariat : Bero RT 002 RW 006, Kebondalem Kidul, Prambanan, Klaten.',
+            alamat_desa_2: 'Pos 57454',
+            kode_desa: 'No. Kode Desa/Kelurahan 3310.012005'
+        };
+
+        // Fungsi untuk mengganti placeholder dengan data sebenarnya saat cetak (tidak perlu di sini)
+        // function replacePlaceholders(templateContent, data) {
+        //     let content = templateContent;
+        //     for (const key in data) {
+        //         const placeholder = `[${key.replace(/_/g, ' ').toUpperCase()}]`;
+        //         content = content.replace(new RegExp(placeholder.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g'), placeholders[key.toLowerCase().replace(/ /g, '_')]);
+        //     }
+        //     return content;
+        // }
+
+        // Load template yang sudah tersimpan
+        fetch('/get-template')
+            .then(response => response.json())
+            .then(data => {
+                if (data && data.template) {
+                    quill.root.innerHTML = data.template;
+                } else {
+                    // Jika belum ada template, set default
+                    quill.root.innerHTML = `
+                        <div class="kop-surat">
+                            ${placeholders.logo_desa}
+                            <h2>PEMERINTAH KABUPATEN KLATEN</h2>
+                            <h3>KECAMATAN PRAMBANAN</h3>
+                            <h4>DESA KEBONDALEM KIDUL</h4>
+                            <div class="alamat-desa">${placeholders.alamat_desa_1}</div>
+                            <div class="alamat-desa">${placeholders.alamat_desa_2}</div>
+                            <div class="alamat-desa">${placeholders.kode_desa}</div>
+                        </div>
+
+                        <div style="text-align: center; margin-bottom: 20px;">
+                            <span style="font-weight: bold;">SURAT KETERANGAN PENGANTAR</span><br>
+                            <span style="font-size: 1.1em;">Nomor : ${placeholders.nomor_surat}</span>
+                        </div>
+
+                        <p>Yang bertanda tangan dibawah ini, menerangkan bahwa:</p>
+                        <ol style="list-style-type: decimal; margin-left: 20px;">
+                            <li>Nama : ${placeholders.nama}</li>
+                            <li>Tempat, Tanggal Lahir : ${placeholders.tempat_tanggal_lahir}</li>
+                            <li>Kewarganegaraan & Agama : ${placeholders.kewarganegaraan_agama}</li>
+                            <li>Pekerjaan : ${placeholders.pekerjaan}</li>
+                            <li>Tempat Domisili : ${placeholders.tempat_domisili}</li>
+                            <li>Daerah Asal : ${placeholders.daerah_asal}</li>
+                            <li>Surat Bukti Diri : ${placeholders.surat_bukti_diri}</li>
+                            <li>Keperluan : ${placeholders.keperluan}</li>
+                            <li>Tujuan : ${placeholders.tujuan}</li>
+                        </ol>
+
+                        <p>Demikian untuk menjadikan maklum bagi yang berkepentingan.</p>
+
+                        <div class="tanggal-surat">
+                            Kebondalem Kidul, ${placeholders.tanggal_surat}<br>
+                            a.n Kepala Desa Kebondalem Kidul<br>
+                            Sekretaris Desa<br><br><br><br>
+                            <span class="signature-name">${placeholders.nama_sekretaris_desa}</span><br>
+                            <span class="signature-position">${placeholders.jabatan_sekretaris_desa}</span>
+                        </div>
+                    `;
+                }
+            })
+            .catch(error => console.error('Error fetching template:', error));
+
+        // Simpan Template ke Database
+        document.getElementById('saveTemplateBtn').onclick = function() {
+            var content = quill.root.innerHTML;
+            fetch('/save-template', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ template: content })
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert(data.message || 'Template berhasil disimpan!');
+            })
+            .catch(error => console.error('Error saving template:', error));
+        };
+
+        // Preview Template
+        document.getElementById('previewBtn').onclick = function() {
+            document.getElementById('templatePreview').style.display = 'block';
+            document.getElementById('previewContent').innerHTML = quill.root.innerHTML;
+        };
+    </script>
+</body>
+</html>

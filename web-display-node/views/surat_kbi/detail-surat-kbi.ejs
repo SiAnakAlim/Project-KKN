@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detail Surat Keterangan Berkelakuan Baik</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        gold: {
+                            400: '#e6b800',
+                            500: '#d4a900',
+                            600: '#c29a00',
+                            700: '#b08b00',
+                        },
+                        golden: {
+                            50: '#fff9e6',
+                            100: '#fff2cc',
+                        }
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.5s ease-out',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0', transform: 'translateY(10px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-50">
+    <div class="min-h-screen flex flex-col animate-fade-in">
+        <nav class="bg-gradient-to-r from-gold-600 to-gold-700 p-4 text-white flex justify-between items-center shadow-lg">
+            <span class="text-xl font-semibold tracking-wide">Detail Surat Keterangan Berkelakuan Baik</span>
+            <div class="flex items-center space-x-3">
+                <span class="text-sm font-medium">User</span>
+                <div class="h-8 w-8 rounded-full bg-gold-500 flex items-center justify-center shadow-inner">
+                    <i class="fas fa-user text-white text-sm"></i>
+                </div>
+            </div>
+        </nav>
+
+        <div class="flex-1 p-6">
+            <div class="max-w-6xl mx-auto">
+                <div class="flex justify-between items-center mb-8">
+                    <div>
+                        <h1 class="text-2xl font-bold text-gray-800">Detail Surat Keterangan Berkelakuan Baik</h1>
+                        <p class="text-sm text-gray-500 mt-1">Informasi lengkap surat keterangan berkelakuan baik</p>
+                    </div>
+                    <div class="flex space-x-3">
+                        <a href="/cetak-surat-kbi/<%= suratKBI.id %>" class="bg-emerald-500 hover:bg-emerald-600 text-white font-medium py-2 px-4 rounded-lg shadow-md transition-all duration-200 flex items-center hover:shadow-lg">
+                            <i class="fas fa-print mr-2"></i> Cetak Surat
+                        </a>
+                        <a href="/surat-kbi" class="bg-gray-500 hover:bg-gray-600 text-white font-medium py-2 px-4 rounded-lg shadow-md transition-all duration-200 flex items-center hover:shadow-lg">
+                            <i class="fas fa-arrow-left mr-2"></i> Kembali
+                        </a>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-xl overflow-hidden border border-gray-200">
+                    <div class="bg-white px-6 py-4 border-b border-gray-200">
+                        <div class="flex justify-between items-center">
+                            <h2 class="text-lg font-semibold text-gray-800 flex items-center">
+                                <i class="fas fa-file-alt text-gold-600 mr-2"></i>
+                                Informasi Surat
+                            </h2>
+                            <div class="flex items-center">
+                                <span class="px-3 py-1 rounded-full text-xs font-semibold
+                                     <%= suratKBI.status === 'Diproses' ? 'bg-amber-100 text-amber-800' : '' %>
+                                    <%= suratKBI.status === 'Selesai' ? 'bg-green-100 text-green-800' : '' %>
+                                    <%= suratKBI.status === 'Ditolak' ? 'bg-red-100 text-red-800' : '' %>">
+                                    <i class="<%= suratKBI.status === 'Diproses' ? 'fas fa-clock' : '' %>
+                                                <%= suratKBI.status === 'Selesai' ? 'fas fa-check-circle' : '' %>
+                                                <%= suratKBI.status === 'Ditolak' ? 'fas fa-times-circle' : '' %> mr-1"></i>
+                                    <%= suratKBI.status %>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="p-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                            <div class="space-y-5">
+                                <div class="grid grid-cols-4 gap-2 items-start">
+                                    <div class="col-span-1 flex justify-between">
+                                        <p class="text-sm font-medium text-gray-500">ID</p>
+                                        <p class="text-gray-500 mr-2">:</p>
+                                    </div>
+                                    <div class="col-span-3">
+                                        <p class="text-sm text-gray-800 font-medium"><%= suratKBI.id %></p>
+                                    </div>
+                                </div>
+
+                                <div class="grid grid-cols-4 gap-2 items-start">
+                                    <div class="col-span-1 flex justify-between">
+                                        <p class="text-sm font-medium text-gray-500">Nomor Surat</p>
+                                        <p class="text-gray-500 mr-2">:</p>
+                                    </div>
+                                    <div class="col-span-3">
+                                        <p class="text-sm text-gray-800"><%= suratKBI.nomor_surat %></p>
+                                    </div>
+                                </div>
+
+                                <div class="grid grid-cols-4 gap-2 items-start">
+                                    <div class="col-span-1 flex justify-between">
+                                        <p class="text-sm font-medium text-gray-500">Nama</p>
+                                        <p class="text-gray-500 mr-2">:</p>
+                                    </div>
+                                    <div class="col-span-3">
+                                        <p class="text-sm text-gray-800"><%= suratKBI.nama %></p>
+                                    </div>
+                                </div>
+
+                                <div class="grid grid-cols-4 gap-2 items-start">
+                                    <div class="col-span-1 flex justify-between">
+                                        <p class="text-sm font-medium text-gray-500">Tertera</p>
+                                        <p class="text-gray-500 mr-2">:</p>
+                                    </div>
+                                    <div class="col-span-3">
+                                        <p class="text-sm text-gray-800"><%= suratKBI.tertera %></p>
+                                    </div>
+                                </div>
+
+                                <div class="grid grid-cols-4 gap-2 items-start">
+                                    <div class="col-span-1 flex justify-between">
+                                        <p class="text-sm font-medium text-gray-500">No. Rekening</p>
+                                        <p class="text-gray-500 mr-2">:</p>
+                                    </div>
+                                    <div class="col-span-3">
+                                        <p class="text-sm text-gray-800"><%= suratKBI.norek %></p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="space-y-5">
+                                <div class="grid grid-cols-4 gap-2 items-start">
+                                    <div class="col-span-1 flex justify-between">
+                                        <p class="text-sm font-medium text-gray-500">Nama Lagi</p>
+                                        <p class="text-gray-500 mr-2">:</p>
+                                    </div>
+                                    <div class="col-span-3">
+                                        <p class="text-sm text-gray-800"><%= suratKBI.nama_lagi %></p>
+                                    </div>
+                                </div>
+
+                                <div class="grid grid-cols-4 gap-2 items-start">
+                                    <div class="col-span-1 flex justify-between">
+                                        <p class="text-sm font-medium text-gray-500">Tertera Lagi</p>
+                                        <p class="text-gray-500 mr-2">:</p>
+                                    </div>
+                                    <div class="col-span-3">
+                                        <p class="text-sm text-gray-800"><%= suratKBI.tertera_lagi %></p>
+                                    </div>
+                                </div>
+
+                                <div class="grid grid-cols-4 gap-2 items-start">
+                                    <div class="col-span-1 flex justify-between">
+                                        <p class="text-sm font-medium text-gray-500">No. Kartu Keluarga</p>
+                                        <p class="text-gray-500 mr-2">:</p>
+                                    </div>
+                                    <div class="col-span-3">
+                                        <p class="text-sm text-gray-800"><%= suratKBI.no_kk %></p>
+                                    </div>
+                                </div>
+
+                                <div class="grid grid-cols-4 gap-2 items-start">
+                                    <div class="col-span-1 flex justify-between">
+                                        <p class="text-sm font-medium text-gray-500">NIK</p>
+                                        <p class="text-gray-500 mr-2">:</p>
+                                    </div>
+                                    <div class="col-span-3">
+                                        <p class="text-sm text-gray-800"><%= suratKBI.nik %></p>
+                                    </div>
+                                </div>
+
+                                <div class="grid grid-cols-4 gap-2 items-start">
+                                    <div class="col-span-1 flex justify-between">
+                                        <p class="text-sm font-medium text-gray-500">Jenis Surat</p>
+                                        <p class="text-gray-500 mr-2">:</p>
+                                    </div>
+                                    <div class="col-span-3">
+                                        <p class="text-sm text-gray-800"><%= suratKBI.jenis_surat %></p>
+                                    </div>
+                                </div>
+
+                                <div class="grid grid-cols-4 gap-2 items-start">
+                                    <div class="col-span-1 flex justify-between">
+                                        <p class="text-sm font-medium text-gray-500">Tanggal Permohonan</p>
+                                        <p class="text-gray-500 mr-2">:</p>
+                                    </div>
+                                    <div class="col-span-3">
+                                        <p class="text-sm text-gray-800"><%= new Date(suratKBI.tanggal_permohonan).toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }) %></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+        <script>
+        // Download PDF
+        function downloadPdf(pdfFile) {
+            const downloadLink = document.createElement('a');
+            downloadLink.href = `/public/pdf/${pdfFile}`;
+            downloadLink.download = pdfFile;
+            document.body.appendChild(downloadLink);
+            downloadLink.click();
+            document.body.removeChild(downloadLink);
+
+            // Show toast notification
+            showToast('File sedang diunduh...', 'bg-gold-500');
+        }
+
+        // Print PDF
+        function printPdf(pdfFile) {
+            const pdfWindow = window.open(`/public/pdf/${pdfFile}`, '_blank');
+            pdfWindow.onload = function() {
+                pdfWindow.print();
+            };
+
+            // Show toast notification
+            showToast('Membuka dokumen untuk dicetak...', 'bg-green-500');
+        }
+
+        // Show toast notification
+        function showToast(message, bgColor) {
+            const toast = document.createElement('div');
+            toast.className = `fixed bottom-6 right-6 ${bgColor} text-white px-4 py-2 rounded-md shadow-lg flex items-center animate-fade-in`;
+            toast.innerHTML = `
+                <i class="fas fa-info-circle mr-2"></i>
+                <span>${message}</span>
+            `;
+            document.body.appendChild(toast);
+
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'transition-opacity', 'duration-300');
+                setTimeout(() => {
+                    document.body.removeChild(toast);
+                }, 300);
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

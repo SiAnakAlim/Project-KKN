@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tutorial Penggunaan</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+    <style>
+        body {
+            background-color: #f7f3e7;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 960px;
+            padding: 30px;
+            box-sizing: border-box;
+            position: relative;
+        }
+
+        #book-container {
+            width: 100%;
+            max-width: 800px;
+            height: 550px;
+            margin: 20px auto;
+            position: relative;
+            perspective: 1500px;
+            transform-style: preserve-3d;
+        }
+
+        .book-cover {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #f5e8c0 0%, #d4a900 100%);
+            color: #333;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            border-radius: 5px 0 0 5px;
+            z-index: 10;
+            transform-origin: left center;
+            transition: transform 1s ease;
+            backface-visibility: hidden;
+        }
+
+        .book-cover h1 {
+            font-size: 2.5em;
+            margin-bottom: 15px;
+            color: #5a4a00;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+        }
+
+        .book-cover p {
+            font-size: 1.2em;
+            color: #5a4a00;
+            margin-bottom: 30px;
+        }
+
+        .book-cover .open-btn {
+            background-color: rgba(255,255,255,0.8);
+            color: #5a4a00;
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .book-cover .open-btn:hover {
+            background-color: white;
+            transform: scale(1.05);
+        }
+
+        .page {
+            position: absolute;
+            width: 50%;
+            height: 100%;
+            background-color: white;
+            box-sizing: border-box;
+            padding: 30px;
+            overflow: auto;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            transform-origin: left center;
+            transition: transform 1s ease;
+            backface-visibility: hidden;
+            z-index: 1;
+            right: 0;
+            border-radius: 0 5px 5px 0;
+        }
+
+        .page.left {
+            left: 0;
+            z-index: 2;
+        }
+
+        .page.right {
+            right: 0;
+            z-index: 1;
+        }
+
+        .page-content {
+            padding: 20px;
+            height: 100%;
+            overflow-y: auto;
+        }
+
+        .page-content h2 {
+            font-size: 1.8em;
+            color: #b08b00;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+        }
+
+        .page-content p {
+            color: #555;
+            line-height: 1.7;
+            margin-bottom: 20px;
+        }
+
+        .page-nav {
+            display: flex;
+            justify-content: space-between;
+            margin-top: auto;
+            padding-top: 20px;
+        }
+
+        .page-btn {
+            background-color: #fff2cc;
+            color: #b08b00;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .page-btn:hover {
+            background-color: #d4a900;
+            color: white;
+        }
+
+        .back-home {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            background-color: #fff2cc;
+            color: #b08b00;
+            border: 1px solid #d4a900;
+            padding: 12px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            text-decoration: none;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            z-index: 100;
+        }
+
+        .back-home:hover {
+            background-color: #d4a900;
+            color: #fff;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+
+            #book-container {
+                height: 400px;
+                margin-top: 10px;
+            }
+
+            .book-cover h1 {
+                font-size: 1.8em;
+            }
+
+            .book-cover p {
+                font-size: 1em;
+            }
+
+            .page {
+                padding: 15px;
+            }
+
+            .page-content h2 {
+                font-size: 1.4em;
+            }
+
+            .page-content p {
+                font-size: 0.95em;
+                line-height: 1.6;
+            }
+
+            .back-home {
+                font-size: 0.9em;
+                padding: 10px 20px;
+                bottom: 20px;
+                left: 20px;
+            }
+        }
+
+        /* Animation for page turning */
+        @keyframes pageTurn {
+            0% { transform: rotateY(0deg); }
+            100% { transform: rotateY(-180deg); }
+        }
+
+        .turning {
+            animation: pageTurn 1s forwards;
+        }
+
+        /* Draggable area for mobile */
+        .drag-area {
+            position: absolute;
+            width: 50px;
+            height: 100%;
+            z-index: 20;
+            cursor: grab;
+        }
+
+        .drag-area.left {
+            left: 0;
+        }
+
+        .drag-area.right {
+            right: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="book-container">
+            <!-- Book Cover -->
+            <div class="book-cover" id="bookCover">
+                <h1 class="font-bold">Panduan Penggunaan</h1>
+                <p class="text-lg">Klik untuk Membuka</p>
+                <div class="open-btn">Buka Buku</div>
+            </div>
+
+            <!-- Pages -->
+            <div class="page left" id="page1" style="display: none;">
+                <div class="page-content">
+                    <h2 class="font-semibold">Halaman 1: Selamat Datang</h2>
+                    <p>Terima kasih telah menggunakan sistem kami! Panduan ini akan membantu Anda memahami fitur-fitur utama dan cara menggunakannya secara efektif.</p>
+                    <p>Kami sarankan Anda untuk membaca setiap halaman secara berurutan untuk mendapatkan pemahaman yang menyeluruh.</p>
+                    <div class="page-nav">
+                        <button class="page-btn" onclick="closeBook()"><i class="fas fa-times mr-1"></i> Tutup</button>
+                        <button class="page-btn" onclick="nextPage()">Lanjut <i class="fas fa-arrow-right ml-1"></i></button>
+                    </div>
+                </div>
+                <div class="drag-area right" onmousedown="startDrag(event, 'next')"></div>
+            </div>
+
+            <div class="page right" id="page2" style="display: none;">
+                <div class="page-content">
+                    <h2 class="font-semibold">Halaman 2: Mengenal Dashboard</h2>
+                    <p>Setelah berhasil login, Anda akan melihat halaman Dashboard. Ini adalah pusat informasi yang menampilkan ringkasan data penting.</p>
+                    <ul class="list-disc list-inside pl-5">
+                        <li><strong>Informasi Utama:</strong> Di bagian atas, Anda akan melihat informasi penting seperti jumlah surat masuk dan status terbaru.</li>
+                        <li><strong>Grafik Analisis:</strong> Beberapa grafik mungkin ditampilkan untuk memberikan visualisasi data.</li>
+                        <li><strong>Akses Cepat:</strong> Tombol-tombol akses cepat ke fitur-fitur yang sering digunakan.</li>
+                    </ul>
+                    <div class="page-nav">
+                        <button class="page-btn" onclick="prevPage()"><i class="fas fa-arrow-left mr-1"></i> Kembali</button>
+                        <button class="page-btn" onclick="nextPage()">Lanjut <i class="fas fa-arrow-right ml-1"></i></button>
+                    </div>
+                </div>
+                <div class="drag-area left" onmousedown="startDrag(event, 'prev')"></div>
+                <div class="drag-area right" onmousedown="startDrag(event, 'next')"></div>
+            </div>
+
+            <div class="page left" id="page3" style="display: none;">
+                <div class="page-content">
+                    <h2 class="font-semibold">Halaman 3: Mengelola Surat Masuk</h2>
+                    <p>Bagian "Surat Masuk" adalah tempat Anda dapat melihat, membaca, dan mengelola surat-surat yang Anda terima.</p>
+                    <ol class="list-decimal list-inside pl-5">
+                        <li><strong>Melihat Daftar Surat:</strong> Daftar surat masuk akan ditampilkan dengan informasi seperti pengirim, perihal, dan tanggal diterima.</li>
+                        <li><strong>Membuka Surat:</strong> Klik pada baris surat untuk melihat detail lengkapnya.</li>
+                        <li><strong>Memberi Tindakan:</strong> Anda mungkin memiliki opsi untuk memberi tindakan pada surat, seperti menyetujui, menolak, atau meneruskan.</li>
+                    </ol>
+                    <div class="page-nav">
+                        <button class="page-btn" onclick="prevPage()"><i class="fas fa-arrow-left mr-1"></i> Kembali</button>
+                        <button class="page-btn" onclick="nextPage()">Lanjut <i class="fas fa-arrow-right ml-1"></i></button>
+                    </div>
+                </div>
+                <div class="drag-area left" onmousedown="startDrag(event, 'prev')"></div>
+                <div class="drag-area right" onmousedown="startDrag(event, 'next')"></div>
+            </div>
+
+            <div class="page right" id="page4" style="display: none;">
+                <div class="page-content">
+                    <h2 class="font-semibold">Halaman 4: Selesai</h2>
+                    <p>Anda telah menyelesaikan panduan penggunaan sistem kami. Kami harap panduan ini membantu Anda memahami cara menggunakan sistem dengan lebih baik.</p>
+                    <p>Jika Anda memiliki pertanyaan lebih lanjut, jangan ragu untuk menghubungi tim dukungan kami.</p>
+                    <div class="page-nav">
+                        <button class="page-btn" onclick="prevPage()"><i class="fas fa-arrow-left mr-1"></i> Kembali</button>
+                        <button class="page-btn" onclick="closeBook()"><i class="fas fa-times mr-1"></i> Tutup Buku</button>
+                    </div>
+                </div>
+                <div class="drag-area left" onmousedown="startDrag(event, 'prev')"></div>
+            </div>
+        </div>
+        <a href="/" class="back-home"><i class="fas fa-arrow-left mr-2"></i>Kembali</a>
+    </div>
+
+    <script>
+        let currentPage = 0;
+        let totalPages = 4;
+        let isDragging = false;
+        let startX = 0;
+        let dragDirection = '';
+
+        function openBook() {
+            document.getElementById('bookCover').style.transform = 'rotateY(-180deg)';
+            setTimeout(() => {
+                document.getElementById('bookCover').style.display = 'none';
+                showPage(1);
+            }, 500);
+        }
+
+        function closeBook() {
+            hideAllPages();
+            document.getElementById('bookCover').style.display = 'flex';
+            document.getElementById('bookCover').style.transform = 'rotateY(0deg)';
+            currentPage = 0;
+        }
+
+        function showPage(pageNumber) {
+            hideAllPages();
+            document.getElementById(`page${pageNumber}`).style.display = 'flex';
+            currentPage = pageNumber;
+        }
+
+        function hideAllPages() {
+            for (let i = 1; i <= totalPages; i++) {
+                document.getElementById(`page${i}`).style.display = 'none';
+            }
+        }
+
+        function nextPage() {
+            if (currentPage < totalPages) {
+                const currentPageEl = document.getElementById(`page${currentPage}`);
+                const nextPageEl = document.getElementById(`page${currentPage + 1}`);
+                
+                if (currentPageEl && nextPageEl) {
+                    currentPageEl.classList.add('turning');
+                    setTimeout(() => {
+                        currentPageEl.style.display = 'none';
+                        nextPageEl.style.display = 'flex';
+                        currentPage++;
+                        currentPageEl.classList.remove('turning');
+                    }, 500);
+                }
+            }
+        }
+
+        function prevPage() {
+            if (currentPage > 1) {
+                const currentPageEl = document.getElementById(`page${currentPage}`);
+                const prevPageEl = document.getElementById(`page${currentPage - 1}`);
+                
+                if (currentPageEl && prevPageEl) {
+                    currentPageEl.classList.add('turning');
+                    setTimeout(() => {
+                        currentPageEl.style.display = 'none';
+                        prevPageEl.style.display = 'flex';
+                        currentPage--;
+                        currentPageEl.classList.remove('turning');
+                    }, 500);
+                }
+            }
+        }
+
+        // Drag functionality for mobile
+        function startDrag(event, direction) {
+            isDragging = true;
+            startX = event.clientX || event.touches[0].clientX;
+            dragDirection = direction;
+            event.preventDefault();
+        }
+
+        function handleDragMove(event) {
+            if (!isDragging) return;
+            
+            const currentX = event.clientX || event.touches[0].clientX;
+            const diffX = currentX - startX;
+            
+            if (dragDirection === 'next' && diffX < -50 && currentPage < totalPages) {
+                endDrag();
+                nextPage();
+            } else if (dragDirection === 'prev' && diffX > 50 && currentPage > 1) {
+                endDrag();
+                prevPage();
+            }
+        }
+
+        function endDrag() {
+            isDragging = false;
+            startX = 0;
+            dragDirection = '';
+        }
+
+        // Event listeners
+        document.getElementById('bookCover').addEventListener('click', openBook);
+        document.addEventListener('mousemove', handleDragMove);
+        document.addEventListener('touchmove', handleDragMove);
+        document.addEventListener('mouseup', endDrag);
+        document.addEventListener('touchend', endDrag);
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (event) => {
+            if (currentPage > 0) {
+                if (event.key === 'ArrowRight' && currentPage < totalPages) {
+                    nextPage();
+                } else if (event.key === 'ArrowLeft' && currentPage > 1) {
+                    prevPage();
+                } else if (event.key === 'Escape') {
+                    closeBook();
+                }
+            }
+        });
+    </script>
+</body>
+</html>

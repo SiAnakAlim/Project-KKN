@@ -1,0 +1,1094 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Surat Beda Identitas</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        gold: {
+                            400: '#e6b800',
+                            500: '#d4a900',
+                            600: '#c29a00',
+                            700: '#b08b00',
+                        },
+                        golden: {
+                            50: '#fff9e6',
+                            100: '#fff2cc',
+                            200: '#ffe699',
+                        }
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.3s ease-out',
+                        'slide-up': 'slideUp 0.3s ease-out',
+                        'pulse-slow': 'pulse 3s infinite'
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' }
+                        },
+                        slideUp: {
+                            '0%': { transform: 'translateY(10px)', opacity: '0' },
+                            '100%': { transform: 'translateY(0)', opacity: '1' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .sidebar-link {
+            transition: all 0.2s ease;
+        }
+        .sidebar-link:hover {
+            transform: translateX(4px);
+            box-shadow: 2px 0 0 0 #d4a900 inset;
+        }
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        .card-hover:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+        .footer-link {
+            transition: all 0.2s ease;
+        }
+        .footer-link:hover {
+            color: '#d4a900';
+            transform: translateY(-2px);
+        }
+        .active-menu {
+            background-color: '#fff2cc';
+            color: '#b08b00';
+            font-weight: 600;
+            border-left: 4px solid #d4a900;
+        }
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            right: 0;
+            min-width: 280px;
+            z-index: 50;
+        }
+        .show-dropdown {
+            display: block;
+            animation: fadeIn 0.3s;
+        }
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+        }
+        .mobile-menu {
+            transform: translateX(-100%);
+            transition: transform 0.3s ease-in-out;
+        }
+        .mobile-menu.open {
+            transform: translateX(0);
+        }
+        @media (min-width: 768px) {
+            .mobile-menu {
+                transform: translateX(0);
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="bg-gray-50">
+    <div class="min-h-screen flex flex-col animate-fade-in">
+        <!-- Header with gold gradient -->
+        <nav class="bg-gradient-to-r from-gold-600 to-gold-500 p-4 text-white shadow-lg">
+            <div class="container mx-auto flex justify-between items-center">
+                <div class="flex items-center space-x-3">
+                    <button id="mobileMenuButton" class="md:hidden mr-2 text-white focus:outline-none">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                    <div class="bg-white p-2 rounded-lg shadow-md">
+                        <i class="fas fa-envelope-open-text text-gold-600 text-xl"></i>
+                    </div>
+                    <span class="text-xl font-bold tracking-wide">Sistem Surat Desa</span>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <div class="hidden md:block bg-gold-700 px-3 py-1 rounded-full text-sm font-medium animate-pulse-slow">
+                        <i class="fas fa-circle text-xs mr-1"></i> Online
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <div class="flex flex-1 relative">
+            <!-- Sidebar -->
+            <button id="mobileMenuButton" class="md:hidden fixed top-4 left-4 bg-gold-500 text-white p-2 rounded-md shadow-md z-50">
+                <i class="fas fa-bars"></i>
+            </button>
+            
+            <aside id="sidebar" class="mobile-menu fixed md:static inset-y-0 left-0 w-64 bg-white shadow-md p-4 border-r border-gray-200 z-50 md:block md:sticky md:top-0 md:h-screen overflow-y-auto">
+                <div class="flex justify-between items-center mb-6 p-2 border-b border-gold-100 md:hidden">
+                    <h3 class="text-lg font-semibold">Menu Navigasi</h3>
+                    <button id="closeSidebar" class="text-gray-500 hover:text-gold-600">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                
+                <div class="mb-6 p-2 border-b border-gold-100">
+                    <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-wider flex items-center">
+                        <i class="fas fa-list-ul mr-2 text-gold-500"></i> Menu Surat
+                    </h3>
+                </div>
+                
+                <ul class="space-y-2">
+                    <li>
+                        <a href="/" class="sidebar-link flex items-center p-3 text-gray-700 hover:text-gold-700 hover:bg-golden-100 rounded-md transition-all animate-fade-in">
+                            <i class="fas fa-home mr-3 text-gold-600 w-5 text-center"></i>
+                            Beranda
+                            <span class="ml-auto bg-gold-100 text-gold-700 text-xs px-2 py-1 rounded-full">Home</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/surat-sktm" class="sidebar-link flex items-center p-3 text-gray-700 hover:text-gold-700 hover:bg-golden-100 rounded-md transition-all animate-fade-in">
+                            <i class="fas fa-hand-holding-usd mr-3 text-gold-600 w-5 text-center"></i>
+                            Surat Keterangan Tidak Mampu
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/surat-ku" class="sidebar-link flex items-center p-3 text-gray-700 hover:text-gold-700 hover:bg-golden-100 rounded-md transition-all animate-fade-in">
+                            <i class="fas fa-briefcase mr-3 text-gold-600 w-5 text-center"></i>
+                            Surat Keterangan Usaha
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/surat-kbi" class="sidebar-link flex items-center p-3 text-gray-700 hover:text-gold-700 hover:bg-golden-100 rounded-md transition-all animate-fade-in active-menu">
+                            <i class="fas fa-id-card mr-3 text-gold-600 w-5 text-center"></i>
+                            Surat Beda Identitas
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/surat-pengantar" class="sidebar-link flex items-center p-3 text-gray-700 hover:text-gold-700 hover:bg-golden-100 rounded-md transition-all animate-fade-in">
+                            <i class="fas fa-envelope mr-3 text-gold-600 w-5 text-center"></i>
+                            Surat Pengantar
+                            <span class="ml-auto bg-gold-100 text-gold-700 text-xs px-2 py-1 rounded-full">New</span>
+                        </a>
+                    </li>
+                </ul>
+            
+                <div class="mt-8 mb-6 p-2 border-b border-gold-100">
+                    <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-wider flex items-center">
+                        <i class="fas fa-cog mr-2 text-gold-500"></i> Administrasi
+                    </h3>
+                </div>
+                
+                <ul class="space-y-2">
+                    <li>
+                        <a href="/statistik" class="sidebar-link flex items-center p-3 text-gray-700 hover:text-gold-700 hover:bg-golden-100 rounded-md transition-all animate-fade-in">
+                            <i class="fas fa-chart-pie mr-3 text-gold-600 w-5 text-center"></i>
+                            Statistik
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/pengaturan" class="sidebar-link flex items-center p-3 text-gray-700 hover:text-gold-700 hover:bg-golden-100 rounded-md transition-all animate-fade-in">
+                            <i class="fas fa-cogs mr-3 text-gold-600 w-5 text-center"></i>
+                            Pengaturan
+                        </a>
+                    </li>
+                </ul>
+            </aside>
+            
+            <div id="mobileOverlay" class="hidden fixed inset-0 bg-black opacity-50 z-40 md:hidden"></div>
+
+            <main class="flex-1 p-6">
+                <div class="bg-white rounded-lg shadow-md p-6 border border-gray-100">
+                    <div class="flex justify-between items-center mb-6">
+                        <h1 class="text-2xl font-bold text-gray-800">Daftar Surat Beda Identitas</h1>
+                        <button id="addSuratKBIBtn" class="flex items-center px-4 py-2 bg-gold-600 hover:bg-gold-700 text-white rounded-md shadow-sm transition-colors duration-200 border border-gold-700">
+                            <i class="fas fa-plus mr-2 text-sm"></i> 
+                            <span class="text-sm font-medium">Tambah Surat-KBI</span>
+                        </button>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                        <div class="bg-white border border-golden-100 rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow">
+                            <div class="flex justify-between items-center">
+                                <div>
+                                    <p class="text-gray-500 text-sm">Diproses</p>
+                                    <p class="text-2xl font-bold text-gray-800"><%= statusCountsKBI.diproses || 0 %></p>
+                                </div>
+                                <div class="bg-yellow-100 text-yellow-800 p-3 rounded-full">
+                                    <i class="fas fa-clock text-xl"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-white border border-golden-100 rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow">
+                            <div class="flex justify-between items-center">
+                                <div>
+                                    <p class="text-gray-500 text-sm">Selesai</p>
+                                    <p class="text-2xl font-bold text-gray-800"><%= statusCountsKBI.selesai || 0 %></p>
+                                </div>
+                                <div class="bg-green-100 text-green-800 p-3 rounded-full">
+                                    <i class="fas fa-check-circle text-xl"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-white border border-golden-100 rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow">
+                            <div class="flex justify-between items-center">
+                                <div>
+                                    <p class="text-gray-500 text-sm">Ditolak</p>
+                                    <p class="text-2xl font-bold text-gray-800"><%= statusCountsKBI.ditolak || 0 %></p>
+                                </div>
+                                <div class="bg-red-100 text-red-800 p-3 rounded-full">
+                                    <i class="fas fa-times-circle text-xl"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
+                        <div class="flex flex-wrap gap-3">
+                            <!-- Status Filter -->
+                            <div class="relative w-full md:w-auto">
+                                <label for="statusFilterKBI" class="sr-only">Filter Status</label>
+                                <div class="flex items-center">
+                                    <select id="statusFilterKBI" class="appearance-none bg-white border border-gray-300 rounded-md pl-3 pr-8 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gold-500 focus:border-gold-500">
+                                        <option value="semua">Semua Status</option>
+                                        <option value="Diproses">Diproses</option>
+                                        <option value="Selesai">Selesai</option>
+                                        <option value="Ditolak">Ditolak</option>
+                                    </select>
+                                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-500">
+                                        <i class="fas fa-chevron-down text-xs"></i>
+                                    </div>
+                                </div>
+                            </div>
+                    
+                            <!-- Items Per Page -->
+                            <div class="relative w-full md:w-auto">
+                                <label for="perPageKBI" class="sr-only">Data per Halaman</label>
+                                <div class="flex items-center">
+                                    <select id="perPageKBI" class="appearance-none bg-white border border-gray-300 rounded-md pl-3 pr-8 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gold-500 focus:border-gold-500">
+                                        <option value="5">5 per halaman</option>
+                                        <option value="10" selected>10 per halaman</option>
+                                        <option value="15">15 per halaman</option>
+                                        <option value="20">20 per halaman</option>
+                                    </select>
+                                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-500">
+                                        <i class="fas fa-chevron-down text-xs"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    
+                        <!-- Search Input -->
+                        <div class="relative w-full md:w-64">
+                            <label for="searchInputKBI" class="sr-only">Cari</label>
+                            <div class="relative">
+                                <input type="text" id="searchInputKBI" placeholder="Cari nomor surat atau nama..."
+                                       class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-gold-500 focus:border-gold-500">
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <i class="fas fa-search text-gray-400 text-sm"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="overflow-x-auto">
+                        <table class="w-full border-collapse">
+                            <thead>
+                                <tr class="bg-golden-50 text-left">
+                                    <th class="p-3 font-semibold text-gray-700">Nomor</th>
+                                    <th class="p-3 font-semibold text-gray-700">Nomor Surat</th>
+                                    <th class="p-3 font-semibold text-gray-700">Nama</th>
+                                    <th class="p-3 font-semibold text-gray-700">Tanggal Permohonan</th>
+                                    <th class="p-3 font-semibold text-gray-700">Status</th>
+                                    <th class="p-3 font-semibold text-gray-700 text-right">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% if (suratKBI.length > 0) { %>
+                                    <%
+                                        // Hitung offset untuk nomor urut
+                                        const offsetKBI = (currentPageKBI - 1) * perPageKBI;
+                                        suratKBI.forEach((row, index) => { %>
+                                            <tr class="border-b hover:bg-golden-50 transition-colors">
+                                                <td class="p-3 text-gray-800"><%= offsetKBI + index + 1 %></td>
+                                                <td class="p-3 text-gray-800"><%= row.nomor_surat %></td>
+                                                <td class="p-3 text-gray-800"><%= row.nama %></td>
+                                                <td class="p-3 text-gray-800"><%= new Date(row.tanggal_permohonan).toLocaleDateString('id-ID') %></td>
+                                                <td class="p-3">
+                                                    <% if (row.status === 'Diproses') { %>
+                                                        <span class="px-3 py-1 rounded-full text-xs font-semibold bg-yellow-100 text-yellow-800">
+                                                            <i class="fas fa-clock mr-1"></i> <%= row.status %>
+                                                        </span>
+                                                    <% } else if (row.status === 'Selesai') { %>
+                                                        <span class="px-3 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-800">
+                                                            <i class="fas fa-check-circle mr-1"></i> <%= row.status %>
+                                                        </span>
+                                                    <% } else if (row.status === 'Ditolak') { %>
+                                                        <span class="px-3 py-1 rounded-full text-xs font-semibold bg-red-100 text-red-800">
+                                                            <i class="fas fa-times-circle mr-1"></i> <%= row.status %>
+                                                        </span>
+                                                    <% } %>
+                                                </td>
+                                                <td class="p-3 text-right">
+                                                    <div class="flex justify-end space-x-2">
+                                                        <a href="/surat-kbi/<%= row.id %>"
+                                                           class="text-gold-600 hover:text-gold-800 p-1 rounded hover:bg-golden-50"
+                                                           title="Detail">
+                                                            <i class="fas fa-eye"></i>
+                                                        </a>
+                                                        <a href="/cetak-surat-kbi/<%= row.id %>"
+                                                           class="text-green-600 hover:text-green-800 p-1 rounded hover:bg-green-50"
+                                                           title="Cetak">
+                                                            <i class="fas fa-print"></i>
+                                                        </a>
+                                                        <button onclick="editSuratKBI('<%= row.id %>')"
+                                                                class="text-purple-600 hover:text-purple-800 p-1 rounded hover:bg-purple-50"
+                                                                title="Edit">
+                                                            <i class="fas fa-edit"></i>
+                                                        </button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        <% }) %>
+                                <% } else { %>
+                                    <tr>
+                                        <td colspan="6" class="p-4 text-center text-gray-500">
+                                            <i class="fas fa-inbox text-3xl mb-2 text-gray-300"></i>
+                                            <p>Tidak ada data surat keterangan beda identitas.</p>
+                                        </td>
+                                    </tr>
+                                <% } %>
+                            </tbody>
+                        </table>
+                    
+                        <% if (totalPagesKBI > 1) { %>
+                            <div class="flex justify-between items-center mt-6">
+                                <div class="text-sm text-gray-600">
+                                    Menampilkan <%= currentPageKBI * perPageKBI - perPageKBI + 1 %>-<%= Math.min(currentPageKBI * perPageKBI, totalItemsKBI) %> dari <%= totalItemsKBI %> surat
+                                </div>
+                                <div class="flex space-x-1">
+                                    <% if (currentPageKBI > 1) { %>
+                                        <a href="?page=<%= currentPageKBI - 1 %>&perPage=<%= perPageKBI %>&status=<%= currentStatusKBI %>&search=<%= currentSearchKBI %>"
+                                           class="px-3 py-1 border rounded hover:bg-golden-50">
+                                            <i class="fas fa-chevron-left"></i>
+                                        </a>
+                                    <% } %>
+                    
+                                    <% for (let i = 1; i <= totalPagesKBI; i++) { %>
+                                        <% if (i === currentPageKBI) { %>
+                                            <span class="px-3 py-1 border rounded bg-gold-600 text-white"><%= i %></span>
+                                        <% } else if (i >= currentPageKBI - 2 && i <= currentPageKBI + 2) { %>
+                                            <a href="?page=<%= i %>&perPage=<%= perPageKBI %>&status=<%= currentStatusKBI %>&search=<%= currentSearchKBI %>"
+                                               class="px-3 py-1 border rounded hover:bg-golden-50"><%= i %></a>
+                                        <% } else if (i === 1 || i === totalPagesKBI) { %>
+                                            <a href="?page=<%= i %>&perPage=<%= perPageKBI %>&status=<%= currentStatusKBI %>&search=<%= currentSearchKBI %>"
+                                               class="px-3 py-1 border rounded hover:bg-golden-50"><%= i %></a>
+                                        <% } else if (i === currentPageKBI - 3 || i === currentPageKBI + 3) { %>
+                                            <span class="px-3 py-1">...</span>
+                                        <% } %>
+                                    <% } %>
+                    
+                                    <% if (currentPageKBI < totalPagesKBI) { %>
+                                        <a href="?page=<%= currentPageKBI + 1 %>&perPage=<%= perPageKBI %>&status=<%= currentStatusKBI %>&search=<%= currentSearchKBI %>"
+                                           class="px-3 py-1 border rounded hover:bg-golden-50">
+                                            <i class="fas fa-chevron-right"></i>
+                                        </a>
+                                    <% } %>
+                                </div>
+                            </div>
+                        <% } %>
+                    </div>
+                </div>
+                
+                <!-- Add Surat Modal -->
+<div id="addSuratKBIModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50 p-4">
+    <div class="bg-white rounded-lg shadow-xl w-full max-w-2xl max-h-screen overflow-y-auto">
+        <div class="flex justify-between items-center border-b p-4">
+            <h3 class="text-xl font-semibold text-gray-800">Tambah Surat Beda Identitas</h3>
+            <button id="closeAddKBIModal" class="text-gray-500 hover:text-gray-700">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <form id="addSuratKBIForm" class="p-4 md:p-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+                <!-- Data Utama -->
+                <div class="md:col-span-2">
+                    <h4 class="font-medium text-gray-700 mb-3">Data Pemohon</h4>
+                </div>
+                
+                <div>
+                    <label for="new_nama" class="block text-sm font-medium text-gray-700 mb-1">Nama Lengkap*</label>
+                    <input type="text" id="new_nama" name="nama" required
+                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gold-500 text-sm">
+                </div>
+
+                <div>
+                    <label for="new_no_kk" class="block text-sm font-medium text-gray-700 mb-1">Nomor KK*</label>
+                    <input type="text" id="new_no_kk" name="no_kk" required
+                        pattern="\d{16}" title="Nomor KK harus 16 digit angka"
+                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gold-500 text-sm">
+                    <p class="text-xs text-gray-500 mt-1">16 digit angka</p>
+                </div>
+
+                <div>
+                    <label for="new_nik" class="block text-sm font-medium text-gray-700 mb-1">NIK*</label>
+                    <input type="text" id="new_nik" name="nik" required
+                        pattern="\d{16}" title="NIK harus 16 digit angka"
+                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gold-500 text-sm">
+                    <p class="text-xs text-gray-500 mt-1">16 digit angka</p>
+                </div>
+
+                <div>
+                    <label for="new_keperluan_surat" class="block text-sm font-medium text-gray-700 mb-1">Keperluan Surat*</label>
+                    <input type="text" id="new_keperluan_surat" name="keperluan_surat" required
+                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gold-500 text-sm">
+                </div>
+
+                <!-- Data Beda Identitas -->
+                <div class="md:col-span-2">
+                    <h4 class="font-medium text-gray-700 mb-3 mt-2">Data Beda Identitas</h4>
+                </div>
+
+                <div>
+                    <label for="new_tertera" class="block text-sm font-medium text-gray-700 mb-1">Nama yang Tertera*</label>
+                    <input type="text" id="new_tertera" name="tertera" required
+                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gold-500 text-sm">
+                </div>
+
+                <div>
+                    <label for="new_nama_lagi" class="block text-sm font-medium text-gray-700 mb-1">Dokumen Tertera*</label>
+                    <input type="text" id="new_nama_lagi" name="nama_lagi" required
+                        placeholder="Contoh: KTP, KK, Ijazah"
+                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gold-500 text-sm">
+                </div>
+
+                <div>
+                    <label for="new_norek" class="block text-sm font-medium text-gray-700 mb-1">Nomor Rekening</label>
+                    <input type="text" id="new_norek" name="norek"
+                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gold-500 text-sm">
+                </div>
+
+                <div>
+                    <label for="new_tertera_lagi" class="block text-sm font-medium text-gray-700 mb-1">Dokumen Tertera Lainnya</label>
+                    <input type="text" id="new_tertera_lagi" name="tertera_lagi"
+                        placeholder="Contoh: Buku Tabungan"
+                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gold-500 text-sm">
+                </div>
+
+                <!-- Auto-generated Info -->
+                <div class="md:col-span-2 p-4 bg-gray-50 rounded-lg mt-2">
+                    <h4 class="font-medium text-gray-700 mb-3">Informasi Sistem</h4>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <p class="text-xs text-gray-500 mb-1">Nomor Surat</p>
+                            <p id="display_nomor_surat_kbi" class="text-sm font-medium text-gray-800">Akan digenerate otomatis</p>
+                        </div>
+                        <div>
+                            <p class="text-xs text-gray-500 mb-1">Jenis Surat</p>
+                            <p class="text-sm font-medium text-gray-800">Keterangan Beda Identitas</p>
+                        </div>
+                        <div>
+                            <p class="text-xs text-gray-500 mb-1">Tanggal Permohonan</p>
+                            <p id="display_tanggal_kbi" class="text-sm font-medium text-gray-800"></p>
+                        </div>
+                        <div>
+                            <p class="text-xs text-gray-500 mb-1">Status</p>
+                            <p class="text-sm font-medium text-gray-800">Diproses</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Form Actions -->
+            <div class="mt-6 flex justify-end space-x-3">
+                <button type="button" id="cancelAddKBIModal" class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-100 text-sm">
+                    Batal
+                </button>
+                <button type="submit" class="px-4 py-2 bg-gold-600 text-white rounded-md hover:bg-gold-700 text-sm">
+                    <i class="fas fa-save mr-2"></i> Simpan
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+                
+                <!-- Edit Surat Modal -->
+<div id="editSuratKBIModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
+    <div class="bg-white rounded-lg shadow-xl w-full max-w-2xl max-h-screen overflow-y-auto">
+        <div class="flex justify-between items-center border-b p-4">
+            <h3 class="text-xl font-semibold text-gray-800">Edit Surat Beda Identitas</h3>
+            <button id="closeEditKBIModal" class="text-gray-500 hover:text-gray-700">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <form id="editSuratKBIForm" class="p-6">
+            <input type="hidden" id="edit_id_kbi" name="id">
+            <input type="hidden" id="edit_jenis_surat" name="jenis_surat" value="kbi">
+            <input type="hidden" id="edit_tanggal_permohonan" name="tanggal_permohonan">
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Data Utama -->
+                <div>
+                    <label for="edit_nama" class="block text-sm font-medium text-gray-700 mb-1">Nama Lengkap*</label>
+                    <input type="text" id="edit_nama" name="nama" required
+                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gold-500">
+                </div>
+
+                <div>
+                    <label for="edit_no_kk" class="block text-sm font-medium text-gray-700 mb-1">Nomor KK*</label>
+                    <input type="text" id="edit_no_kk" name="no_kk" required
+                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gold-500">
+                </div>
+
+                <div>
+                    <label for="edit_nik" class="block text-sm font-medium text-gray-700 mb-1">NIK*</label>
+                    <input type="text" id="edit_nik" name="nik" required
+                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gold-500">
+                </div>
+
+                <div>
+                    <label for="edit_keperluan_surat" class="block text-sm font-medium text-gray-700 mb-1">Keperluan Surat*</label>
+                    <input type="text" id="edit_keperluan_surat" name="keperluan_surat" required
+                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gold-500">
+                </div>
+
+                <!-- Data Beda Identitas -->
+                <div>
+                    <label for="edit_tertera" class="block text-sm font-medium text-gray-700 mb-1">Nama yang Tertera*</label>
+                    <input type="text" id="edit_tertera" name="tertera" required
+                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gold-500">
+                </div>
+
+                <div>
+                    <label for="edit_nama_lagi" class="block text-sm font-medium text-gray-700 mb-1">Dokumen Tertera*</label>
+                    <input type="text" id="edit_nama_lagi" name="nama_lagi" required
+                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gold-500">
+                </div>
+
+                <div>
+                    <label for="edit_norek" class="block text-sm font-medium text-gray-700 mb-1">Nomor Rekening</label>
+                    <input type="text" id="edit_norek" name="norek"
+                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gold-500">
+                </div>
+
+                <div>
+                    <label for="edit_tertera_lagi" class="block text-sm font-medium text-gray-700 mb-1">Dokumen Tertera Lainnya</label>
+                    <input type="text" id="edit_tertera_lagi" name="tertera_lagi"
+                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gold-500">
+                </div>
+
+                <div>
+                    <label for="edit_status_kbi" class="block text-sm font-medium text-gray-700 mb-1">Status*</label>
+                    <select id="edit_status_kbi" name="status" required
+                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gold-500">
+                        <option value="Diproses">Diproses</option>
+                        <option value="Selesai">Selesai</option>
+                        <option value="Ditolak">Ditolak</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="mt-6 flex justify-end space-x-3">
+                <button type="button" id="cancelEditKBIModal" class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-100">
+                    Batal
+                </button>
+                <button type="submit" class="px-4 py-2 bg-gold-600 text-white rounded-md hover:bg-gold-700">
+                    <i class="fas fa-save mr-2"></i> Simpan Perubahan
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+            </main>
+        </div>
+
+        <!-- Footer -->
+        <footer class="bg-gray-800 text-white">
+            <div class="container mx-auto px-6 py-8">
+                <div class="flex flex-col md:flex-row justify-between">
+                    <div class="mb-8 md:mb-0">
+                        <div class="flex items-center mb-4">
+                            <div class="bg-gold-500 p-2 rounded-lg mr-3">
+                                <i class="fas fa-envelope-open-text text-white"></i>
+                            </div>
+                            <span class="text-xl font-bold">Sistem Surat Desa</span>
+                        </div>
+                        <p class="text-gray-400 text-sm max-w-xs">
+                            Sistem pelayanan surat menyurat digital untuk mempermudah administrasi warga Desa Sojiwan.
+                        </p>
+                        <p class="text-gold-400 font-semibold mt-4">© 2025 Tim KKN Sowan Sojiwan</p>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 md:grid-cols-3 gap-8">
+                        <div>
+                            <h3 class="text-gold-400 font-semibold mb-4 text-lg">Navigasi</h3>
+                            <ul class="space-y-2">
+                                <li><a href="/" class="footer-link text-gray-300 hover:text-gold-400">Beranda</a></li>
+                                <li><a href="/surat-kbi" class="footer-link text-gray-300 hover:text-gold-400">Surat Beda Identitas</a></li>
+                                <li><a href="/statistik" class="footer-link text-gray-300 hover:text-gold-400">Statistik</a></li>
+                                <li><a href="/pengaturan" class="footer-link text-gray-300 hover:text-gold-400">Pengaturan</a></li>
+                            </ul>
+                        </div>
+                        
+                        <div>
+                            <h3 class="text-gold-400 font-semibold mb-4 text-lg">Bantuan</h3>
+                            <ul class="space-y-2">
+                                <li><a href="#" class="footer-link text-gray-300 hover:text-gold-400">Tutorial Penggunaan</a></li>
+                                <li><a href="#" class="footer-link text-gray-300 hover:text-gold-400">FAQ</a></li>
+                                <li><a href="#" class="footer-link text-gray-300 hover:text-gold-400">Kebijakan Privasi</a></li>
+                                <li><a href="#" class="footer-link text-gray-300 hover:text-gold-400">Syarat & Ketentuan</a></li>
+                            </ul>
+                        </div>
+                        
+                        <div>
+                            <h3 class="text-gold-400 font-semibold mb-4 text-lg">Kontak</h3>
+                            <ul class="space-y-2">
+                                <li class="flex items-center">
+                                    <i class="fas fa-map-marker-alt text-gold-400 mr-2"></i>
+                                    <span class="text-gray-300">Desa Sojiwan, Jawa Tengah</span>
+                                </li>
+                                <li class="flex items-center">
+                                    <i class="fas fa-envelope text-gold-400 mr-2"></i>
+                                    <a href="mailto:kkn.sojiwan2025@example.com" class="footer-link text-gray-300 hover:text-gold-400">kkn.sojiwan2025@example.com</a>
+                                </li>
+                                <li class="flex items-center">
+                                    <i class="fas fa-phone-alt text-gold-400 mr-2"></i>
+                                    <a href="tel:+6281234567890" class="footer-link text-gray-300 hover:text-gold-400">+62 812-3456-7890</a>
+                                </li>
+                            </ul>
+                            <div class="mt-4 flex space-x-4">
+                                <a href="#" class="footer-link text-gray-300 hover:text-gold-400 text-xl">
+                                    <i class="fab fa-facebook"></i>
+                                </a>
+                                <a href="#" class="footer-link text-gray-300 hover:text-gold-400 text-xl">
+                                    <i class="fab fa-instagram"></i>
+                                </a>
+                                <a href="#" class="footer-link text-gray-300 hover:text-gold-400 text-xl">
+                                    <i class="fab fa-whatsapp"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="border-t border-gray-700 mt-8 pt-6 text-center">
+                    <p class="text-gray-400 text-sm">
+                        Sistem ini dikembangkan oleh Tim KKN UPN "VETERAN" YOGYAKARTA 2025 untuk Desa Kebondalem Kidul
+                    </p>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // Mobile sidebar toggle
+        const mobileMenuButton = document.getElementById('mobileMenuButton');
+        const closeSidebar = document.getElementById('closeSidebar');
+        const sidebar = document.getElementById('sidebar');
+        const mobileOverlay = document.getElementById('mobileOverlay');
+    
+        if (mobileMenuButton && closeSidebar && sidebar && mobileOverlay) {
+            mobileMenuButton.addEventListener('click', function() {
+                sidebar.classList.add('open');
+                mobileOverlay.classList.remove('hidden');
+                document.body.style.overflow = 'hidden';
+            });
+    
+            closeSidebar.addEventListener('click', function() {
+                sidebar.classList.remove('open');
+                mobileOverlay.classList.add('hidden');
+                document.body.style.overflow = '';
+            });
+    
+            mobileOverlay.addEventListener('click', function() {
+                sidebar.classList.remove('open');
+                mobileOverlay.classList.add('hidden');
+                document.body.style.overflow = '';
+            });
+    
+            // Close sidebar when clicking a link (for mobile)
+            const sidebarLinks = document.querySelectorAll('.sidebar-link');
+            sidebarLinks.forEach(link => {
+                link.addEventListener('click', function() {
+                    if (window.innerWidth < 768) {
+                        sidebar.classList.remove('open');
+                        mobileOverlay.classList.add('hidden');
+                        document.body.style.overflow = '';
+                    }
+                });
+            });
+        }
+    
+        // Toggle notification dropdown
+        const notificationBtn = document.getElementById('notificationBtn');
+        const notificationDropdown = document.getElementById('notificationDropdown');
+        if (notificationBtn && notificationDropdown) {
+            notificationBtn.addEventListener('click', function() {
+                notificationDropdown.classList.toggle('show-dropdown');
+                document.getElementById('historyDropdown')?.classList.remove('show-dropdown');
+            });
+        }
+    
+        // Toggle history dropdown
+        const historyBtn = document.getElementById('historyBtn');
+        const historyDropdown = document.getElementById('historyDropdown');
+        if (historyBtn && historyDropdown) {
+            historyBtn.addEventListener('click', function() {
+                historyDropdown.classList.toggle('show-dropdown');
+                document.getElementById('notificationDropdown')?.classList.remove('show-dropdown');
+            });
+        }
+    
+        // Close dropdowns when clicking outside
+        window.addEventListener('click', function(event) {
+            if (notificationBtn && notificationDropdown && !event.target.matches('#notificationBtn') && !event.target.closest('#notificationDropdown')) {
+                notificationDropdown.classList.remove('show-dropdown');
+            }
+            if (historyBtn && historyDropdown && !event.target.matches('#historyBtn') && !event.target.closest('#historyDropdown')) {
+                historyDropdown.classList.remove('show-dropdown');
+            }
+        });
+    
+        // Adjust main content margin when sidebar is toggled
+        function adjustContentMargin() {
+            const sidebarElement = document.querySelector('aside');
+            if (sidebarElement) {
+                const sidebarWidth = sidebarElement.offsetWidth;
+                const mainElement = document.querySelector('main');
+                if (mainElement) {
+                    if (window.innerWidth >= 768) {
+                        mainElement.style.marginLeft = `${sidebarWidth}px`;
+                    } else {
+                        mainElement.style.marginLeft = '0';
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <script>
+  document.addEventListener('DOMContentLoaded', () => {
+    // Modal and Form Elements
+    const addSuratKBIBtn = document.getElementById('addSuratKBIBtn');
+    const addSuratKBIModal = document.getElementById('addSuratKBIModal');
+    const closeAddKBIModal = document.getElementById('closeAddKBIModal');
+    const cancelAddKBIModal = document.getElementById('cancelAddKBIModal');
+    const editSuratKBIModal = document.getElementById('editSuratKBIModal');
+    const closeEditKBIModal = document.getElementById('closeEditKBIModal');
+    const cancelEditKBIModal = document.getElementById('cancelEditKBIModal');
+    const editSuratKBIForm = document.getElementById('editSuratKBIForm');
+
+    // Filter and Search Elements
+    const statusFilter = document.getElementById('statusFilterKBI');
+    const perPageFilter = document.getElementById('perPageKBI');
+    const searchInput = document.getElementById('searchInputKBI');
+
+    // Initialize filters from URL parameters
+    function initializeFilters() {
+        const urlParams = new URLSearchParams(window.location.search);
+        
+        if (urlParams.has('status')) {
+            statusFilter.value = urlParams.get('status');
+        }
+        if (urlParams.has('perPage')) {
+            perPageFilter.value = urlParams.get('perPage');
+        }
+        if (urlParams.has('search')) {
+            searchInput.value = urlParams.get('search');
+        }
+    }
+
+    // Update URL with current filter values
+    function updateFilters() {
+        const params = new URLSearchParams();
+        
+        if (statusFilter.value !== 'semua') {
+            params.set('status', statusFilter.value);
+        }
+        
+        if (perPageFilter.value !== '10') {
+            params.set('perPage', perPageFilter.value);
+        }
+        
+        if (searchInput.value.trim() !== '') {
+            params.set('search', searchInput.value.trim());
+        }
+        
+        // Reset to page 1 when filters change
+        params.set('page', '1');
+        
+        window.location.search = params.toString();
+    }
+
+    // Setup event listeners for filters
+    function setupFilterListeners() {
+        statusFilter.addEventListener('change', updateFilters);
+        perPageFilter.addEventListener('change', updateFilters);
+        
+        // Debounce search input (500ms delay)
+        let searchTimeout;
+        searchInput.addEventListener('input', () => {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(updateFilters, 500);
+        });
+        
+        // Also trigger search on Enter key
+        searchInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                updateFilters();
+            }
+        });
+    }
+
+    // Modal control functions
+    function setupModalControls() {
+        // Add Surat KBI Modal
+        if (addSuratKBIBtn && addSuratKBIModal) {
+            addSuratKBIBtn.addEventListener('click', () => {
+                addSuratKBIModal.classList.remove('hidden');
+                displayTanggalKBI();
+            });
+        }
+
+        if (closeAddKBIModal && cancelAddKBIModal) {
+            closeAddKBIModal.addEventListener('click', () => addSuratKBIModal.classList.add('hidden'));
+            cancelAddKBIModal.addEventListener('click', () => addSuratKBIModal.classList.add('hidden'));
+        }
+
+        // Edit Surat KBI Modal
+        if (closeEditKBIModal && cancelEditKBIModal) {
+            closeEditKBIModal.addEventListener('click', () => editSuratKBIModal.classList.add('hidden'));
+            cancelEditKBIModal.addEventListener('click', () => editSuratKBIModal.classList.add('hidden'));
+        }
+    }
+
+    // Form submission handlers
+function setupFormHandlers() {
+    // Add Surat KBI Form
+    document.getElementById('addSuratKBIForm')?.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        // Client-side validation
+        const nikInput = document.getElementById('new_nik');
+        if (!/^\d{16}$/.test(nikInput.value)) {
+            showNotification('NIK harus terdiri dari 16 digit angka', 'error');
+            nikInput.focus();
+            return;
+        }
+
+        const kkInput = document.getElementById('new_no_kk');
+        if (!/^\d{16}$/.test(kkInput.value)) {
+            showNotification('Nomor KK harus terdiri dari 16 digit angka', 'error');
+            kkInput.focus();
+            return;
+        }
+
+        // Collect form data
+        const formData = {
+            nama: document.getElementById('new_nama').value,
+            no_kk: kkInput.value,
+            nik: nikInput.value,
+            tertera: document.getElementById('new_tertera').value,
+            norek: document.getElementById('new_norek').value || null,
+            nama_lagi: document.getElementById('new_nama_lagi').value,
+            tertera_lagi: document.getElementById('new_tertera_lagi').value || null,
+            keperluan_surat: document.getElementById('new_keperluan_surat').value,
+            jenis_surat: 'kbi'
+        };
+
+        try {
+            const response = await fetch('/surat-kbi', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(formData)
+            });
+
+            const result = await response.json();
+
+            if (response.ok && result.success) {
+                showNotification('Surat keterangan beda identitas berhasil ditambahkan', 'success');
+                setTimeout(() => window.location.reload(), 1500);
+            } else {
+                showNotification(result.message || 'Gagal menambahkan surat keterangan beda identitas', 'error');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            showNotification('Terjadi kesalahan saat mengirim data', 'error');
+        }
+    });
+
+    // Edit Surat KBI Form
+    if (editSuratKBIForm) {
+        editSuratKBIForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const id = document.getElementById('edit_id_kbi').value;
+            const formData = {
+                nama: document.getElementById('edit_nama').value,
+                no_kk: document.getElementById('edit_no_kk').value,
+                nik: document.getElementById('edit_nik').value,
+                tertera: document.getElementById('edit_tertera').value,
+                norek: document.getElementById('edit_norek').value || null,
+                nama_lagi: document.getElementById('edit_nama_lagi').value,
+                tertera_lagi: document.getElementById('edit_tertera_lagi').value || null,
+                keperluan_surat: document.getElementById('edit_keperluan_surat').value,
+                jenis_surat: 'kbi',
+                status: document.getElementById('edit_status_kbi').value,
+                tanggal_permohonan: document.getElementById('edit_tanggal_permohonan').value
+            };
+
+            // Client-side validation
+            if (!/^\d{16}$/.test(formData.nik)) {
+                showNotification('NIK harus 16 digit angka', 'error');
+                return;
+            }
+
+            if (!/^\d{16}$/.test(formData.no_kk)) {
+                showNotification('Nomor KK harus 16 digit angka', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch(`/api/surat-kbi/${id}`, {
+                    method: 'PUT',
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                const contentType = response.headers.get('content-type');
+                if (!contentType?.includes('application/json')) {
+                    throw new Error(await response.text() || 'Invalid response from server');
+                }
+
+                const result = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(result.message || 'Gagal memperbarui surat');
+                }
+
+                showNotification('Surat berhasil diperbarui', 'success');
+                setTimeout(() => window.location.reload(), 1500);
+            } catch (error) {
+                console.error('Error:', error);
+                showNotification(error.message || 'Terjadi kesalahan saat memperbarui surat', 'error');
+            }
+        });
+    }
+}
+
+    // Display current date in add form
+    function displayTanggalKBI() {
+        const now = new Date();
+        const formattedDate = now.toLocaleDateString('id-ID', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+        });
+        document.getElementById('display_tanggal_kbi').textContent = formattedDate;
+    }
+
+    window.editSuratKBI = async (id) => {
+    try {
+        // Show loading state
+        const editButton = document.querySelector(`button[onclick="editSuratKBI('${id}')"]`);
+        if (editButton) {
+            const originalHTML = editButton.innerHTML;
+            editButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+            editButton.disabled = true;
+        }
+
+        const response = await fetch(`/api/surat-kbi/${id}`, {
+            headers: { 'Accept': 'application/json' }
+        });
+
+        const contentType = response.headers.get('content-type');
+        if (!contentType?.includes('application/json')) {
+            throw new Error(await response.text() || 'Invalid response from server');
+        }
+
+        const result = await response.json();
+
+        if (!response.ok) {
+            throw new Error(result.message || 'Gagal memuat data surat');
+        }
+
+        if (!result.success || !result.data) {
+            throw new Error('Data tidak ditemukan');
+        }
+
+        const data = result.data;
+        
+        // Fill edit form
+        document.getElementById('edit_id_kbi').value = data.id;
+        document.getElementById('edit_nama').value = data.nama || '';
+        document.getElementById('edit_no_kk').value = data.no_kk || '';
+        document.getElementById('edit_nik').value = data.nik || '';
+        document.getElementById('edit_tertera').value = data.tertera || '';
+        document.getElementById('edit_norek').value = data.norek || '';
+        document.getElementById('edit_nama_lagi').value = data.nama_lagi || '';
+        document.getElementById('edit_tertera_lagi').value = data.tertera_lagi || '';
+        document.getElementById('edit_keperluan_surat').value = data.keperluan_surat || '';
+        document.getElementById('edit_jenis_surat').value = data.jenis_surat || 'kbi';
+        document.getElementById('edit_tanggal_permohonan').value = data.tanggal_permohonan || '';
+        document.getElementById('edit_status_kbi').value = data.status || 'Diproses';
+
+        // Show modal
+        editSuratKBIModal.classList.remove('hidden');
+
+        // Reset button state if successful
+        if (editButton) {
+            editButton.innerHTML = '<i class="fas fa-edit"></i>';
+            editButton.disabled = false;
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        showNotification('Gagal memuat data surat: ' + (error.message || 'Terjadi kesalahan'), 'error');
+    }
+};
+
+    // Notification system
+    function showNotification(message, type = 'success') {
+        const colors = {
+            success: 'bg-green-500',
+            error: 'bg-red-500',
+            warning: 'bg-yellow-500',
+            info: 'bg-blue-500'
+        };
+        
+        const icons = {
+            success: 'fa-check-circle',
+            error: 'fa-exclamation-circle',
+            warning: 'fa-exclamation-triangle',
+            info: 'fa-info-circle'
+        };
+
+        const notification = document.createElement('div');
+        notification.className = `fixed top-4 right-4 ${colors[type]} text-white px-4 py-2 rounded-md shadow-lg flex items-center animate-fade-in z-50`;
+        notification.innerHTML = `
+            <i class="fas ${icons[type]} mr-2"></i>
+            <span>${message}</span>
+        `;
+        document.body.appendChild(notification);
+        
+        setTimeout(() => {
+            notification.classList.add('opacity-0', 'transition-opacity', 'duration-300');
+            setTimeout(() => notification.remove(), 300);
+        }, 3000);
+    }
+
+    // Initialize everything
+    initializeFilters();
+    setupFilterListeners();
+    setupModalControls();
+    setupFormHandlers();
+});
+    </script>
+</body>
+</html>

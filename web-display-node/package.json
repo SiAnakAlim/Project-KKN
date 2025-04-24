@@ -1,7 +1,11 @@
 {
   "dependencies": {
+    "body-parser": "^1.20.3",
     "ejs": "^3.1.10",
     "express": "^4.21.2",
-    "mysql": "^2.18.1"
+    "html-pdf": "^3.0.1",
+    "mysql": "^2.18.1",
+    "pdfkit": "^0.16.0",
+    "phantomjs-prebuilt": "^2.1.16"
   }
 }

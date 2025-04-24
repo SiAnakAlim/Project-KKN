@@ -1,0 +1,254 @@
+<!DOCTYPE html> 
+ <html lang="en"> 
+ <head> 
+  <meta charset="UTF-8"> 
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+  <title>Surat Keterangan Tidak Mampu</title> 
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"> 
+  <style> 
+  /* Gaya umum untuk kertas */ 
+  .paper { 
+  width: 21cm; /* Ukuran kertas A4 */ 
+  min-height: 29.7cm; 
+  padding: 2cm; 
+  margin: 1cm auto; 
+  border: 1px solid #ccc; 
+  background-color: white; 
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1); 
+  font-family: 'Times New Roman', serif; 
+  } 
+  
+  /* Header surat */ 
+  .header { 
+  text-align: center; 
+  margin-bottom: 20px; 
+  } 
+  
+  .logo { 
+  max-width: 100px; 
+  height: auto; 
+  margin-bottom: 10px; 
+  } 
+  
+  .garis-bawah { 
+  border-bottom: 2px solid black; 
+  margin-top: 5px; 
+  } 
+  
+  .kode-desa { 
+  font-size: 14px; 
+  margin-top: 5px; 
+  } 
+  
+  /* Judul surat */ 
+  .judul-surat { 
+  text-align: center; 
+  margin-bottom: 20px; 
+  } 
+  
+  /* Isi surat */ 
+  .content { 
+  text-align: justify; 
+  line-height: 1.5; 
+  margin-bottom: 20px; 
+  } 
+  
+  .label { 
+  display: inline-block; 
+  width: 150px; 
+  font-weight: bold; 
+  } 
+  
+  .value { 
+  display: inline-block; 
+  } 
+  
+  .data-lain { 
+  display: flex; 
+  justify-content: space-between; 
+  margin-bottom: 5px; 
+  } 
+  
+  .data-lain-label { 
+  font-weight: bold; 
+  } 
+  
+  .data-lain-value { 
+  /* Gaya ditambahkan untuk memastikan nilai rata kanan */ 
+  text-align: right; 
+  flex: 1; /* Mengisi sisa ruang */ 
+  } 
+  
+  /* Blok tanda tangan */ 
+  .signature-block { 
+  display: flex; 
+  justify-content: flex-end; 
+  margin-top: 30px; 
+  } 
+  
+  .signature-container { 
+  text-align: center; 
+  } 
+  
+  .tanggal-ttd { 
+  margin-bottom: 5px; 
+  } 
+  
+  .signature-name { 
+  margin-top: 60px; 
+  font-weight: bold; 
+  } 
+  
+  /* Tombol */ 
+  .no-print { 
+  text-align: center; 
+  margin-top: 20px; 
+  } 
+  
+  .no-print button { 
+  padding: 12px 24px; 
+  border: none; 
+  border-radius: 6px; 
+  font-size: 16px; 
+  cursor: pointer; 
+  margin: 0 10px; 
+  transition: all 0.3s ease; 
+  display: inline-flex; 
+  align-items: center; 
+  gap: 8px; 
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); 
+  } 
+  
+  .btn-print { 
+  background-color: #28a745; 
+  color: white; 
+  } 
+  
+  .btn-back { 
+  background-color: #6c757d; 
+  color: white; 
+  } 
+  
+  .no-print button:hover { 
+  transform: translateY(-2px); 
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15); 
+  } 
+  
+  .no-print button:active { 
+  transform: translateY(0); 
+  } 
+  
+  /* Hanya untuk tampilan di browser */ 
+  @media screen { 
+  .no-print { 
+  display: block; 
+  text-align: center; 
+  margin-top: 20px; 
+  } 
+  } 
+  
+  /* Tidak muncul di PDF */ 
+  @media print { 
+  @page { 
+  size: A4; 
+  /* Margin yang disesuaikan sama dengan surat sebelumnya */ 
+  margin-top: 2cm; 
+  margin-bottom: 2cm; 
+  margin-left: 2.5cm; 
+  margin-right: 2cm; 
+  } 
+  
+  body { 
+  margin: 0 !important; 
+  padding: 0 !important; 
+  -webkit-print-color-adjust: exact; 
+  } 
+  
+  .paper { 
+  width: auto !important; 
+  min-height: auto !important; 
+  margin: 0 !important; 
+  padding: 0 !important; 
+  box-shadow: none !important; 
+  /* Menghilangkan border pada saat cetak */ 
+  border: none !important; 
+  background-color: transparent !important; 
+  } 
+  
+  .no-print { 
+  display: none !important; 
+  } 
+  } 
+  </style> 
+ </head>
+ <body> 
+    <div class="paper"> 
+     <div class="header"> 
+      <img class="logo" src="/image/logokebondalem-fix.png" alt="Logo Desa"> 
+      <h3>PEMERINTAH KABUPATEN KLATEN</h3> 
+      <h3>KECAMATAN PRAMBANAN</h3> 
+      <h2>DESA&nbsp;KEBONDALEM&nbsp;KIDUL</h2> 
+      <p>Sekretariat : Bero RT 002 RW 006, Kebondalem Kidul, Prambanan, Klaten. Pos 57454</p> 
+      <div class="garis-bawah"></div> 
+      <p class="kode-desa">No. Kode Desa/Kelurahan: 3310.012005</p> 
+     </div> 
+  
+     <div class="judul-surat"> 
+      <h3 style="font-size: 22px; font-weight: bold; ">SURAT KETERANGAN TIDAK MAMPU</h3> 
+      <p style="font-weight: bold; margin-top: -5px;">Nomor : <%= suratSKTM.nomor_surat || '' %></p> 
+     </div> 
+  
+     <div class="content"> 
+      <p>Yang bertanda tangan di bawah ini, Kepala Desa Kebondalem Kidul, Kecamatan Prambanan, Kabupaten Klaten, menerangkan bahwa:</p> 
+      <p><span class="label">Nama</span><span class="value">: <strong><%= suratSKTM.nama ? suratSKTM.nama.toUpperCase() : '' %></strong></span></p> 
+      <div class="data-lain"> 
+       <p class="data-lain-label">No. Kartu Keluarga</p> 
+       <p class="data-lain-value">: <%= suratSKTM.no_kk || '' %></p> 
+      </div> 
+      <div class="data-lain"> 
+       <p class="data-lain-label">Nomor Induk Kependudukan</p> 
+       <p class="data-lain-value">: <%= suratSKTM.nik || '' %></p> 
+      </div> 
+      <div class="data-lain"> 
+       <p class="data-lain-label">Tempat, Tanggal Lahir</p> 
+       <p class="data-lain-value">: <%= suratSKTM.tempat_tanggal_lahir || '' %></p> 
+      </div> 
+      <div class="data-lain"> 
+       <p class="data-lain-label">Jenis Kelamin</p> 
+       <p class="data-lain-value">: <%= suratSKTM.jenis_kelamin || '' %></p> 
+      </div> 
+      <div class="data-lain"> 
+       <p class="data-lain-label">Alamat</p> 
+       <p class="data-lain-value">: <%= suratSKTM.alamat || '' %></p> 
+      </div> 
+      <div class="data-lain"> 
+       <p class="data-lain-label">Nomor HP</p> 
+       <p class="data-lain-value">: <%= suratSKTM.nomor_hp || '' %></p> 
+      </div> 
+  
+      <p style="margin-top: 20px;">Adalah benar-benar warga Desa Kebondalem Kidul dan termasuk keluarga kurang mampu/tidak mampu. Surat keterangan ini dibuat untuk <%= suratSKTM.jenis_surat || 'keperluan lain' %>.</p> 
+      <p style="margin-top: 10px;">Demikian surat keterangan ini dibuat dengan sebenarnya, semoga menjadikan periksa dan dapat dipergunakan sebagaimana mestinya.</p> 
+     </div> 
+  
+     <div class="signature-block"> 
+      <div class="signature-container"> 
+       <div class="ttd-kanan"> 
+        <p class="tanggal-ttd">Kebondalem Kidul, <%= new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) %></p> 
+        <p >a.n Kepala Desa Kebondalem Kidul</p> 
+        <p>Sekretaris Desa</p> 
+        <div style="height: 60px;"></div> 
+        <p class="signature-name">DARU PURNOMO</p> 
+       </div> 
+      </div> 
+     </div> 
+  
+     <div class="no-print" style="text-align: center; margin-top: 30px;"> 
+      <button class="btn-print" onclick="window.print()"> 
+       <i class="fas fa-print"></i> Cetak 
+      </button> 
+      <button class="btn-back" onclick="window.history.back()"> 
+       <i class="fas fa-arrow-left"></i> Kembali 
+      </button> 
+     </div> 
+    </div> 
+   </body>

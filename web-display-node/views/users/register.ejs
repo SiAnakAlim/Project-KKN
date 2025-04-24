@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Register - SojiwanBot</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .error-message {
+            color: red;
+            font-size: 0.875rem;
+            /* 14px */
+            margin-top: 0.25rem;
+            /* 4px */
+        }
+
+        .password-info {
+            position: absolute;
+            background-color: #fef9c3;
+            /* Kuning pucat */
+            border: 1px solid #fde047;
+            /* Kuning muda */
+            padding: 0.75rem;
+            /* 12px */
+            border-radius: 0.5rem;
+            /* 8px */
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            z-index: 10;
+        }
+    </style>
+    <script>
+        function togglePassword(id, iconId) {
+            const input = document.getElementById(id);
+            const icon = document.getElementById(iconId);
+            if (input.type === "password") {
+                input.type = "text";
+                icon.innerHTML = eyeOff;
+            } else {
+                input.type = "password";
+                icon.innerHTML = eye;
+            }
+        }
+
+        const eye = `<svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24"
+            stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M2.458 12C3.732 7.943 7.522 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.478 0-8.268-2.943-9.542-7z" />
+        </svg>`;
+
+        const eyeOff = `<svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24"
+            stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.542-7a9.964 9.964 0 012.174-3.338M9.88 9.88a3 3 0 004.24 4.24" />
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3l18 18" />
+        </svg>`;
+
+        function validateName(input) {
+            const nameError = document.getElementById('name-error');
+            if (/\d/.test(input.value)) {
+                nameError.textContent = "Nama tidak boleh mengandung angka.";
+                return false;
+            } else {
+                nameError.textContent = "";
+                return true;
+            }
+        }
+
+        function validateEmail(input) {
+            const emailError = document.getElementById('email-error');
+            if (!input.value.includes('@') || !input.value.substring(input.value.indexOf('@')).includes('.')) {
+                emailError.textContent = "Email harus mengandung '@' dan titik setelah '@'.";
+                return false;
+            } else {
+                emailError.textContent = "";
+                return true;
+            }
+        }
+
+        function validatePassword(input) {
+            const passwordError = document.getElementById('password-error');
+            const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+{}\[\]:;<>,.?~\\-]).{8,20}$/;
+            if (!passwordRegex.test(input.value)) {
+                passwordError.textContent = "Password tidak memenuhi syarat.";
+                return false;
+            } else {
+                passwordError.textContent = "";
+                return true;
+            }
+        }
+
+        function validateConfirmPassword(password, confirmPassword) {
+            const confirmPasswordError = document.getElementById('confirm-password-error');
+            if (password.value !== confirmPassword.value) {
+                confirmPasswordError.textContent = "Password tidak cocok.";
+                return false;
+            } else {
+                confirmPasswordError.textContent = "";
+                return true;
+            }
+        }
+
+        function showPasswordInfo() {
+            const passwordInfo = document.getElementById('password-info');
+            passwordInfo.classList.toggle('hidden');
+        }
+    </script>
+</head>
+
+<body class="bg-yellow-100 min-h-screen flex items-center justify-center">
+
+    <div class="w-full md:w-10/12 lg:w-9/12 bg-white shadow-lg rounded-lg overflow-hidden flex flex-col md:flex-row min-h-[450px]">
+
+        <div class="md:w-1/2 p-8 md:p-12 fade-in-up">
+            <h1 class="text-4xl font-extrabold text-[#d4a900] text-center mb-2">SojiwanBot</h1>
+            <p class="text-center text-sm text-gray-600 mb-6 italic">Disusun oleh Tim KKN Sowan Sojiwan 2025</p>
+
+            <h2 class="text-xl font-semibold mb-1 text-gray-800 text-center">Register Akun</h2>
+            <p class="text-center text-sm text-gray-500 mb-6">Silakan daftar untuk memulai aplikasi</p>
+
+            <% if (messages.error) { %>
+                <p class="text-red-500 text-sm mb-4 text-center">
+                    <%= messages.error %>
+                </p>
+                <% } %>
+
+                    <form action="/register" method="POST" class="space-y-4">
+
+                        <div class="relative">
+                            <label for="nama" class="block text-sm font-medium text-gray-700 mb-2">Nama</label>
+                            <div class="relative">
+                                <span class="absolute inset-y-0 left-0 flex items-center pl-2 text-gray-400">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2"
+                                        viewBox="0 0 24 24">
+                                        <path
+                                            d="M5.121 17.804A9.935 9.935 0 0112 15c2.22 0 4.266.722 5.879 1.938M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                                    </svg>
+                                </span>
+                                <input type="text" name="nama" id="nama" placeholder="Masukkan nama Anda" required
+                                    class="pl-9 pr-4 py-2 w-full border rounded-md focus:outline-none focus:border-[#b08b00] border-l-2 border-gray-300"
+                                    oninput="validateName(this)" />
+                            </div>
+                            <p id="name-error" class="error-message mt-2"></p>
+                        </div>
+
+                        <div class="relative">
+                            <label for="email" class="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                            <div class="relative">
+                                <span class="absolute inset-y-0 left-0 flex items-center pl-2 text-gray-400">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2"
+                                        viewBox="0 0 24 24">
+                                        <path d="M16 12l-4-4-4 4m8 0v4a2 2 0 002 2H6a2 2 0 01-2-2v-4" />
+                                    </svg>
+                                </span>
+                                <input type="email" name="email" id="email" placeholder="Masukkan email Anda" required
+                                    class="pl-9 pr-4 py-2 w-full border rounded-md focus:outline-none focus:border-[#b08b00]"
+                                    oninput="validateEmail(this)" />
+                            </div>
+                            <p id="email-error" class="error-message mt-2"></p>
+                        </div>
+
+                        <div class="relative">
+                            <label for="password" class="block text-sm font-medium text-gray-700 mb-2">Password
+                                <span class="inline-flex items-center justify-center px-2 py-1 ml-1 text-xs font-bold leading-none text-yellow-800 bg-yellow-200 rounded-full cursor-pointer transition-colors duration-300 hover:bg-yellow-300"
+                                    onclick="showPasswordInfo()">
+                                    i
+                                </span>
+                            </label>
+                            <div class="relative">
+                                <span class="absolute inset-y-0 left-0 flex items-center pl-2 text-gray-400">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2"
+                                        viewBox="0 0 24 24">
+                                        <path d="M12 11c0-1.104.896-2 2-2s2 .896 2 2v4H8v-4c0-1.104.896-2 2-2s2 .896 2 2z" />
+                                        <path d="M4 8v12h16V8H4z" />
+                                    </svg>
+                                </span>
+                                <input type="password" name="password" id="password" placeholder="Masukkan password Anda"
+                                    required
+                                    class="pl-9 pr-10 py-2 w-full border rounded-md focus:outline-none focus:border-[#b08b00]"
+                                    oninput="validatePassword(this)" />
+                                <button type="button" class="absolute right-2 top-2 text-gray-500"
+                                    onclick="togglePassword('password','icon1')">
+                                    <span id="icon1">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M2.458 12C3.732 7.943 7.522 5 12 5c4.478 0 8.268 2.943 9.542 7" />
+                                        </svg>
+                                    </span>
+                                </button>
+                            </div>
+                            <p id="password-error" class="error-message mt-2"></p>
+                            <div id="password-info" class="password-info hidden">
+                                Password harus 8-20 karakter, mengandung huruf besar, huruf kecil, angka, dan simbol.
+                                <br>
+                                Contoh simbol: !@#$%^&*()_+{}[]:;<>,.?~\\-
+                            </div>
+                        </div>
+
+                        <div class="relative">
+                            <label for="confirm_password" class="block text-sm font-medium text-gray-700 mb-2">Konfirmasi
+                                Password</label>
+                            <div class="relative">
+                                <span class="absolute inset-y-0 left-0 flex items-center pl-2 text-gray-400">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2"
+                                        viewBox="0 0 24 24">
+                                        <path d="M12 11c0-1.104.896-2 2-2s2 .896 2 2v4H8v-4c0-1.104.896-2 2-2s2 .896 2 2z" />
+                                        <path d="M4 8v12h16V8H4z" />
+                                    </svg>
+                                </span>
+                                <input type="password" name="confirm_password" id="confirm_password"
+                                    placeholder="Konfirmasi password Anda" required
+                                    class="pl-9 pr-10 py-2 w-full border rounded-md focus:outline-none focus:border-[#b08b00]"
+                                    oninput="validateConfirmPassword(password, this)" />
+                                <button type="button" class="absolute right-2 top-2 text-gray-500"
+                                    onclick="togglePassword('confirm_password','icon2')">
+                                    <span id="icon2">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M2.458 12C3.732 7.943 7.522 5 12 5c4.478 0 8.268 2.943 9.542 7" />
+                                        </svg>
+                                    </span>
+                                </button>
+                            </div>
+                            <p id="confirm-password-error" class="error-message mt-2"></p>
+                        </div>
+
+                        <button type="submit"
+                            class="w-full bg-[#d4a900] text-white py-2 rounded-md hover:bg-[#b08b00] transition duration-300 shadow-md">
+                            Register
+                        </button>
+                    </form>
+
+                    <p class="text-center mt-4 text-sm">
+                        Sudah punya akun?
+                        <a href="/login" class="text-[#d4a900] hover:underline">Login</a>
+                    </p>
+        </div>
+
+        <div class="md:w-1/2 hidden md:block bg-cover bg-center"
+            style="background-image: url('/image/bg-login.jpg');">
+            <div class="w-full h-full bg-black bg-opacity-20"></div>
+        </div>
+    </div>
+
+</body>
+
+</html>
