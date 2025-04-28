@@ -30,165 +30,118 @@ app.use(session({
 }));
 app.use(flash());
 
-// Notification SSE clients
-const notificationClients = new Set();
+// Array untuk menyimpan clients yang terhubung ke SSE
+let notificationClients = [];
 
-// SSE endpoint for real-time notifications
-// In your app.js (server-side)
+// Route untuk menampilkan notifikasi
+app.get('/notifikasi', (req, res) => {
+    if (!req.session.userId) {
+        return res.redirect('/login');
+    }
+
+    const query = `
+        SELECT n.*, 
+               CASE 
+                   WHEN n.related_type = 'surat' THEN s.nomor_surat
+                   WHEN n.related_type = 'surat_ku' THEN sku.nomor_surat
+                   WHEN n.related_type = 'surat_kbi' THEN skbi.nomor_surat
+                   WHEN n.related_type = 'surat_sktm' THEN sktm.nomor_surat
+               END as nomor_surat,
+               CASE 
+                   WHEN n.related_type = 'surat' THEN s.nama
+                   WHEN n.related_type = 'surat_ku' THEN sku.nama
+                   WHEN n.related_type = 'surat_kbi' THEN skbi.nama
+                   WHEN n.related_type = 'surat_sktm' THEN sktm.nama
+               END as nama
+        FROM notifications n
+        LEFT JOIN surat s ON n.related_type = 'surat' AND n.related_id = s.id
+        LEFT JOIN surat_ku sku ON n.related_type = 'surat_ku' AND n.related_id = sku.id
+        LEFT JOIN surat_kbi skbi ON n.related_type = 'surat_kbi' AND n.related_id = skbi.id
+        LEFT JOIN surat_sktm sktm ON n.related_type = 'surat_sktm' AND n.related_id = sktm.id
+        WHERE n.user_id = ?
+        ORDER BY n.created_at DESC
+    `;
+
+    db.query(query, [req.session.userId], (err, results) => {
+        if (err) {
+            console.error('Error fetching notifications:', err);
+            return res.status(500).send('Internal Server Error');
+        }
+
+        // Fungsi untuk menghitung time ago
+        function formatTimeAgo(dateString) {
+            const date = new Date(dateString);
+            const now = new Date();
+            const diffInSeconds = Math.floor((now - date) / 1000);
+            
+            if (diffInSeconds < 60) return `${diffInSeconds} detik yang lalu`;
+            if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)} menit yang lalu`;
+            if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)} jam yang lalu`;
+            return `${Math.floor(diffInSeconds / 86400)} hari yang lalu`;
+        }
+
+        res.render('pemberitahuan/notifikasi', {
+            notifications: results,
+            formatTimeAgo: formatTimeAgo
+        });
+    });
+});
+
+// Route untuk menandai notifikasi sebagai dibaca
+app.get('/mark-as-read/:id', (req, res) => {
+    if (!req.session.userId) {
+        return res.redirect('/login');
+    }
+
+    const notificationId = req.params.id;
+    const redirectUrl = req.query.redirect || '/notifikasi';
+
+    db.query(
+        'UPDATE notifications SET is_read = 1 WHERE id = ? AND user_id = ?',
+        [notificationId, req.session.userId],
+        (err) => {
+            if (err) {
+                console.error('Error marking notification as read:', err);
+                return res.status(500).send('Internal Server Error');
+            }
+            res.redirect(redirectUrl);
+        }
+    );
+});
+
+// SSE endpoint untuk notifikasi real-time
 app.get('/notifications-stream', (req, res) => {
     if (!req.session.userId) {
-        res.writeHead(401, { 'Content-Type': 'text/plain' });
-        return res.end();
+        return res.status(403).end();
     }
 
     res.setHeader('Content-Type', 'text/event-stream');
     res.setHeader('Cache-Control', 'no-cache');
     res.setHeader('Connection', 'keep-alive');
-    res.flushHeaders();
 
-    const clientId = req.session.userId;
-    const client = {
+    // Tambahkan client ke daftar notifikasi
+    const clientId = Date.now();
+    const newClient = {
         id: clientId,
+        userId: req.session.userId,
         res
     };
+    notificationClients.push(newClient);
 
-    notificationClients.add(client);
-
-    // Send initial heartbeat
-    res.write(': connected\n\n');
-
-    // Handle client disconnect
     req.on('close', () => {
-        notificationClients.delete(client);
         console.log(`Client ${clientId} disconnected`);
-    });
-
-    // Handle errors more gracefully
-    req.on('error', (err) => {
-        console.error('SSE connection error:', err);
-        notificationClients.delete(client);
-        if (!res.headersSent) {
-            res.end();
-        }
-    });
-
-    // Heartbeat to keep connection alive
-    const heartbeatInterval = setInterval(() => {
-        try {
-            if (!res.headersSent) {
-                res.write(': heartbeat\n\n');
-            }
-        } catch (err) {
-            console.error('Heartbeat failed:', err);
-            clearInterval(heartbeatInterval);
-            notificationClients.delete(client);
-        }
-    }, 30000);
-
-    // Clean up on disconnect
-    req.on('close', () => {
-        clearInterval(heartbeatInterval);
-        notificationClients.delete(client);
+        notificationClients = notificationClients.filter(client => client.id !== clientId);
     });
 });
 
-// Send notification to specific user
-function sendNotification(userId, notificationData) {
-    if (!userId || !notificationData) {
-        console.error('Invalid parameters for sendNotification');
-        return;
-    }
-
-    const eventData = {
-        event: 'new-notification',
-        data: notificationData
-    };
-
-    const eventString = `data: ${JSON.stringify(eventData)}\n\n`;
-
+// Fungsi untuk mengirim notifikasi ke semua client yang terkoneksi
+function sendNotification(userId, data) {
     notificationClients.forEach(client => {
-        try {
-            if (client.id === userId) {
-                client.res.write(eventString);
-                client.res.flush();
-            }
-        } catch (error) {
-            console.error('Error sending SSE notification:', error);
-            notificationClients.delete(client);
+        if (client.userId === userId) {
+            client.res.write(`data: ${JSON.stringify(data)}\n\n`);
         }
     });
 }
-// SSE heartbeat to keep connections alive
-setInterval(() => {
-    notificationClients.forEach(client => {
-        try {
-            client.res.write(': heartbeat\n\n');
-        } catch (error) {
-            console.error('Error sending SSE heartbeat:', error);
-            notificationClients.delete(client);
-        }
-    });
-}, 30000); // Every 30 seconds
-// Clean up zombie connections periodically
-setInterval(() => {
-    const now = Date.now();
-    notificationClients.forEach(client => {
-        // If the response socket is destroyed, remove the client
-        if (client.res.socket.destroyed) {
-            notificationClients.delete(client);
-        }
-    });
-}, 60000); // Every minute
-
-// Mark notifications as read
-app.post('/mark-notifications-read', (req, res) => {
-    if (!req.session.userId) return res.status(401).json({ success: false });
-
-    db.query(
-        "UPDATE notifications SET is_read = 1 WHERE user_id = ? AND is_read = 0",
-        [req.session.userId],
-        (err) => {
-            if (err) {
-                console.error('Error marking notifications as read:', err);
-                return res.status(500).json({ success: false });
-            }
-            res.json({ success: true });
-        }
-    );
-});
-
-// Get notifications with related data
-app.get('/api/notifications', (req, res) => {
-    if (!req.session.userId) return res.status(401).json({ success: false, message: 'Unauthorized' });
-
-    const query = `
-        SELECT n.*, 
-            CASE 
-                WHEN n.related_type = 'surat_ku' THEN sku.nomor_surat
-                WHEN n.related_type = 'surat' THEN s.nomor_surat
-            END as nomor_surat,
-            CASE 
-                WHEN n.related_type = 'surat_ku' THEN sku.nama
-                WHEN n.related_type = 'surat' THEN s.nama
-            END as nama
-        FROM notifications n
-        LEFT JOIN surat_ku sku ON n.related_type = 'surat_ku' AND n.related_id = sku.id
-        LEFT JOIN surat s ON n.related_type = 'surat' AND n.related_id = s.id
-        WHERE n.user_id = ? 
-        ORDER BY n.created_at DESC 
-        LIMIT 5`;
-
-    db.query(query, [req.session.userId], (err, results) => {
-        if (err) {
-            console.error('Error fetching notifications:', err);
-            return res.status(500).json({ 
-                success: false, 
-                message: 'Failed to fetch notifications' 
-            });
-        }
-        res.json({ success: true, notifications: results });
-    });
-});
 
 // Route untuk halaman tutorial penggunaan (tutorial-penggunaan.ejs)
 app.get('/tutorial-penggunaan', (req, res) => {
@@ -243,25 +196,33 @@ app.get('/', (req, res) => {
         LIMIT 5`;
     
     // Queries for statistics
-    const totalSuratQuery = `
-        SELECT 
-            (SELECT COUNT(*) FROM surat) + 
-            (SELECT COUNT(*) FROM surat_ku) AS total`;
-    
-    const diprosesQuery = `
-        SELECT 
-            (SELECT COUNT(*) FROM surat WHERE status = 'Diproses') + 
-            (SELECT COUNT(*) FROM surat_ku WHERE status = 'Diproses') AS diproses`;
-    
-    const selesaiQuery = `
-        SELECT 
-            (SELECT COUNT(*) FROM surat WHERE status = 'Selesai') + 
-            (SELECT COUNT(*) FROM surat_ku WHERE status = 'Selesai') AS selesai`;
-    
-    const ditolakQuery = `
-        SELECT 
-            (SELECT COUNT(*) FROM surat WHERE status = 'Ditolak') + 
-            (SELECT COUNT(*) FROM surat_ku WHERE status = 'Ditolak') AS ditolak`;
+const totalSuratQuery = `
+SELECT
+    (SELECT COUNT(*) FROM surat) +
+    (SELECT COUNT(*) FROM surat_ku) +
+    (SELECT COUNT(*) FROM surat_kbi) +
+    (SELECT COUNT(*) FROM surat_sktm) AS total`;
+
+const diprosesQuery = `
+SELECT
+    (SELECT COUNT(*) FROM surat WHERE status = 'Diproses') +
+    (SELECT COUNT(*) FROM surat_ku WHERE status = 'Diproses') +
+    (SELECT COUNT(*) FROM surat_kbi WHERE status = 'Diproses') +
+    (SELECT COUNT(*) FROM surat_sktm WHERE status = 'Diproses') AS diproses`;
+
+const selesaiQuery = `
+SELECT
+    (SELECT COUNT(*) FROM surat WHERE status = 'Selesai') +
+    (SELECT COUNT(*) FROM surat_ku WHERE status = 'Selesai') +
+    (SELECT COUNT(*) FROM surat_kbi WHERE status = 'Selesai') +
+    (SELECT COUNT(*) FROM surat_sktm WHERE status = 'Selesai') AS selesai`;
+
+const ditolakQuery = `
+SELECT
+    (SELECT COUNT(*) FROM surat WHERE status = 'Ditolak') +
+    (SELECT COUNT(*) FROM surat_ku WHERE status = 'Ditolak') +
+    (SELECT COUNT(*) FROM surat_kbi WHERE status = 'Ditolak') +
+    (SELECT COUNT(*) FROM surat_sktm WHERE status = 'Ditolak') AS ditolak`;
 
     // Get user data first
     db.query(userSql, [userId], (userErr, userResult) => {
@@ -412,6 +373,28 @@ async function logActivity(userId, action, entityType, entityId, details = null)
         });
     });
 }
+app.get('/riwayat', async (req, res) => {
+    try {
+        const query = (sql, values) => {
+            return new Promise((resolve, reject) => {
+                db.query(sql, values, (error, results, fields) => {
+                    if (error) {
+                        reject(error);
+                        return;
+                    }
+                    resolve([results, fields]);
+                });
+            });
+        };
+
+        const [riwayatAktivitas] = await query('SELECT * FROM activity_logs ORDER BY created_at DESC');
+        res.render('pemberitahuan/riwayat', { riwayatAktivitas: riwayatAktivitas });
+
+    } catch (error) {
+        console.error('Gagal mengambil riwayat aktivitas:', error);
+        res.status(500).send('Gagal mengambil data riwayat.');
+    }
+});
 
 app.get('/statistik', (req, res) => {
     // Logika untuk menghitung total surat

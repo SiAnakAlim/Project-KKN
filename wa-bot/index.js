@@ -18,6 +18,25 @@ dbConn.connect(err => {
     }
     console.log('✅ Database Terhubung!');
 });
+async function sendBotNotification(sock, jenisSurat, nomorSurat, nama, nomorWaPengirim) {
+    const botNumber = sock.user.id.split(':')[0] + '@s.whatsapp.net'; // Get bot's own number
+    
+    let message = `📄 *SURAT BARU BERHASIL DIBUAT*\n\n`;
+    message += `Jenis Surat\t: ${jenisSurat}\n`;
+    message += `Nomor Surat\t: ${nomorSurat}\n`;
+    message += `Nama\t\t: ${nama}\n`;
+    message += `No. WA\t\t: ${nomorWaPengirim}\n`;
+    message += `Waktu\t\t: ${new Date().toLocaleString()}\n\n`;
+    message += `Mohon cek website untuk verifikasi lebih lanjut.`;
+
+    try {
+        await sock.sendMessage(botNumber, { text: message });
+        console.log(`Notifikasi berhasil dikirim ke bot: ${jenisSurat} - ${nomorSurat}`);
+    } catch (error) {
+        console.error('Gagal mengirim notifikasi ke bot:', error);
+    }
+}
+
 
 async function startBot() {
     const { state, saveCreds } = await useMultiFileAuthState("./session");
@@ -71,24 +90,22 @@ async function startBot() {
         try {
             if (currentState.step === 0) {
                 if (messageText.toLowerCase() === "halo" || messageText.toLowerCase() === "hai") {
-                    await sock.sendMessage(senderNumber, { text: "Halo! Saya SojiwanBot! Terimakasih telah menghubungi saya via WhatsApp, Saya siap membantu kebutuhan surat Anda!" });
-                    await sock.sendMessage(senderNumber, { text: "Ketik \"menu\" untuk melihat daftar menu layanan." });
+                    await sock.sendMessage(senderNumber, { text: `👋 *Halo! Saya SojiwanBot!* Terimakasih telah menghubungi saya via WhatsApp. Saya siap membantu kebutuhan surat Anda!` });
+                    await sock.sendMessage(senderNumber, { text: `📜 Ketik *menu* untuk melihat daftar layanan yang tersedia.` });
                     currentState.step = 1;
                 }
-            } else if (currentState.step === 1) {
+            }else if (currentState.step === 1) {
                 if (messageText.toLowerCase() === "menu") {
-                    const menuText = ` *Menu Layanan Surat:*
-                    1️⃣ Surat Keterangan Tidak Mampu
-                    2️⃣ Surat Keterangan Usaha
-                    3️⃣ Surat Keterangan Beda Identitas
-                    4️⃣ Surat Pengantar
-                    5️⃣ Cek Status Surat
+                    const menuText = `*Menu Layanan Surat:*
+                    1. Surat Keterangan Tidak Mampu
+                    2. Surat Keterangan Usaha
+                    3. Surat Keterangan Beda Identitas
+                    4. Surat Pengantar
+                    5. Cek Status Surat
 
                     Ketik angka *1, 2, 3, 4, atau 5* untuk melanjutkan.`;
                     await sock.sendMessage(senderNumber, { text: menuText });
                     currentState.step = 2;
-                } else {
-                    await sock.sendMessage(senderNumber, { text: 'Ketik "menu" untuk melihat daftar layanan.' });
                 }
             } else if (currentState.step === 2) {
                 if (messageText === '1') {
@@ -111,13 +128,14 @@ async function startBot() {
                     await sock.sendMessage(senderNumber, { text: "Silakan masukkan nomor surat Anda:" });
                     currentState.step = 400; // Cek Status Surat
                 } else if (messageText.toLowerCase() === 'menu') {
-                    const menuText = `* Layanan Surat Kami *\n\n` +
-                    `- 1️⃣ *Surat Keterangan Tidak Mampu*\n` +
-                    `- 2️⃣ *Surat Keterangan Usaha*\n` +
-                    `- 3️⃣ 🆔 *Surat Keterangan Beda Identitas*\n` +
-                    `- 4️⃣ *Surat Pengantar*\n` +
-                    `- 5️⃣ *Cek Status Surat*\n\n` +
-                    `Ketik angka *1, 2, 3, 4, atau 5* untuk melanjutkan.`;
+                    const menuText = `*Menu Layanan Surat:*
+                    1. Surat Keterangan Tidak Mampu
+                    2. Surat Keterangan Usaha
+                    3. Surat Keterangan Beda Identitas
+                    4. Surat Pengantar
+                    5. Cek Status Surat
+
+                    Ketik angka *1, 2, 3, 4, atau 5* untuk melanjutkan.`;
                   
                   await sock.sendMessage(senderNumber, { text: menuText });
                 } else {
@@ -176,31 +194,37 @@ async function startBot() {
                 currentState.step = 11;
             } else if (currentState.step === 11) {
                 currentState.data.tujuan = messageText;
-
+            
                 const dataPreview = `✅ *Konfirmasi Data Anda:*
-
-*Nama Lengkap                  :* ${currentState.data.nama}
-*Tempat, Tanggal Lahir         :* ${currentState.data.tempat_tanggal_lahir}
-*Kewarganegaraan dan Agama     :* ${currentState.data.kewarganegaraan_agama}
-*Pekerjaan                     :* ${currentState.data.pekerjaan}
-*Tempat Domisili               :* ${currentState.data.tempat_domisili}
-*Daerah Asal                   :* ${currentState.data.daerah_asal}
-*NIK                           :* ${currentState.data.surat_bukti_diri}
-*Keperluan                     :* ${currentState.data.keperluan}
-*Tujuan                        :* ${currentState.data.tujuan}
-
-Apakah data sudah benar? (ya / tidak)`;
-
+            1. *Nama Lengkap* : ${currentState.data.nama}
+            2. *Tempat, Tanggal Lahir* : ${currentState.data.tempat_tanggal_lahir}
+            3. *Kewarganegaraan & Agama* : ${currentState.data.kewarganegaraan_agama}
+            4. *Pekerjaan* : ${currentState.data.pekerjaan}
+            5. *Tempat Domisili* : ${currentState.data.tempat_domisili}
+            6. *Daerah Asal* : ${currentState.data.daerah_asal}
+            7. *NIK* : ${currentState.data.surat_bukti_diri}
+            8. *Keperluan* : ${currentState.data.keperluan}
+            9. *Tujuan* : ${currentState.data.tujuan}
+            
+            Apakah data sudah benar?
+            Ketik:
+            *ya* - Untuk melanjutkan
+            *tidak* - Untuk membatalkan
+            *edit* - Untuk mengubah data tertentu`;
+            
                 await sock.sendMessage(senderNumber, { text: dataPreview });
                 currentState.step = 12;
-            } else if (currentState.step === 12) { // Konfirmasi Percobaan
-                if (messageText.toLowerCase() === 'ya') {
+            } else if (currentState.step === 12) {
+                const pilihan = messageText.toLowerCase();
+            
+                if (pilihan === 'ya') {
+                    // Simpan ke database
                     const { nama, tempat_tanggal_lahir, kewarganegaraan_agama, pekerjaan, tempat_domisili, daerah_asal, surat_bukti_diri, keperluan, tujuan } = currentState.data;
                     const jenisSurat = 'Percobaan';
                     const tanggalPermohonan = new Date().toISOString().slice(0, 10);
                     const status = 'Diproses';
-                    const tahunSekarang = new Date().getFullYear(); // Mendapatkan tahun saat ini
-                
+                    const tahunSekarang = new Date().getFullYear();
+            
                     const sql = 'INSERT INTO surat (nama, tempat_tanggal_lahir, kewarganegaraan_agama, pekerjaan, tempat_domisili, daerah_asal, surat_bukti_diri, keperluan, tujuan, jenis_surat, tanggal_permohonan, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
                     dbConn.query(sql, [nama, tempat_tanggal_lahir, kewarganegaraan_agama, pekerjaan, tempat_domisili, daerah_asal, surat_bukti_diri, keperluan, tujuan, jenisSurat, tanggalPermohonan, status], (err, results) => {
                         if (err) {
@@ -208,27 +232,133 @@ Apakah data sudah benar? (ya / tidak)`;
                             sock.sendMessage(senderNumber, { text: '⚠️ Terjadi kesalahan saat menyimpan data. Silakan coba lagi nanti.' });
                         } else {
                             const newId = results.insertId;
-                            const nomorSurat = `SP/${String(newId).padStart(3, '0')}/${tahunSekarang}`; // Format nomor surat yang baru
-                            const updateNomorSuratSql = 'UPDATE surat SET nomor_surat = ? WHERE id = ?';
-                            dbConn.query(updateNomorSuratSql, [nomorSurat, results.insertId], (errUpdate) => {
+                            const nomorSurat = `SP/${String(newId).padStart(3, '0')}/${tahunSekarang}`;
+                            const updateNomorSuratSql = 'UPDATE surat SET nomor_surat = ?, nomor_wa = ? WHERE id = ?';
+                            dbConn.query(updateNomorSuratSql, [nomorSurat, senderNumber, newId], (errUpdate) => {
                                 if (errUpdate) {
                                     console.error('Error memperbarui nomor surat:', errUpdate);
                                     sock.sendMessage(senderNumber, { text: '⚠️ Terjadi kesalahan saat memperbarui nomor surat.' });
                                 } else {
                                     sock.sendMessage(senderNumber, { text: `✅ Data berhasil disimpan! Nomor surat Anda: *${nomorSurat}*. Anda akan diberi tahu jika surat sudah selesai.` });
-                                    console.log(`Data surat percobaan berhasil disimpan untuk ${senderNumber} dengan ID: ${results.insertId} dan Nomor Surat: ${nomorSurat}`);
+                                    console.log(`Data surat pengantar berhasil disimpan untuk ${senderNumber} dengan ID: ${newId} dan Nomor Surat: ${nomorSurat}`);
+                                    
+                                    // Send notification to bot
+                                    sendBotNotification(sock, jenisSurat, nomorSurat, nama, senderNumber);
                                 }
                             });
                         }
                         delete userStates[senderNumber];
                     });
-                } else if (messageText.toLowerCase() === 'tidak') {
-                    await sock.sendMessage(senderNumber, { text: '❌ Proses pengisian formulir dibatalkan. Ketik "menu" untuk memulai kembali.' });
+            
+                } else if (pilihan === 'tidak') {
+                    await sock.sendMessage(senderNumber, { text: '❌ Proses pengisian formulir dibatalkan. Ketik "halo" untuk memulai kembali.' });
                     delete userStates[senderNumber];
-                    currentState.step = 1;
+                    
+                } else if (pilihan === 'edit') {
+                    const editMenu = `✏️ *Pilih data yang ingin diedit:*
+            1. Nama Lengkap
+            2. Tempat, Tanggal Lahir
+            3. Kewarganegaraan dan Agama
+            4. Pekerjaan
+            5. Tempat Domisili
+            6. Daerah Asal
+            7. NIK
+            8. Keperluan
+            9. Tujuan
+            
+            Ketik nomor yang ingin diedit (contoh : 1)`;
+                    await sock.sendMessage(senderNumber, { text: editMenu });
+                    currentState.step = 13;
+            
                 } else {
-                    await sock.sendMessage(senderNumber, { text: 'Pilihan tidak valid. Silakan balas dengan "ya" atau "tidak".' });
+                    await sock.sendMessage(senderNumber, { text: '⚠️ Pilihan tidak valid. Balas dengan "ya", "tidak", atau "edit".' });
                 }
+            
+            } else if (currentState.step === 13) {
+                const nomorEdit = parseInt(messageText);
+                currentState.dataFieldToEdit = nomorEdit;
+            
+                if (nomorEdit >= 1 && nomorEdit <= 9) {
+                    let fieldLabel = '';
+                    switch (nomorEdit) {
+                        case 1: fieldLabel = `Nama : ${currentState.data.nama}`; break;
+                        case 2: fieldLabel = `Tempat, Tanggal Lahir : ${currentState.data.tempat_tanggal_lahir}`; break;
+                        case 3: fieldLabel = `Kewarganegaraan dan Agama : ${currentState.data.kewarganegaraan_agama}`; break;
+                        case 4: fieldLabel = `Pekerjaan : ${currentState.data.pekerjaan}`; break;
+                        case 5: fieldLabel = `Tempat Domisili : ${currentState.data.tempat_domisili}`; break;
+                        case 6: fieldLabel = `Daerah Asal : ${currentState.data.daerah_asal}`; break;
+                        case 7: fieldLabel = `NIK : ${currentState.data.surat_bukti_diri}`; break;
+                        case 8: fieldLabel = `Keperluan : ${currentState.data.keperluan}`; break;
+                        case 9: fieldLabel = `Tujuan : ${currentState.data.tujuan}`; break;
+                    }
+                    await sock.sendMessage(senderNumber, { text: `Data saat ini:\n${fieldLabel}\n\nMasukkan data baru:` });
+                    currentState.step = 14;
+                } else {
+                    await sock.sendMessage(senderNumber, { text: '⚠️ Nomor tidak valid. Silakan pilih dari 1 sampai 9.' });
+                }
+            
+            } else if (currentState.step === 14) {
+                const field = currentState.dataFieldToEdit;
+            
+                switch (field) {
+                    case 1: currentState.data.nama = messageText.toUpperCase(); break;
+                    case 2: currentState.data.tempat_tanggal_lahir = messageText; break;
+                    case 3: currentState.data.kewarganegaraan_agama = messageText; break;
+                    case 4: currentState.data.pekerjaan = messageText; break;
+                    case 5: currentState.data.tempat_domisili = messageText; break;
+                    case 6: currentState.data.daerah_asal = messageText; break;
+                    case 7: currentState.data.surat_bukti_diri = messageText; break;
+                    case 8: currentState.data.keperluan = messageText; break;
+                    case 9: currentState.data.tujuan = messageText; break;
+                }
+            
+                await sock.sendMessage(senderNumber, { text: '✅ Data berhasil diperbarui.\n\nKetik *edit* untuk mengedit data lain, atau ketik *selesai* untuk melanjutkan konfirmasi.' });
+                currentState.step = 15;
+            
+            } else if (currentState.step === 15) {
+                const pilihanEdit = messageText.toLowerCase();
+                if (pilihanEdit === 'edit') {
+                    const editMenu = `✏️ *Pilih data yang ingin diedit:*
+            1. Nama Lengkap
+            2. Tempat, Tanggal Lahir
+            3. Kewarganegaraan dan Agama
+            4. Pekerjaan
+            5. Tempat Domisili
+            6. Daerah Asal
+            7. NIK
+            8. Keperluan
+            9. Tujuan
+            
+            Ketik nomor yang ingin diedit (contoh: 1)`;
+                    await sock.sendMessage(senderNumber, { text: editMenu });
+                    currentState.step = 13;
+            
+                } else if (pilihanEdit === 'selesai') {
+                    // Balik ke konfirmasi data
+                    const dataPreview = `✅ *Konfirmasi Data Anda:*
+                
+                1. *Nama Lengkap* : ${currentState.data.nama}
+                2. *Tempat, Tanggal Lahir* : ${currentState.data.tempat_tanggal_lahir}
+                3. *Kewarganegaraan & Agama* : ${currentState.data.kewarganegaraan_agama}
+                4. *Pekerjaan* : ${currentState.data.pekerjaan}
+                5. *Tempat Domisili* : ${currentState.data.tempat_domisili}
+                6. *Daerah Asal* : ${currentState.data.daerah_asal}
+                7. *NIK* : ${currentState.data.surat_bukti_diri}
+                8. *Keperluan* : ${currentState.data.keperluan}
+                9. *Tujuan* : ${currentState.data.tujuan}
+                
+                Apakah data sudah benar?
+                Ketik:
+                *ya* - Untuk melanjutkan
+                *tidak* - Untuk membatalkan
+                *edit* - Untuk mengubah data tertentu`;
+                
+                    await sock.sendMessage(senderNumber, { text: dataPreview });
+                    currentState.step = 12;
+                } else {
+                    await sock.sendMessage(senderNumber, { text: '⚠️ Pilihan tidak valid. Balas dengan "edit" untuk ubah data lain atau "selesai" untuk konfirmasi.' });
+                }
+            
             } else if (currentState.step === 100) { // Langkah SKU
                 if (/\d/.test(messageText)) {
                     await sock.sendMessage(senderNumber, { text: "Nama tidak boleh mengandung angka. Silakan masukkan nama yang valid." });
@@ -277,56 +407,190 @@ Apakah data sudah benar? (ya / tidak)`;
                 currentState.step = 108;
             } else if (currentState.step === 108) {
                 currentState.data.alamat_bank = messageText;
-
+            
                 const dataPreview = `✅ *Konfirmasi Data Anda:*
-
-*Nama Lengkap                   :* ${currentState.data.nama}
-*Tempat, Tanggal Lahir          :* ${currentState.data.tempat_tanggal_lahir}
-*No. KTP                        :* ${currentState.data.no_ktp}
-*Alamat KTP                     :* ${currentState.data.alamat_ktp}
-*Jenis Usaha                    :* ${currentState.data.jenis_usaha}
-*Alamat Usaha                   :* ${currentState.data.alamat_usaha}
-*Lama Usaha                     :* ${currentState.data.lama_usaha}
-*Nama Bank                      :* ${currentState.data.nama_bank}
-*Alamat Bank                    :* ${currentState.data.alamat_bank}
-
-                Apakah data sudah benar? (ya / tidak)`;
-
+            
+            1. *Nama Lengkap* : ${currentState.data.nama}
+            2. *Tempat, Tanggal Lahir* : ${currentState.data.tempat_tanggal_lahir}
+            3. *No. KTP* : ${currentState.data.no_ktp}
+            4. *Alamat KTP* : ${currentState.data.alamat_ktp}
+            5. *Jenis Usaha* : ${currentState.data.jenis_usaha}
+            6. *Alamat Usaha* : ${currentState.data.alamat_usaha}
+            7. *Lama Usaha* : ${currentState.data.lama_usaha}
+            8. *Nama Bank* : ${currentState.data.nama_bank}
+            9. *Alamat Bank* : ${currentState.data.alamat_bank}
+            
+            Apakah data sudah benar?
+            Ketik:
+            *ya* - Untuk melanjutkan
+            *tidak* - Untuk membatalkan
+            *edit* - Untuk mengubah data tertentu`;
+            
                 await sock.sendMessage(senderNumber, { text: dataPreview });
                 currentState.step = 109;
-            } else if (currentState.step === 109) { // Konfirmasi SKU
-                if (messageText.toLowerCase() === 'ya') {
+            } else if (currentState.step === 109) {
+                const pilihan = messageText.toLowerCase();
+            
+                if (pilihan === 'ya') {
+                    // Simpan ke database
                     const { nama, tempat_tanggal_lahir, no_ktp, alamat_ktp, jenis_usaha, alamat_usaha, lama_usaha, nama_bank, alamat_bank } = currentState.data;
                     const jenis_surat = 'Surat Keterangan Usaha';
                     const tanggal_permohonan = new Date().toISOString().slice(0, 10);
                     const status = 'Diproses';
-
+                    const tahunSekarang = new Date().getFullYear();
+            
                     const sql = 'INSERT INTO surat_ku (nama, tempat_tanggal_lahir, no_ktp, alamat_ktp, jenis_usaha, alamat_usaha, lama_usaha, nama_bank, alamat_bank, jenis_surat, tanggal_permohonan, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
                     dbConn.query(sql, [nama, tempat_tanggal_lahir, no_ktp, alamat_ktp, jenis_usaha, alamat_usaha, lama_usaha, nama_bank, alamat_bank, jenis_surat, tanggal_permohonan, status], (err, results) => {
                         if (err) {
                             console.error('Error menyimpan data ke database:', err);
                             sock.sendMessage(senderNumber, { text: '⚠️ Terjadi kesalahan saat menyimpan data. Silakan coba lagi nanti.' });
                         } else {
-                            const nomorSurat = `SKU/${results.insertId.toString().padStart(3, '0')}/${new Date().getFullYear()}`;
-                            const updateNomorSuratSql = 'UPDATE surat_ku SET nomor_surat = ? WHERE id = ?';
-                            dbConn.query(updateNomorSuratSql, [nomorSurat, results.insertId], (errUpdate) => {
-                                if (errUpdate) {
-                                    console.error('Error memperbarui nomor surat:', errUpdate);
-                                    sock.sendMessage(senderNumber, { text: '⚠️ Terjadi kesalahan saat memperbarui nomor surat.' });
-                                } else {
-                                    sock.sendMessage(senderNumber, { text: `✅ Data berhasil disimpan! Nomor surat Anda: *${nomorSurat}*. Anda akan diberi tahu jika surat sudah selesai.` });
-                                    console.log(`Data surat SKU berhasil disimpan untuk ${senderNumber} dengan ID: ${results.insertId}`);
-                                }
-                            });
+                            const newId = results.insertId;
+                            const nomorSurat = `SKU/${String(newId).padStart(3, '0')}/${tahunSekarang}`;
+                            const updateNomorSuratSql = 'UPDATE surat_ku SET nomor_surat = ?, nomor_wa = ? WHERE id = ?';
+                                dbConn.query(updateNomorSuratSql, [nomorSurat, senderNumber, newId], (errUpdate) => {
+                                    if (errUpdate) {
+                                        console.error('Error memperbarui nomor surat:', errUpdate);
+                                        sock.sendMessage(senderNumber, { text: '⚠️ Terjadi kesalahan saat memperbarui nomor surat.' });
+                                    } else {
+                                        sock.sendMessage(senderNumber, { text: `✅ Data berhasil disimpan! Nomor surat Anda: *${nomorSurat}*. Anda akan diberi tahu jika surat sudah selesai.` });
+                                        console.log(`Data surat SKU berhasil disimpan untuk ${senderNumber} dengan ID: ${newId} dan Nomor Surat: ${nomorSurat}`);
+                                        
+                                        // Send notification to bot
+                                        sendBotNotification(sock, jenis_surat, nomorSurat, nama, senderNumber);
+                                    }
+                                });
                         }
                         delete userStates[senderNumber];
                     });
-                } else if (messageText.toLowerCase() === 'tidak') {
-                    await sock.sendMessage(senderNumber, { text: '❌ Proses pengisian formulir dibatalkan. Ketik "menu" untuk memulai kembali.' });
+            
+                } else if (pilihan === 'tidak') {
+                    await sock.sendMessage(senderNumber, { text: '❌ Proses pengisian formulir dibatalkan. Ketik "halo" untuk memulai kembali.' });
                     delete userStates[senderNumber];
-                    currentState.step = 1;
+                    
+                } else if (pilihan === 'edit') {
+                    const editMenu = `✏️ *Pilih data yang ingin diedit:*
+            1. Nama Lengkap
+            2. Tempat, Tanggal Lahir
+            3. No. KTP
+            4. Alamat KTP
+            5. Jenis Usaha
+            6. Alamat Usaha
+            7. Lama Usaha
+            8. Nama Bank
+            9. Alamat Bank
+            
+            Ketik nomor yang ingin diedit (contoh: 1)`;
+                    await sock.sendMessage(senderNumber, { text: editMenu });
+                    currentState.step = 110;
+            
                 } else {
-                    await sock.sendMessage(senderNumber, { text: 'Pilihan tidak valid. Silakan balas dengan "ya" atau "tidak".' });
+                    await sock.sendMessage(senderNumber, { text: '⚠️ Pilihan tidak valid. Balas dengan "ya", "tidak", atau "edit".' });
+                }
+            
+            } else if (currentState.step === 110) {
+                const nomorEdit = parseInt(messageText);
+                currentState.dataFieldToEdit = nomorEdit;
+            
+                if (nomorEdit >= 1 && nomorEdit <= 9) {
+                    let fieldLabel = '';
+                    switch (nomorEdit) {
+                        case 1: fieldLabel = `Nama : ${currentState.data.nama}`; break;
+                        case 2: fieldLabel = `Tempat, Tanggal Lahir : ${currentState.data.tempat_tanggal_lahir}`; break;
+                        case 3: fieldLabel = `No. KTP : ${currentState.data.no_ktp}`; break;
+                        case 4: fieldLabel = `Alamat KTP : ${currentState.data.alamat_ktp}`; break;
+                        case 5: fieldLabel = `Jenis Usaha : ${currentState.data.jenis_usaha}`; break;
+                        case 6: fieldLabel = `Alamat Usaha : ${currentState.data.alamat_usaha}`; break;
+                        case 7: fieldLabel = `Lama Usaha : ${currentState.data.lama_usaha}`; break;
+                        case 8: fieldLabel = `Nama Bank : ${currentState.data.nama_bank}`; break;
+                        case 9: fieldLabel = `Alamat Bank : ${currentState.data.alamat_bank}`; break;
+                    }
+                    await sock.sendMessage(senderNumber, { text: `Data saat ini:\n${fieldLabel}\n\nMasukkan data baru:` });
+                    currentState.step = 111;
+                } else {
+                    await sock.sendMessage(senderNumber, { text: '⚠️ Nomor tidak valid. Silakan pilih dari 1 sampai 9.' });
+                }
+            
+            } else if (currentState.step === 111) {
+                const field = currentState.dataFieldToEdit;
+            
+                switch (field) {
+                    case 1: 
+                        if (/\d/.test(messageText)) {
+                            await sock.sendMessage(senderNumber, { text: "Nama tidak boleh mengandung angka. Silakan masukkan nama yang valid." });
+                            return;
+                        }
+                        currentState.data.nama = messageText.toUpperCase(); 
+                        break;
+                    case 2: 
+                        const ttlRegex = /^[A-Za-z\s]+, \d{1,2} [A-Za-z]+ \d{4}$/;
+                        if (!ttlRegex.test(messageText)) {
+                            await sock.sendMessage(senderNumber, { text: "Format tempat dan tanggal lahir salah. Contoh: Jakarta, 11 Desember 2003" });
+                            return;
+                        }
+                        currentState.data.tempat_tanggal_lahir = messageText; 
+                        break;
+                    case 3: 
+                        const nikRegex = /^\d{16}$/;
+                        if (!nikRegex.test(messageText)) {
+                            await sock.sendMessage(senderNumber, { text: "No. KTP harus 16 digit angka." });
+                            return;
+                        }
+                        currentState.data.no_ktp = messageText; 
+                        break;
+                    case 4: currentState.data.alamat_ktp = messageText; break;
+                    case 5: currentState.data.jenis_usaha = messageText; break;
+                    case 6: currentState.data.alamat_usaha = messageText; break;
+                    case 7: currentState.data.lama_usaha = messageText; break;
+                    case 8: currentState.data.nama_bank = messageText; break;
+                    case 9: currentState.data.alamat_bank = messageText; break;
+                }
+            
+                await sock.sendMessage(senderNumber, { text: '✅ Data berhasil diperbarui.\n\nKetik *edit* untuk mengedit data lain, atau ketik *selesai* untuk melanjutkan konfirmasi.' });
+                currentState.step = 112;
+            
+            } else if (currentState.step === 112) {
+                const pilihanEdit = messageText.toLowerCase();
+                if (pilihanEdit === 'edit') {
+                    const editMenu = `✏️ *Pilih data yang ingin diedit:*
+            1. Nama Lengkap
+            2. Tempat, Tanggal Lahir
+            3. No. KTP
+            4. Alamat KTP
+            5. Jenis Usaha
+            6. Alamat Usaha
+            7. Lama Usaha
+            8. Nama Bank
+            9. Alamat Bank
+            
+            Ketik nomor yang ingin diedit (contoh: 1)`;
+                    await sock.sendMessage(senderNumber, { text: editMenu });
+                    currentState.step = 110;
+            
+                } else if (pilihanEdit === 'selesai') {
+                    // Balik ke konfirmasi data
+                    const dataPreview = `✅ *Konfirmasi Data Anda:*
+                
+                1. *Nama Lengkap* : ${currentState.data.nama}
+                2. *Tempat, Tanggal Lahir* : ${currentState.data.tempat_tanggal_lahir}
+                3. *No. KTP* : ${currentState.data.no_ktp}
+                4. *Alamat KTP* : ${currentState.data.alamat_ktp}
+                5. *Jenis Usaha* : ${currentState.data.jenis_usaha}
+                6. *Alamat Usaha* : ${currentState.data.alamat_usaha}
+                7. *Lama Usaha* : ${currentState.data.lama_usaha}
+                8. *Nama Bank* : ${currentState.data.nama_bank}
+                9. *Alamat Bank* : ${currentState.data.alamat_bank}
+                
+                Apakah data sudah benar?
+                Ketik:
+                *ya* - Untuk melanjutkan
+                *tidak* - Untuk membatalkan
+                *edit* - Untuk mengubah data tertentu`;
+                
+                    await sock.sendMessage(senderNumber, { text: dataPreview });
+                    currentState.step = 109;
+                } else {
+                    await sock.sendMessage(senderNumber, { text: '⚠️ Pilihan tidak valid. Balas dengan "edit" untuk ubah data lain atau "selesai" untuk konfirmasi.' });
                 }
             }
             else if (currentState.step === 200) { // Langkah SKTM
@@ -371,29 +635,37 @@ Apakah data sudah benar? (ya / tidak)`;
                 currentState.data.alamat = messageText;
                 await sock.sendMessage(senderNumber, { text: "7. Nomor HP:" });
                 currentState.step = 206;
-            } else if (currentState.step === 206) {
+            } // ===================== SURAT SKTM (200-215) =====================
+            else if (currentState.step === 206) {
                 currentState.data.nomor_hp = messageText;
             
                 const dataPreview = `✅ *Konfirmasi Data Anda:*
             
-            Nama Lengkap                  : ${currentState.data.nama}
-            No. KK                       : ${currentState.data.no_kk}
-            NIK                           : ${currentState.data.nik}
-            Tempat, Tanggal Lahir      : ${currentState.data.tempat_tanggal_lahir}
-            Jenis Kelamin                 : ${currentState.data.jenis_kelamin}
-            Alamat                        : ${currentState.data.alamat}
-            Nomor HP                      : ${currentState.data.nomor_hp}
+            1. *Nama Lengkap* : ${currentState.data.nama}
+            2. *No. KK* : ${currentState.data.no_kk}
+            3. *NIK* : ${currentState.data.nik}
+            4. *Tempat, Tanggal Lahir* : ${currentState.data.tempat_tanggal_lahir}
+            5. *Jenis Kelamin* : ${currentState.data.jenis_kelamin}
+            6. *Alamat* : ${currentState.data.alamat}
+            7. *Nomor HP* : ${currentState.data.nomor_hp}
             
-            Apakah data sudah benar? (ya / tidak)`;
+            Apakah data sudah benar?
+            Ketik:
+            *ya* - Untuk melanjutkan
+            *tidak* - Untuk membatalkan
+            *edit* - Untuk mengubah data tertentu`;
             
                 await sock.sendMessage(senderNumber, { text: dataPreview });
                 currentState.step = 207;
-            } else if (currentState.step === 207) { // Konfirmasi SKTM
-                if (messageText.toLowerCase() === 'ya') {
+            } else if (currentState.step === 207) {
+                const pilihan = messageText.toLowerCase();
+            
+                if (pilihan === 'ya') {
                     const { nama, no_kk, nik, tempat_tanggal_lahir, jenis_kelamin, alamat, nomor_hp } = currentState.data;
                     const jenis_surat = 'Surat Keterangan Tidak Mampu';
                     const tanggal_permohonan = new Date().toISOString().slice(0, 10);
                     const status = 'Diproses';
+                    const tahunSekarang = new Date().getFullYear();
             
                     const sql = 'INSERT INTO surat_sktm (nama, no_kk, nik, tempat_tanggal_lahir, jenis_kelamin, alamat, nomor_hp, jenis_surat, tanggal_permohonan, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
                     dbConn.query(sql, [nama, no_kk, nik, tempat_tanggal_lahir, jenis_kelamin, alamat, nomor_hp, jenis_surat, tanggal_permohonan, status], (err, results) => {
@@ -401,111 +673,333 @@ Apakah data sudah benar? (ya / tidak)`;
                             console.error('Error menyimpan data ke database:', err);
                             sock.sendMessage(senderNumber, { text: '⚠️ Terjadi kesalahan saat menyimpan data. Silakan coba lagi nanti.' });
                         } else {
-                            const nomorSurat = `SKTM/${results.insertId.toString().padStart(3, '0')}/${new Date().getFullYear()}`;
-                            const updateNomorSuratSql = 'UPDATE surat_sktm SET nomor_surat = ? WHERE id = ?';
-                            dbConn.query(updateNomorSuratSql, [nomorSurat, results.insertId], (errUpdate) => {
+                            const nomorSurat = `SKTM/${String(results.insertId).padStart(3, '0')}/${tahunSekarang}`;
+                            const updateNomorSuratSql = 'UPDATE surat_sktm SET nomor_surat = ?, nomor_wa = ? WHERE id = ?';
+                            dbConn.query(updateNomorSuratSql, [nomorSurat, senderNumber, results.insertId], (errUpdate) => {
                                 if (errUpdate) {
                                     console.error('Error memperbarui nomor surat:', errUpdate);
                                     sock.sendMessage(senderNumber, { text: '⚠️ Terjadi kesalahan saat memperbarui nomor surat.' });
                                 } else {
                                     sock.sendMessage(senderNumber, { text: `✅ Data berhasil disimpan! Nomor surat Anda: *${nomorSurat}*. Anda akan diberi tahu jika surat sudah selesai.` });
                                     console.log(`Data surat SKTM berhasil disimpan untuk ${senderNumber} dengan ID: ${results.insertId}`);
+                                    
+                                    // Send notification to bot
+                                    sendBotNotification(sock, jenis_surat, nomorSurat, nama, senderNumber);
                                 }
                             });
                         }
                         delete userStates[senderNumber];
                     });
-                } else if (messageText.toLowerCase() === 'tidak') {
-                    await sock.sendMessage(senderNumber, { text: '❌ Proses pengisian formulir dibatalkan. Ketik "menu" untuk memulai kembali.' });
+            
+                } else if (pilihan === 'tidak') {
+                    await sock.sendMessage(senderNumber, { text: '❌ Proses pengisian formulir dibatalkan. Ketik "halo" untuk memulai kembali.' });
                     delete userStates[senderNumber];
-                    currentState.step = 1;
+                    
+                } else if (pilihan === 'edit') {
+                    const editMenu = `✏️ *Pilih data yang ingin diedit:*
+            1. Nama Lengkap
+            2. No. KK
+            3. NIK
+            4. Tempat, Tanggal Lahir
+            5. Jenis Kelamin
+            6. Alamat
+            7. Nomor HP
+            
+            Ketik nomor yang ingin diedit (contoh: 1)`;
+                    await sock.sendMessage(senderNumber, { text: editMenu });
+                    currentState.step = 208;
+            
                 } else {
-                    await sock.sendMessage(senderNumber, { text: 'Pilihan tidak valid. Silakan balas dengan "ya" atau "tidak".' });
+                    await sock.sendMessage(senderNumber, { text: '⚠️ Pilihan tidak valid. Balas dengan "ya", "tidak", atau "edit".' });
+                }
+            
+            } else if (currentState.step === 208) {
+                const nomorEdit = parseInt(messageText);
+                currentState.dataFieldToEdit = nomorEdit;
+            
+                if (nomorEdit >= 1 && nomorEdit <= 7) {
+                    let fieldLabel = '';
+                    switch (nomorEdit) {
+                        case 1: fieldLabel = `Nama : ${currentState.data.nama}`; break;
+                        case 2: fieldLabel = `No. KK : ${currentState.data.no_kk}`; break;
+                        case 3: fieldLabel = `NIK : ${currentState.data.nik}`; break;
+                        case 4: fieldLabel = `Tempat, Tanggal Lahir : ${currentState.data.tempat_tanggal_lahir}`; break;
+                        case 5: fieldLabel = `Jenis Kelamin : ${currentState.data.jenis_kelamin}`; break;
+                        case 6: fieldLabel = `Alamat : ${currentState.data.alamat}`; break;
+                        case 7: fieldLabel = `Nomor HP : ${currentState.data.nomor_hp}`; break;
+                    }
+                    await sock.sendMessage(senderNumber, { text: `Data saat ini:\n${fieldLabel}\n\nMasukkan data baru:` });
+                    currentState.step = 209;
+                } else {
+                    await sock.sendMessage(senderNumber, { text: '⚠️ Nomor tidak valid. Silakan pilih dari 1 sampai 7.' });
+                }
+            
+            } else if (currentState.step === 209) {
+                const field = currentState.dataFieldToEdit;
+            
+                switch (field) {
+                    case 1: 
+                        if (/\d/.test(messageText)) {
+                            await sock.sendMessage(senderNumber, { text: "Nama tidak boleh mengandung angka. Silakan masukkan nama yang valid." });
+                            return;
+                        }
+                        currentState.data.nama = messageText.toUpperCase(); 
+                        break;
+                    case 2: currentState.data.no_kk = messageText; break;
+                    case 3: 
+                        const nikRegex = /^\d{16}$/;
+                        if (!nikRegex.test(messageText)) {
+                            await sock.sendMessage(senderNumber, { text: "NIK harus 16 digit angka." });
+                            return;
+                        }
+                        currentState.data.nik = messageText; 
+                        break;
+                    case 4: 
+                        const ttlRegex = /^[A-Za-z\s]+, \d{1,2} [A-Za-z]+ \d{4}$/;
+                        if (!ttlRegex.test(messageText)) {
+                            await sock.sendMessage(senderNumber, { text: "Format tempat dan tanggal lahir salah. Contoh: Garut, 15 September 2001" });
+                            return;
+                        }
+                        currentState.data.tempat_tanggal_lahir = messageText; 
+                        break;
+                    case 5: 
+                        if (!['L', 'P'].includes(messageText.toUpperCase())) {
+                            await sock.sendMessage(senderNumber, { text: "Jenis kelamin harus L atau P." });
+                            return;
+                        }
+                        currentState.data.jenis_kelamin = messageText.toUpperCase(); 
+                        break;
+                    case 6: currentState.data.alamat = messageText; break;
+                    case 7: currentState.data.nomor_hp = messageText; break;
+                }
+            
+                await sock.sendMessage(senderNumber, { text: '✅ Data berhasil diperbarui.\n\nKetik *edit* untuk mengedit data lain, atau ketik *selesai* untuk melanjutkan konfirmasi.' });
+                currentState.step = 210;
+            
+            } else if (currentState.step === 210) {
+                const pilihanEdit = messageText.toLowerCase();
+                if (pilihanEdit === 'edit') {
+                    const editMenu = `✏️ *Pilih data yang ingin diedit:*
+            1. Nama Lengkap
+            2. No. KK
+            3. NIK
+            4. Tempat, Tanggal Lahir
+            5. Jenis Kelamin
+            6. Alamat
+            7. Nomor HP
+            
+            Ketik nomor yang ingin diedit (contoh: 1)`;
+                    await sock.sendMessage(senderNumber, { text: editMenu });
+                    currentState.step = 208;
+            
+                }else if (pilihanEdit === 'selesai') {
+                    // Balik ke konfirmasi data
+                    const dataPreview = `✅ *Konfirmasi Data Anda:*
+                
+                1. *Nama Lengkap* : ${currentState.data.nama}
+                2. *No. KK* : ${currentState.data.no_kk}
+                3. *NIK* : ${currentState.data.nik}
+                4. *Tempat, Tanggal Lahir* : ${currentState.data.tempat_tanggal_lahir}
+                5. *Jenis Kelamin* : ${currentState.data.jenis_kelamin}
+                6. *Alamat* : ${currentState.data.alamat}
+                7. *Nomor HP* : ${currentState.data.nomor_hp}
+                
+                Apakah data sudah benar?
+                Ketik:
+                *ya* - Untuk melanjutkan
+                *tidak* - Untuk membatalkan
+                *edit* - Untuk mengubah data tertentu`;
+                
+                    await sock.sendMessage(senderNumber, { text: dataPreview });
+                    currentState.step = 207;
+                } else {
+                    await sock.sendMessage(senderNumber, { text: '⚠️ Pilihan tidak valid. Balas dengan "edit" untuk ubah data lain atau "selesai" untuk konfirmasi.' });
                 }
             }
-            else if (currentState.step === 300) { // Langkah SKBI
-                if (/\d/.test(messageText)) {
-                    await sock.sendMessage(senderNumber, { text: "Nama tidak boleh mengandung angka. Silakan masukkan nama yang valid." });
-                } else {
-                    currentState.data.nama = messageText.toUpperCase();
-                    await sock.sendMessage(senderNumber, { text: "2. Tertera:" });
-                    currentState.step = 301;
-                }
-            } else if (currentState.step === 301) {
-                currentState.data.tertera = messageText;
-                await sock.sendMessage(senderNumber, { text: "3. No. Rekening:" });
-                currentState.step = 302;
-            } else if (currentState.step === 302) {
-                currentState.data.norek = messageText;
-                await sock.sendMessage(senderNumber, { text: "4. Nama Lagi:" });
-                currentState.step = 303;
-            } else if (currentState.step === 303) {
-                currentState.data.nama_lagi = messageText;
-                await sock.sendMessage(senderNumber, { text: "5. Tertera Lagi:" });
-                currentState.step = 304;
-            } else if (currentState.step === 304) {
-                currentState.data.tertera_lagi = messageText;
-                await sock.sendMessage(senderNumber, { text: "6. No. KK:" });
-                currentState.step = 305;
-            } else if (currentState.step === 305) {
-                currentState.data.no_kk = messageText;
-                await sock.sendMessage(senderNumber, { text: "7. NIK:" });
-                currentState.step = 306;
-            } else if (currentState.step === 306) {
+            
+            // ===================== SURAT KBI (300-315) =====================
+            else if (currentState.step === 306) {
                 const nikRegex = /^\d{16}$/;
                 if (nikRegex.test(messageText)) {
                     currentState.data.nik = messageText;
             
                     const dataPreview = `✅ *Konfirmasi Data Anda:*
             
-            Nama Lengkap                  : ${currentState.data.nama}
-            Tertera                       : ${currentState.data.tertera}
-            No. Rekening                 : ${currentState.data.norek}
-            Nama Lagi                     : ${currentState.data.nama_lagi}
-            Tertera Lagi                  : ${currentState.data.tertera_lagi}
-            No. KK                       : ${currentState.data.no_kk}
-            NIK                           : ${currentState.data.nik}
+            1. *Nama Lengkap* : ${currentState.data.nama}
+            2. *Tertera* : ${currentState.data.tertera}
+            3. *No. Rekening* : ${currentState.data.norek}
+            4. *Nama Lagi* : ${currentState.data.nama_lagi}
+            5. *Tertera Lagi* : ${currentState.data.tertera_lagi}
+            6. *No. KK* : ${currentState.data.no_kk}
+            7. *NIK* : ${currentState.data.nik}
+            8. *Keperluan Surat* : ${currentState.data.keperluan_surat}
             
-            Apakah data sudah benar? (ya / tidak)`;
+            Apakah data sudah benar?
+            Ketik:
+            *ya* - Untuk melanjutkan
+            *tidak* - Untuk membatalkan
+            *edit* - Untuk mengubah data tertentu`;
             
                     await sock.sendMessage(senderNumber, { text: dataPreview });
                     currentState.step = 307;
                 } else {
-                    await sock.sendMessage(senderNumber, { text: "NIK harus 16 digit angka." });
+                    await sock.sendMessage(senderNumber, { text: "⚠️ NIK yang Anda masukkan tidak valid. Pastikan NIK terdiri dari 16 digit angka." });
                 }
-            } else if (currentState.step === 307) { // Konfirmasi SKBI
-                if (messageText.toLowerCase() === 'ya') {
-                    const { nama, tertera, norek, nama_lagi, tertera_lagi, no_kk, nik } = currentState.data;
+            } else if (currentState.step === 307) {
+                const pilihan = messageText.toLowerCase();
+            
+                if (pilihan === 'ya') {
+                    const { nama, tertera, norek, nama_lagi, tertera_lagi, no_kk, nik, keperluan_surat } = currentState.data;
                     const jenis_surat = 'Surat Keterangan Beda Identitas';
                     const tanggal_permohonan = new Date().toISOString().slice(0, 10);
                     const status = 'Diproses';
+                    const tahunSekarang = new Date().getFullYear();
             
-                    const sql = 'INSERT INTO surat_kbi (nama, tertera, norek, nama_lagi, tertera_lagi, no_kk, nik, jenis_surat, tanggal_permohonan, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
-                    dbConn.query(sql, [nama, tertera, norek, nama_lagi, tertera_lagi, no_kk, nik, jenis_surat, tanggal_permohonan, status], (err, results) => {
+                    const sql = 'INSERT INTO surat_kbi (nama, tertera, norek, nama_lagi, tertera_lagi, no_kk, nik, keperluan_surat, jenis_surat, tanggal_permohonan, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+                    dbConn.query(sql, [nama, tertera, norek, nama_lagi, tertera_lagi, no_kk, nik, keperluan_surat, jenis_surat, tanggal_permohonan, status], (err, results) => {
                         if (err) {
                             console.error('Error menyimpan data ke database:', err);
                             sock.sendMessage(senderNumber, { text: '⚠️ Terjadi kesalahan saat menyimpan data. Silakan coba lagi nanti.' });
                         } else {
-                            const nomorSurat = `SKBI/${results.insertId.toString().padStart(3, '0')}/${new Date().getFullYear()}`;
-                            const updateNomorSuratSql = 'UPDATE surat_KBI SET nomor_surat = ? WHERE id = ?';
-                            dbConn.query(updateNomorSuratSql, [nomorSurat, results.insertId], (errUpdate) => {
-                                if (errUpdate) {
-                                    console.error('Error memperbarui nomor surat:', errUpdate);
-                                    sock.sendMessage(senderNumber, { text: '⚠️ Terjadi kesalahan saat memperbarui nomor surat.' });
-                                } else {
-                                    sock.sendMessage(senderNumber, { text: `✅ Data berhasil disimpan! Nomor surat Anda: *${nomorSurat}*. Anda akan diberi tahu jika surat sudah selesai.` });
-                                    console.log(`Data surat SKBI berhasil disimpan untuk ${senderNumber} dengan ID: ${results.insertId}`);
-                                }
-                            });
+                            const nomorSurat = `SKBI/${String(results.insertId).padStart(3, '0')}/${tahunSekarang}`;
+                            const updateNomorSuratSql = 'UPDATE surat_kbi SET nomor_surat = ?, nomor_wa = ? WHERE id = ?';
+                                dbConn.query(updateNomorSuratSql, [nomorSurat, senderNumber, results.insertId], (errUpdate) => {
+                                    if (errUpdate) {
+                                        console.error('Error memperbarui nomor surat:', errUpdate);
+                                        sock.sendMessage(senderNumber, { text: '⚠️ Terjadi kesalahan saat memperbarui nomor surat.' });
+                                    } else {
+                                        sock.sendMessage(senderNumber, { text: `✅ Data berhasil disimpan! Nomor surat Anda: *${nomorSurat}*. Anda akan diberi tahu jika surat sudah selesai.` });
+                                        console.log(`Data surat SKBI berhasil disimpan untuk ${senderNumber} dengan ID: ${results.insertId}`);
+                                        
+                                        // Send notification to bot
+                                        sendBotNotification(sock, jenis_surat, nomorSurat, nama, senderNumber);
+                                    }
+                                });
                         }
                         delete userStates[senderNumber];
                     });
-                } else if (messageText.toLowerCase() === 'tidak') {
-                    await sock.sendMessage(senderNumber, { text: '❌ Proses pengisian formulir dibatalkan. Ketik "menu" untuk memulai kembali.' });
+            
+                } else if (pilihan === 'tidak') {
+                    await sock.sendMessage(senderNumber, { text: '❌ Proses pengisian formulir dibatalkan. Ketik "halo" untuk memulai kembali.' });
                     delete userStates[senderNumber];
-                    currentState.step = 1;
+                    
+                } else if (pilihan === 'edit') {
+                    const editMenu = `✏️ *Pilih data yang ingin diedit:*
+            1. Nama Lengkap
+            2. Tertera
+            3. No. Rekening
+            4. Nama Lagi
+            5. Tertera Lagi
+            6. No. KK
+            7. NIK
+            8. Keperluan Surat
+            
+            Ketik nomor yang ingin diedit (contoh: 1)`;
+                    await sock.sendMessage(senderNumber, { text: editMenu });
+                    currentState.step = 308;
+            
                 } else {
-                    await sock.sendMessage(senderNumber, { text: 'Pilihan tidak valid. Silakan balas dengan "ya" atau "tidak".' });
+                    await sock.sendMessage(senderNumber, { text: '⚠️ Pilihan tidak valid. Balas dengan "ya", "tidak", atau "edit".' });
+                }
+            
+            } else if (currentState.step === 308) {
+                const nomorEdit = parseInt(messageText);
+                currentState.dataFieldToEdit = nomorEdit;
+            
+                if (nomorEdit >= 1 && nomorEdit <= 8) {
+                    let fieldLabel = '';
+                    switch (nomorEdit) {
+                        case 1: fieldLabel = `Nama : ${currentState.data.nama}`; break;
+                        case 2: fieldLabel = `Tertera : ${currentState.data.tertera}`; break;
+                        case 3: fieldLabel = `No. Rekening : ${currentState.data.norek}`; break;
+                        case 4: fieldLabel = `Nama Lagi : ${currentState.data.nama_lagi}`; break;
+                        case 5: fieldLabel = `Tertera Lagi : ${currentState.data.tertera_lagi}`; break;
+                        case 6: fieldLabel = `No. KK : ${currentState.data.no_kk}`; break;
+                        case 7: fieldLabel = `NIK : ${currentState.data.nik}`; break;
+                        case 8: fieldLabel = `Keperluan Surat : ${currentState.data.keperluan_surat}`; break;
+                    }
+                    await sock.sendMessage(senderNumber, { text: `Data saat ini:\n${fieldLabel}\n\nMasukkan data baru:` });
+                    currentState.step = 309;
+                } else {
+                    await sock.sendMessage(senderNumber, { text: '⚠️ Nomor tidak valid. Silakan pilih dari 1 sampai 8.' });
+                }
+            
+            } else if (currentState.step === 309) {
+                const field = currentState.dataFieldToEdit;
+            
+                switch (field) {
+                    case 1: 
+                        if (/\d/.test(messageText)) {
+                            await sock.sendMessage(senderNumber, { text: "Nama tidak boleh mengandung angka. Silakan masukkan nama yang valid." });
+                            return;
+                        }
+                        currentState.data.nama = messageText.toUpperCase(); 
+                        break;
+                    case 2: currentState.data.tertera = messageText; break;
+                    case 3: currentState.data.norek = messageText; break;
+                    case 4: 
+                        if (/\d/.test(messageText)) {
+                            await sock.sendMessage(senderNumber, { text: "Nama tidak boleh mengandung angka. Silakan masukkan nama yang valid." });
+                            return;
+                        }
+                        currentState.data.nama_lagi = messageText.toUpperCase(); 
+                        break;
+                    case 5: currentState.data.tertera_lagi = messageText; break;
+                    case 6: currentState.data.no_kk = messageText; break;
+                    case 7: 
+                        const nikRegex = /^\d{16}$/;
+                        if (!nikRegex.test(messageText)) {
+                            await sock.sendMessage(senderNumber, { text: "NIK harus 16 digit angka." });
+                            return;
+                        }
+                        currentState.data.nik = messageText; 
+                        break;
+                    case 8: currentState.data.keperluan_surat = messageText; break;
+                }
+            
+                await sock.sendMessage(senderNumber, { text: '✅ Data berhasil diperbarui.\n\nKetik *edit* untuk mengedit data lain, atau ketik *selesai* untuk melanjutkan konfirmasi.' });
+                currentState.step = 310;
+            
+            } else if (currentState.step === 310) {
+                const pilihanEdit = messageText.toLowerCase();
+                if (pilihanEdit === 'edit') {
+                    const editMenu = `✏️ *Pilih data yang ingin diedit:*
+            1. Nama Lengkap
+            2. Tertera
+            3. No. Rekening
+            4. Nama Lagi
+            5. Tertera Lagi
+            6. No. KK
+            7. NIK
+            8. Keperluan Surat
+            
+            Ketik nomor yang ingin diedit (contoh: 1)`;
+                    await sock.sendMessage(senderNumber, { text: editMenu });
+                    currentState.step = 308;
+            
+                } else if (pilihanEdit === 'selesai') {
+                    // Balik ke konfirmasi data
+                    const dataPreview = `✅ *Konfirmasi Data Anda:*
+            
+            1. *Nama Lengkap*    : ${currentState.data.nama}
+            2. *Tertera*         : ${currentState.data.tertera}
+            3. *No. Rekening*   : ${currentState.data.norek}
+            4. *Nama Lagi*      : ${currentState.data.nama_lagi}
+            5. *Tertera Lagi*   : ${currentState.data.tertera_lagi}
+            6. *No. KK*        : ${currentState.data.no_kk}
+            7. *NIK*           : ${currentState.data.nik}
+            8. *Keperluan Surat* : ${currentState.data.keperluan_surat}
+            
+            Apakah data sudah benar?
+            Ketik:
+            *ya* - Untuk melanjutkan
+            *tidak* - Untuk membatalkan
+            *edit* - Untuk mengubah data tertentu`;
+                    await sock.sendMessage(senderNumber, { text: dataPreview });
+                    currentState.step = 307;
+            
+                } else {
+                    await sock.sendMessage(senderNumber, { text: '⚠️ Pilihan tidak valid. Balas dengan "edit" untuk ubah data lain atau "selesai" untuk konfirmasi.' });
                 }
             }
 

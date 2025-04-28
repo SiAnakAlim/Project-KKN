@@ -28,7 +28,7 @@
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             position: relative;
             border: none;
-            margin: 20px; /* Margin untuk kertas A4 */
+            margin: 20px;
         }
     
         .garis-bawah {
@@ -45,7 +45,7 @@
         .logo {
             width: 80px;
             position: absolute;
-            left: 12px; /* Atur jarak dari kiri */
+            left: 12px;
             top: 5px;
         }
     
@@ -112,38 +112,47 @@
         }
     
         .content p {
-    margin: 5px 0;
-    display: block;
-    page-break-inside: avoid;
-}
+            margin: 5px 0;
+            display: block;
+            page-break-inside: avoid;
+        }
+    
         .content strong {
             font-weight: bold;
         }
     
-        .label {
-            width: 180px;
-            flex-shrink: 0;
-            padding-left: 38px;
-        }
-    
-        .value {
-            flex-grow: 1;
-            padding-left: 28px;
-        }
-    
-        .data-lain {
+        /* Improved alignment for data fields */
+        .data-container {
             display: flex;
             margin-left: 38px;
         }
     
-        .data-lain-label {
-            width: 180px;
+        .data-label {
+            width: 220px;
             flex-shrink: 0;
         }
     
-        .data-lain-value {
+        .data-value {
             flex-grow: 1;
-            padding-left: 28px;
+        }
+    
+        .data-value strong {
+            font-weight: bold;
+        }
+    
+        /* Special alignment for the first name field */
+        .first-name-container {
+            display: flex;
+            margin-left: 38px;
+        }
+    
+        .first-name-label {
+            width: 220px;
+            flex-shrink: 0;
+        }
+    
+        .first-name-value {
+            flex-grow: 1;
         }
     
         /* Tanda Tangan */
@@ -237,7 +246,6 @@
         @media print {
             @page {
                 size: A4;
-                /* Margin yang disesuaikan sama dengan surat sebelumnya */
                 margin-top: 2cm;
                 margin-bottom: 2cm;
                 margin-left: 2.5cm;
@@ -256,7 +264,6 @@
                 margin: 0 !important;
                 padding: 0 !important;
                 box-shadow: none !important;
-                /* Menghilangkan border pada saat cetak */
                 border: none !important;
                 background-color: transparent !important;
             }
@@ -286,31 +293,44 @@
 
         <div class="content">
             <p>Yang bertanda tangan di bawah ini, Kepala Desa Kebondalem Kidul, Kecamatan Prambanan, Kabupaten Klaten, menerangkan bahwa:</p>
-            <p><span class="label">Nama</span><span class="value">: <strong><%= suratKBI.nama ? suratKBI.nama.toUpperCase() : '' %></strong></span></p>
-            <div class="data-lain">
-                <p class="data-lain-label">Yang Tertera di</p>
-                <p class="data-lain-value">: <%= suratKBI.tertera || '' %></p>
+            
+            <!-- First name field with proper alignment -->
+            <div class="first-name-container">
+                <p class="first-name-label">Nama</p>
+                <p class="first-name-value">: <strong><%= suratKBI.nama ? suratKBI.nama.toUpperCase() : '' %></strong></p>
             </div>
-            <div class="data-lain">
-                <p class="data-lain-label">No. Rekening</p>
-                <p class="data-lain-value">: <%= suratKBI.norek || '' %></p>
+            
+            <!-- Other data fields with consistent alignment -->
+            <div class="data-container">
+                <p class="data-label">Yang Tertera di</p>
+                <p class="data-value">: <%= suratKBI.tertera || '' %></p>
             </div>
+            
+            <div class="data-container">
+                <p class="data-label">No. Rekening</p>
+                <p class="data-value">: <%= suratKBI.norek || '' %></p>
+            </div>
+            
             <p style="margin-left: 38px;">Dan:</p>
-            <div class="data-lain">
-                <p class="data-lain-label">Nama</p>
-                <p class="data-lain-value"> : <strong> &nbsp;<%= suratKBI.nama_lagi ? suratKBI.nama_lagi.toUpperCase() : '' %></strong></p>
+            
+            <div class="data-container">
+                <p class="data-label">Nama</p>
+                <p class="data-value">: <strong><%= suratKBI.nama_lagi ? suratKBI.nama_lagi.toUpperCase() : '' %></strong></p>
             </div>
-            <div class="data-lain">
-                <p class="data-lain-label">Yang Tertera di</p>
-                <p class="data-lain-value">: <%= suratKBI.tertera_lagi || '' %></p>
+            
+            <div class="data-container">
+                <p class="data-label">Yang Tertera di</p>
+                <p class="data-value">: <%= suratKBI.tertera_lagi || '' %></p>
             </div>
-            <div class="data-lain">
-                <p class="data-lain-label">Nomor Kartu Keluarga</p>
-                <p class="data-lain-value">: <%= suratKBI.no_kk || '' %></p>
+            
+            <div class="data-container">
+                <p class="data-label">Nomor Kartu Keluarga</p>
+                <p class="data-value">: <%= suratKBI.no_kk || '' %></p>
             </div>
-            <div class="data-lain">
-                <p class="data-lain-label">Nomor Induk Kependudukan</p>
-                <p class="data-lain-value">: <%= suratKBI.nik || '' %></p>
+            
+            <div class="data-container">
+                <p class="data-label">Nomor Induk Kependudukan</p>
+                <p class="data-value">: <%= suratKBI.nik || '' %></p>
             </div>
         
             <p style="margin-top: 20px;"><strong>Adalah nama dan data satu orang yang sama.</strong> Adapun surat keterangan ini dibuat sebagai <%= suratKBI.keperluan_surat || 'keperluan lain' %>.</p>
@@ -321,9 +341,10 @@
             <div class="signature-container">
                 <div class="ttd-kanan">
                     <p class="tanggal-ttd">Kebondalem Kidul, <%= new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) %></p>
-                    <p >a.n Kepala Desa Kebondalem Kidul</p>
+                    <p>a.n Kepala Desa Kebondalem Kidul</p>
                     <p>Sekretaris Desa</p>
-                    <div style="height: 60px;"></div> <p class="signature-name">DARU PURNOMO</p>
+                    <div style="height: 60px;"></div>
+                    <p class="signature-name">DARU PURNOMO</p>
                 </div>
             </div>
         </div>

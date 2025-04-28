@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Riwayat Aktivitas</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+    <style>
+        .bg-golden-light { background-color: #FAF0CA; }
+        .text-golden-dark { color: #B8860B; }
+        
+        /* Adjust container width and spacing */
+        .container {
+            max-width: 1200px;
+            padding: 1.5rem;
+        }
+        
+        /* Table adjustments */
+        .striped-table {
+            width: 100%;
+            font-size: 0.9rem;
+        }
+        
+        .striped-table tbody tr:nth-child(even) {
+            background-color: #FFFBE6;
+        }
+        
+        .striped-table th,
+        .striped-table td {
+            padding: 0.6rem 0.8rem;
+            text-align: left;
+            border-bottom: 1px solid #F3E5AB;
+        }
+        
+        .striped-table thead th {
+            border-bottom: 2px solid #D4A373;
+            font-size: 0.85rem;
+        }
+        
+        .striped-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+        
+        /* Improved search container */
+        .search-container {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            margin-bottom: 1rem;
+            width: 250px;
+        }
+        
+        .search-input {
+            padding: 0.4rem 2rem 0.4rem 0.75rem;
+            border: 1px solid #ccc;
+            border-radius: 0.25rem;
+            width: 100%;
+            font-size: 0.9rem;
+        }
+        
+        .search-clear {
+            position: absolute;
+            right: 0.75rem;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #666;
+            background: none;
+            border: none;
+            display: none;
+            padding: 0;
+            margin: 0;
+            font-size: 0.9rem;
+        }
+        
+        /* Pagination adjustments */
+        .pagination-container {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+        
+        .pagination-button {
+            padding: 0.4rem 0.6rem;
+            border: 1px solid #ccc;
+            border-radius: 0.25rem;
+            margin-right: 0.2rem;
+            cursor: pointer;
+            background-color: white;
+            min-width: 2rem;
+            text-align: center;
+            font-size: 0.85rem;
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            .search-container {
+                width: 100%;
+            }
+            
+            .striped-table th, 
+            .striped-table td {
+                padding: 0.5rem;
+                font-size: 0.8rem;
+            }
+            
+            .pagination-container {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body class="bg-golden-light font-sans">
+
+<div class="container mx-auto py-4">
+    <div class="mb-4">
+        <a href="/" class="inline-flex items-center text-golden-dark hover:text-yellow-700 text-sm">
+            <i class="fas fa-arrow-left mr-2"></i> Kembali ke Beranda
+        </a>
+    </div>
+
+    <h1 class="text-2xl font-semibold text-golden-dark mb-4 flex items-center">
+        <i class="fas fa-history mr-2"></i> Riwayat Aktivitas
+    </h1>
+
+    <div class="flex items-center mb-4">
+        <div class="search-container">
+            <input id="searchInput" type="text" placeholder="Cari berdasarkan detail..." class="search-input">
+            <button id="clearSearch" class="search-clear">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+    </div>
+
+    <% if (riwayatAktivitas && riwayatAktivitas.length > 0) { %>
+        <div class="overflow-x-auto">
+            <table class="min-w-full bg-white rounded-md shadow-sm striped-table">
+                <thead class="bg-yellow-100 text-yellow-700">
+                    <tr>
+                        <th class="py-2 px-3 border-b text-left">#</th>
+                        <th class="py-2 px-3 border-b text-left">User</th>
+                        <th class="py-2 px-3 border-b text-left">Aksi</th>
+                        <th class="py-2 px-3 border-b text-left">Entitas</th>
+                        <th class="py-2 px-3 border-b text-left">Detail</th>
+                        <th class="py-2 px-3 border-b text-left">Waktu</th>
+                    </tr>
+                </thead>
+                <tbody id="aktivitasTable">
+                    <% riwayatAktivitas.forEach((aktivitas, index) => { %>
+                        <tr class="hover:bg-yellow-50">
+                            <td class="py-2 px-3 border-b"><%= index + 1 %></td>
+
+                            <td class="py-2 px-3 border-b">
+                                <div class="flex items-center">
+                                    <i class="fas fa-user-circle mr-2 text-gray-600"></i>
+                                    <span><%= aktivitas.user_id %></span>
+                                </div>
+                            </td>
+
+                            <td class="py-2 px-3 border-b">
+                                <div class="flex items-center">
+                                    <i class="fas fa-edit mr-2 text-green-500"></i>
+                                    <span><%= aktivitas.action.toUpperCase() %></span>
+                                </div>
+                            </td>
+
+                            <td class="py-2 px-3 border-b">
+                                <%
+                                    let entityLink = "#";
+                                    if (aktivitas.entity_type === "surat_ku") entityLink = "/surat-ku";
+                                    else if (aktivitas.entity_type === "surat_kbi") entityLink = "/surat-kbi";
+                                    else if (aktivitas.entity_type === "surat_sktm") entityLink = "/surat-sktm";
+                                    else if (aktivitas.entity_type === "surat") entityLink = "/surat-pengantar";
+                                %>
+                                <a href="<%= entityLink %>" class="flex items-center text-indigo-600 hover:underline">
+                                    <i class="fas fa-link mr-1"></i>
+                                    <span><%= aktivitas.entity_type.replace('_', ' ').toUpperCase() %></span>
+                                </a>
+                            </td>
+
+                            <td class="py-2 px-3 border-b text-gray-700"><%= aktivitas.details %></td>
+
+                            <td class="py-2 px-3 border-b text-gray-500 text-xs">
+                                <i class="far fa-clock mr-1"></i>
+                                <%= new Date(aktivitas.created_at).toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' }) %>,
+                                <%= new Date(aktivitas.created_at).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' }) %>
+                            </td>
+                        </tr>
+                    <% }); %>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="flex flex-col sm:flex-row items-center justify-between mt-4 gap-2">
+            <div class="flex items-center">
+                <label for="entriesPerPage" class="text-gray-700 mr-2 text-sm">Tampilkan</label>
+                <select id="entriesPerPage" class="p-1 border rounded-md focus:outline-none focus:ring-1 focus:ring-yellow-400 text-sm">
+                    <option value="5">5</option>
+                    <option value="10" selected>10</option>
+                    <option value="15">15</option>
+                </select>
+                <span class="text-gray-700 ml-2 text-sm">entri per halaman</span>
+            </div>
+            <div id="pagination" class="pagination-container"></div>
+        </div>
+
+    <% } else { %>
+        <div class="bg-yellow-100 border-l-4 border-yellow-500 p-3 rounded-md">
+            <div class="flex items-center">
+                <div class="text-yellow-500">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
+                <div class="ml-2">
+                    <p class="text-sm font-semibold text-yellow-700">Belum ada riwayat aktivitas.</p>
+                    <p class="text-xs text-yellow-600">Riwayat aktivitas akan ditampilkan di sini.</p>
+                </div>
+            </div>
+        </div>
+    <% } %>
+</div>
+
+<script>
+    const searchInput = document.getElementById('searchInput');
+    const clearSearch = document.getElementById('clearSearch');
+    const entriesPerPage = document.getElementById('entriesPerPage');
+    const aktivitasTable = document.getElementById('aktivitasTable');
+    const pagination = document.getElementById('pagination');
+    let rows = Array.from(aktivitasTable.getElementsByTagName('tr'));
+    let currentPage = 1;
+    let totalPages = 0;
+    const maxVisiblePages = 5;
+
+    function renderTable() {
+        const query = searchInput.value.toLowerCase();
+        const perPage = parseInt(entriesPerPage.value);
+        const filteredRows = rows.filter(row => {
+            return row.cells[4].innerText.toLowerCase().includes(query);
+        });
+
+        totalPages = Math.ceil(filteredRows.length / perPage);
+        const start = (currentPage - 1) * perPage;
+        const end = start + perPage;
+        aktivitasTable.innerHTML = '';
+
+        filteredRows.slice(start, end).forEach((row, index) => {
+            row.cells[0].innerText = start + index + 1;
+            aktivitasTable.appendChild(row);
+        });
+
+        renderPagination();
+        clearSearch.style.display = query ? 'block' : 'none';
+    }
+
+    function renderPagination() {
+        pagination.innerHTML = '';
+
+        const prevButton = document.createElement('button');
+        prevButton.innerHTML = '<i class="fas fa-chevron-left"></i> Prev';
+        prevButton.className = `pagination-button ${currentPage === 1 ? 'disabled text-gray-500 cursor-not-allowed' : ''}`;
+        prevButton.onclick = () => {
+            if (currentPage > 1) {
+                currentPage--;
+                renderTable();
+            }
+        };
+        pagination.appendChild(prevButton);
+
+        if (totalPages <= maxVisiblePages) {
+            for (let i = 1; i <= totalPages; i++) {
+                pagination.appendChild(createPageButton(i));
+            }
+        } else {
+            if (currentPage <= Math.ceil(maxVisiblePages / 2)) {
+                for (let i = 1; i <= maxVisiblePages - 2; i++) {
+                    pagination.appendChild(createPageButton(i));
+                }
+                pagination.appendChild(createEllipsis());
+                pagination.appendChild(createPageButton(totalPages));
+            } else if (currentPage >= totalPages - Math.floor(maxVisiblePages / 2) + 1) {
+                pagination.appendChild(createPageButton(1));
+                pagination.appendChild(createEllipsis());
+                for (let i = totalPages - maxVisiblePages + 3; i <= totalPages; i++) {
+                    pagination.appendChild(createPageButton(i));
+                }
+            } else {
+                pagination.appendChild(createPageButton(1));
+                pagination.appendChild(createEllipsis());
+                for (let i = currentPage - 1; i <= currentPage + 1; i++) {
+                    pagination.appendChild(createPageButton(i));
+                }
+                pagination.appendChild(createEllipsis());
+                pagination.appendChild(createPageButton(totalPages));
+            }
+        }
+
+        const nextButton = document.createElement('button');
+        nextButton.innerHTML = 'Next <i class="fas fa-chevron-right"></i>';
+        nextButton.className = `pagination-button ${currentPage === totalPages || totalPages === 0 ? 'disabled text-gray-500 cursor-not-allowed' : ''}`;
+        nextButton.onclick = () => {
+            if (currentPage < totalPages) {
+                currentPage++;
+                renderTable();
+            }
+        };
+        pagination.appendChild(nextButton);
+    }
+
+    function createPageButton(pageNumber) {
+        const button = document.createElement('button');
+        button.innerText = pageNumber;
+        button.className = `pagination-button ${pageNumber === currentPage ? 'active' : ''}`;
+        button.onclick = () => {
+            currentPage = pageNumber;
+            renderTable();
+        };
+        return button;
+    }
+
+    function createEllipsis() {
+        const span = document.createElement('span');
+        span.innerText = '...';
+        span.className = 'pagination-ellipsis';
+        return span;
+    }
+
+    searchInput.addEventListener('input', () => {
+        currentPage = 1;
+        renderTable();
+    });
+
+    clearSearch.addEventListener('click', () => {
+        searchInput.value = '';
+        currentPage = 1;
+        renderTable();
+    });
+
+    entriesPerPage.addEventListener('change', () => {
+        currentPage = 1;
+        renderTable();
+    });
+
+    window.onload = () => renderTable();
+</script>
+
+</body>
+</html>

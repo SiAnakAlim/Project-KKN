@@ -105,10 +105,7 @@
         <!-- Header with gold gradient -->
         <nav class="bg-gradient-to-r from-gold-600 to-gold-500 p-4 text-white shadow-lg">
             <div class="container mx-auto flex justify-between items-center">
-                <div class="flex items-center space-x-3">
-                    <button id="mobileMenuButton" class="md:hidden mr-2 text-white focus:outline-none">
-                        <i class="fas fa-bars text-xl"></i>
-                    </button>
+                <div class="flex items-center space-x-3 ml">
                     <div class="bg-white p-2 rounded-lg shadow-md">
                         <i class="fas fa-envelope-open-text text-gold-600 text-xl"></i>
                     </div>
@@ -128,76 +125,75 @@
                 <i class="fas fa-bars"></i>
             </button>
             
-            <aside id="sidebar" class="mobile-menu fixed md:static inset-y-0 left-0 w-64 bg-white shadow-md p-4 border-r border-gray-200 z-50 md:block md:sticky md:top-0 md:h-screen overflow-y-auto">
-                <div class="flex justify-between items-center mb-6 p-2 border-b border-gold-100 md:hidden">
-                    <h3 class="text-lg font-semibold">Menu Navigasi</h3>
-                    <button id="closeSidebar" class="text-gray-500 hover:text-gold-600">
-                        <i class="fas fa-times"></i>
-                    </button>
-                </div>
-                
-                <div class="mb-6 p-2 border-b border-gold-100">
-                    <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-wider flex items-center">
-                        <i class="fas fa-list-ul mr-2 text-gold-500"></i> Menu Surat
-                    </h3>
-                </div>
-                
-                <ul class="space-y-2">
-                    <li>
-                        <a href="/" class="sidebar-link flex items-center p-3 text-gray-700 hover:text-gold-700 hover:bg-golden-100 rounded-md transition-all animate-fade-in">
-                            <i class="fas fa-home mr-3 text-gold-600 w-5 text-center"></i>
-                            Beranda
-                            <span class="ml-auto bg-gold-100 text-gold-700 text-xs px-2 py-1 rounded-full">Home</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="/surat-sktm" class="sidebar-link flex items-center p-3 text-gray-700 hover:text-gold-700 hover:bg-golden-100 rounded-md transition-all animate-fade-in active-menu">
-                            <i class="fas fa-hand-holding-usd mr-3 text-gold-600 w-5 text-center"></i>
-                            Surat Keterangan Tidak Mampu
-                        </a>
-                    </li>
-                    <li>
-                        <a href="/surat-ku" class="sidebar-link flex items-center p-3 text-gray-700 hover:text-gold-700 hover:bg-golden-100 rounded-md transition-all animate-fade-in">
-                            <i class="fas fa-briefcase mr-3 text-gold-600 w-5 text-center"></i>
-                            Surat Keterangan Usaha
-                        </a>
-                    </li>
-                    <li>
-                        <a href="/surat-kbi" class="sidebar-link flex items-center p-3 text-gray-700 hover:text-gold-700 hover:bg-golden-100 rounded-md transition-all animate-fade-in">
-                            <i class="fas fa-id-card mr-3 text-gold-600 w-5 text-center"></i>
-                            Surat Beda Identitas
-                        </a>
-                    </li>
-                    <li>
-                        <a href="/surat-pengantar" class="sidebar-link flex items-center p-3 text-gray-700 hover:text-gold-700 hover:bg-golden-100 rounded-md transition-all animate-fade-in">
-                            <i class="fas fa-envelope mr-3 text-gold-600 w-5 text-center"></i>
-                            Surat Pengantar
-                            <span class="ml-auto bg-gold-100 text-gold-700 text-xs px-2 py-1 rounded-full">New</span>
-                        </a>
-                    </li>
-                </ul>
+           <!-- Sidebar -->
+        <aside id="sidebar" class="mobile-menu fixed md:static inset-y-0 left-0 w-64 bg-white shadow-md p-4 border-r border-gray-200 z-50 md:block md:sticky md:top-0 md:h-screen overflow-y-auto">
+            <div class="flex justify-between items-center mb-6 p-2 border-b border-gold-100 md:hidden">
+                <h3 class="text-lg font-semibold">Menu Navigasi</h3>
+                <button id="closeSidebar" class="text-gray-500 hover:text-gold-600">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
             
-                <div class="mt-8 mb-6 p-2 border-b border-gold-100">
-                    <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-wider flex items-center">
-                        <i class="fas fa-cog mr-2 text-gold-500"></i> Administrasi
-                    </h3>
-                </div>
-                
-                <ul class="space-y-2">
-                    <li>
-                        <a href="/statistik" class="sidebar-link flex items-center p-3 text-gray-700 hover:text-gold-700 hover:bg-golden-100 rounded-md transition-all animate-fade-in">
-                            <i class="fas fa-chart-pie mr-3 text-gold-600 w-5 text-center"></i>
-                            Statistik
-                        </a>
-                    </li>
-                    <li>
-                        <a href="/pengaturan" class="sidebar-link flex items-center p-3 text-gray-700 hover:text-gold-700 hover:bg-golden-100 rounded-md transition-all animate-fade-in">
-                            <i class="fas fa-cogs mr-3 text-gold-600 w-5 text-center"></i>
-                            Pengaturan
-                        </a>
-                    </li>
-                </ul>
-            </aside>
+            <div class="mb-6 p-2 border-b border-gold-100">
+                <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-wider flex items-center">
+                    <i class="fas fa-list-ul mr-2 text-gold-500"></i> Menu Surat
+                </h3>
+            </div>
+            <ul class="space-y-2">
+                <li>
+                    <a href="/" class="sidebar-link flex items-center p-3 text-gray-700 hover:text-gold-700 hover:bg-golden-100 rounded-md transition-all animate-fade-in">
+                        <i class="fas fa-home mr-3 text-gold-600 w-5 text-center"></i>
+                        Beranda
+                        <span class="ml-auto bg-gold-100 text-gold-700 text-xs px-2 py-1 rounded-full">Home</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/surat-sktm" class="sidebar-link flex items-center p-3 text-gray-700 hover:text-gold-700 hover:bg-golden-100 rounded-md transition-all animate-fade-in active-menu">
+                        <i class="fas fa-hand-holding-usd mr-3 text-gold-600 w-5 text-center"></i>
+                        Surat Keterangan Tidak Mampu
+                    </a>
+                </li>
+                <li>
+                    <a href="/surat-ku" class="sidebar-link flex items-center p-3 text-gray-700 hover:text-gold-700 hover:bg-golden-100 rounded-md transition-all animate-fade-in">
+                        <i class="fas fa-briefcase mr-3 text-gold-600 w-5 text-center"></i>
+                        Surat Keterangan Usaha
+                    </a>
+                </li>
+                <li>
+                    <a href="/surat-kbi" class="sidebar-link flex items-center p-3 text-gray-700 hover:text-gold-700 hover:bg-golden-100 rounded-md transition-all animate-fade-in">
+                        <i class="fas fa-id-card mr-3 text-gold-600 w-5 text-center"></i>
+                        Surat Beda Identitas
+                    </a>
+                </li>
+                <li>
+                    <a href="/surat-pengantar" class="sidebar-link flex items-center p-3 text-gray-700 hover:text-gold-700 hover:bg-golden-100 rounded-md transition-all animate-fade-in">
+                        <i class="fas fa-envelope mr-3 text-gold-600 w-5 text-center"></i>
+                        Surat Pengantar
+                        <span class="ml-auto bg-gold-100 text-gold-700 text-xs px-2 py-1 rounded-full">New</span>
+                    </a>
+                </li>
+            </ul>
+        
+            <div class="mt-8 mb-6 p-2 border-b border-gold-100">
+                <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-wider flex items-center">
+                    <i class="fas fa-bell mr-2 text-gold-500"></i> Pemberitahuan & Riwayat
+                </h3>
+            </div>
+            <ul class="space-y-2">
+                <li>
+                    <a href="/notifikasi" class="sidebar-link flex items-center p-3 text-gray-700 hover:text-gold-700 hover:bg-golden-100 rounded-md transition-all animate-fade-in">
+                        <i class="fas fa-bell mr-3 text-gold-600 w-5 text-center"></i>
+                        Pemberitahuan
+                    </a>
+                </li>
+                <li>
+                    <a href="/riwayat" class="sidebar-link flex items-center p-3 text-gray-700 hover:text-gold-700 hover:bg-golden-100 rounded-md transition-all animate-fade-in">
+                        <i class="fas fa-history mr-3 text-gold-600 w-5 text-center"></i>
+                        Riwayat
+                    </a>
+                </li>
+            </ul>
+        </aside>
             
             <div id="mobileOverlay" class="hidden fixed inset-0 bg-black opacity-50 z-40 md:hidden"></div>
 
@@ -350,6 +346,14 @@
                                                                 title="Edit">
                                                             <i class="fas fa-edit"></i>
                                                         </button>
+                                                        <% if (row.status === 'Selesai' && row.nomor_wa) { %>
+                                                            <a href="https://wa.me/<%= row.nomor_wa %>?text=Yth.%20<%= encodeURIComponent(row.nama) %>,%0ASurat%20Keterangan%20Tidak%20Mampu%20Anda%20dengan%20nomor%20<%= encodeURIComponent(row.nomor_surat) %>%20sudah%20selesai.%20Anda%20bisa%20mengambil%20di%20balai%20desa%20pukul%2008.00%20-%2015.00."
+                                                               class="inline-flex items-center p-1 rounded hover:bg-teal-100 text-teal-600 hover:text-teal-800"
+                                                               title="Kirim WA"
+                                                               target="_blank">
+                                                                <i class="fab fa-whatsapp text-lg"></i>
+                                                            </a>
+                                                        <% } %>
                                                     </div>
                                                 </td>
                                             </tr>
@@ -364,43 +368,6 @@
                                 <% } %>
                             </tbody>
                         </table>
-                    
-                        <% if (totalPagesSKTM > 1) { %>
-                            <div class="flex justify-between items-center mt-6">
-                                <div class="text-sm text-gray-600">
-                                    Menampilkan <%= currentPageSKTM * perPageSKTM - perPageSKTM + 1 %>-<%= Math.min(currentPageSKTM * perPageSKTM, totalItemsSKTM) %> dari <%= totalItemsSKTM %> surat
-                                </div>
-                                <div class="flex space-x-1">
-                                    <% if (currentPageSKTM > 1) { %>
-                                        <a href="?page=<%= currentPageSKTM - 1 %>&perPage=<%= perPageSKTM %>&status=<%= currentStatusSKTM %>&search=<%= currentSearchSKTM %>"
-                                           class="px-3 py-1 border rounded hover:bg-golden-50">
-                                            <i class="fas fa-chevron-left"></i>
-                                        </a>
-                                    <% } %>
-                    
-                                    <% for (let i = 1; i <= totalPagesSKTM; i++) { %>
-                                        <% if (i === currentPageSKTM) { %>
-                                            <span class="px-3 py-1 border rounded bg-gold-600 text-white"><%= i %></span>
-                                        <% } else if (i >= currentPageSKTM - 2 && i <= currentPageSKTM + 2) { %>
-                                            <a href="?page=<%= i %>&perPage=<%= perPageSKTM %>&status=<%= currentStatusSKTM %>&search=<%= currentSearchSKTM %>"
-                                               class="px-3 py-1 border rounded hover:bg-golden-50"><%= i %></a>
-                                        <% } else if (i === 1 || i === totalPagesSKTM) { %>
-                                            <a href="?page=<%= i %>&perPage=<%= perPageSKTM %>&status=<%= currentStatusSKTM %>&search=<%= currentSearchSKTM %>"
-                                               class="px-3 py-1 border rounded hover:bg-golden-50"><%= i %></a>
-                                        <% } else if (i === currentPageSKTM - 3 || i === currentPageSKTM + 3) { %>
-                                            <span class="px-3 py-1">...</span>
-                                        <% } %>
-                                    <% } %>
-                    
-                                    <% if (currentPageSKTM < totalPagesSKTM) { %>
-                                        <a href="?page=<%= currentPageSKTM + 1 %>&perPage=<%= perPageSKTM %>&status=<%= currentStatusSKTM %>&search=<%= currentSearchSKTM %>"
-                                           class="px-3 py-1 border rounded hover:bg-golden-50">
-                                            <i class="fas fa-chevron-right"></i>
-                                        </a>
-                                    <% } %>
-                                </div>
-                            </div>
-                        <% } %>
                     </div>
                 </div>
                 
@@ -508,8 +475,8 @@
                     </div>
                 </div>
                 
-                <!-- Edit Surat Modal -->
-                <div id="editSuratSKTMModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
+                 <!-- Edit Surat Modal -->
+                 <div id="editSuratSKTMModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
                     <div class="bg-white rounded-lg shadow-xl w-full max-w-2xl max-h-screen overflow-y-auto">
                         <div class="flex justify-between items-center border-b p-4">
                             <h3 class="text-xl font-semibold text-gray-800">Edit Surat Keterangan Tidak Mampu</h3>
@@ -521,54 +488,56 @@
                             <input type="hidden" id="edit_id_sktm" name="id">
                             <input type="hidden" id="edit_jenis_surat" name="jenis_surat" value="sktm">
                             <input type="hidden" id="edit_tanggal_permohonan" name="tanggal_permohonan">
-
+                
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <!-- Data Pemohon -->
                                 <div>
                                     <label for="edit_nama" class="block text-sm font-medium text-gray-700 mb-1">Nama Lengkap*</label>
                                     <input type="text" id="edit_nama" name="nama" required
                                         class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gold-500">
                                 </div>
-
+                
                                 <div>
                                     <label for="edit_no_kk" class="block text-sm font-medium text-gray-700 mb-1">Nomor KK*</label>
                                     <input type="text" id="edit_no_kk" name="no_kk" required
                                         class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gold-500">
                                 </div>
-
+                
                                 <div>
                                     <label for="edit_nik" class="block text-sm font-medium text-gray-700 mb-1">NIK*</label>
                                     <input type="text" id="edit_nik" name="nik" required
                                         class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gold-500">
                                 </div>
-
+                
                                 <div>
                                     <label for="edit_tempat_tanggal_lahir" class="block text-sm font-medium text-gray-700 mb-1">Tempat/Tgl Lahir*</label>
                                     <input type="text" id="edit_tempat_tanggal_lahir" name="tempat_tanggal_lahir" required
                                         class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gold-500">
                                 </div>
-
+                
                                 <div>
                                     <label for="edit_jenis_kelamin" class="block text-sm font-medium text-gray-700 mb-1">Jenis Kelamin*</label>
                                     <select id="edit_jenis_kelamin" name="jenis_kelamin" required
                                         class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gold-500">
-                                        <option value="Laki-laki">Laki-laki</option>
-                                        <option value="Perempuan">Perempuan</option>
+                                        <option value="L">L</option>
+                                        <option value="P">P</option>
                                     </select>
                                 </div>
-
+                
                                 <div>
                                     <label for="edit_alamat" class="block text-sm font-medium text-gray-700 mb-1">Alamat*</label>
                                     <input type="text" id="edit_alamat" name="alamat" required
                                         class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gold-500">
                                 </div>
-
+                
                                 <div>
                                     <label for="edit_nomor_hp" class="block text-sm font-medium text-gray-700 mb-1">Nomor HP</label>
                                     <input type="tel" id="edit_nomor_hp" name="nomor_hp"
+                                        pattern="08[0-9]{9,11}"
+                                        title="Nomor HP harus dimulai dengan 08 dan minimal 11 digit"
                                         class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gold-500">
+                                    <p class="text-xs text-gray-500 mt-1">Format: 08xxxxxxxx (10-13 digit)</p>
                                 </div>
-
+                
                                 <div>
                                     <label for="edit_status_sktm" class="block text-sm font-medium text-gray-700 mb-1">Status*</label>
                                     <select id="edit_status_sktm" name="status" required
@@ -578,8 +547,11 @@
                                         <option value="Ditolak">Ditolak</option>
                                     </select>
                                 </div>
+                
+                                <div id="whatsappButtonEditSKTM" class="md:col-span-2 mt-4">
+                                </div>
                             </div>
-
+                
                             <div class="mt-6 flex justify-end space-x-3">
                                 <button type="button" id="cancelEditSKTMModal" class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-100">
                                     Batal
@@ -596,75 +568,97 @@
 
         <!-- Footer -->
         <footer class="bg-gray-800 text-white">
-            <div class="container mx-auto px-6 py-8">
+            <div class="container mx-auto px-4 md:px-6 py-6 md:py-8">
                 <div class="flex flex-col md:flex-row justify-between">
                     <div class="mb-8 md:mb-0">
                         <div class="flex items-center mb-4">
                             <div class="bg-gold-500 p-2 rounded-lg mr-3">
                                 <i class="fas fa-envelope-open-text text-white"></i>
                             </div>
-                            <span class="text-xl font-bold">Sistem Surat Desa</span>
+                            <span class="text-lg md:text-xl font-bold">Sistem Surat Desa</span>
                         </div>
-                        <p class="text-gray-400 text-sm max-w-xs">
-                            Sistem pelayanan surat menyurat digital untuk mempermudah administrasi warga Desa Sojiwan.
+                        <p class="text-gray-400 text-xs md:text-sm max-w-xs">
+                            Sistem pelayanan surat menyurat digital untuk mempermudah administrasi warga Desa Kebondalem Kidul.
                         </p>
-                        <p class="text-gold-400 font-semibold mt-4">© 2025 Tim KKN Sowan Sojiwan</p>
+                        <p class="text-gold-400 font-semibold mt-3 md:mt-4 text-sm md:text-base">© 2025 Tim KKN Sowan Sojiwan</p>
                     </div>
-                    
-                    <div class="grid grid-cols-2 md:grid-cols-3 gap-8">
+        
+                    <div class="grid grid-cols-2 md:grid-cols-3 gap-6 md:gap-8">
                         <div>
-                            <h3 class="text-gold-400 font-semibold mb-4 text-lg">Navigasi</h3>
-                            <ul class="space-y-2">
-                                <li><a href="/" class="footer-link text-gray-300 hover:text-gold-400">Beranda</a></li>
-                                <li><a href="/surat-kbi" class="footer-link text-gray-300 hover:text-gold-400">Surat Beda Identitas</a></li>
-                                <li><a href="/statistik" class="footer-link text-gray-300 hover:text-gold-400">Statistik</a></li>
-                                <li><a href="/pengaturan" class="footer-link text-gray-300 hover:text-gold-400">Pengaturan</a></li>
+                            <h3 class="text-gold-400 font-semibold mb-3 md:mb-4 text-base md:text-lg">Navigasi</h3>
+                            <ul class="space-y-1 md:space-y-2">
+                                <li><a href="/" class="footer-link text-xs md:text-sm text-gray-300 hover:text-gold-400">Beranda</a></li>
+                                
+                                <li class="relative group">
+                                    <a href="#" class="footer-link text-xs md:text-sm text-gray-300 hover:text-gold-400 flex items-center">
+                                        Surat 
+                                        <i class="fas fa-caret-down ml-1 text-gray-400 transition-transform duration-300 group-hover:rotate-180"></i>
+                                    </a>
+                        
+                                    <!-- Dropdown -->
+                                    <ul class="absolute left-0 top-full mt-2 w-56 bg-gray-700 rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 ease-out z-20">
+                                        <li>
+                                            <a href="/surat-pengantar" class="block px-4 py-2 text-xs md:text-sm text-gray-300 hover:text-gold-400 whitespace-nowrap">Surat Pengantar</a>
+                                        </li>
+                                        <li>
+                                            <a href="/surat-tidak-mampu" class="block px-4 py-2 text-xs md:text-sm text-gray-300 hover:text-gold-400 whitespace-nowrap">Surat Keterangan Tidak Mampu</a>
+                                        </li>
+                                        <li>
+                                            <a href="/surat-beda-identitas" class="block px-4 py-2 text-xs md:text-sm text-gray-300 hover:text-gold-400 whitespace-nowrap">Surat Keterangan Beda Identitas</a>
+                                        </li>
+                                        <li>
+                                            <a href="/surat-usaha" class="block px-4 py-2 text-xs md:text-sm text-gray-300 hover:text-gold-400 whitespace-nowrap">Surat Keterangan Usaha</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                        
+                                <li><a href="/riwayat" class="footer-link text-xs md:text-sm text-gray-300 hover:text-gold-400">Riwayat</a></li>
+                                <li><a href="/notifikasi" class="footer-link text-xs md:text-sm text-gray-300 hover:text-gold-400">Pemberitahuan</a></li>
                             </ul>
                         </div>
                         
+                        
+        
                         <div>
-                            <h3 class="text-gold-400 font-semibold mb-4 text-lg">Bantuan</h3>
-                            <ul class="space-y-2">
-                                <li><a href="#" class="footer-link text-gray-300 hover:text-gold-400">Tutorial Penggunaan</a></li>
-                                <li><a href="#" class="footer-link text-gray-300 hover:text-gold-400">FAQ</a></li>
-                                <li><a href="#" class="footer-link text-gray-300 hover:text-gold-400">Kebijakan Privasi</a></li>
-                                <li><a href="#" class="footer-link text-gray-300 hover:text-gold-400">Syarat & Ketentuan</a></li>
+                            <h3 class="text-gold-400 font-semibold mb-3 md:mb-4 text-base md:text-lg">Bantuan</h3>
+                            <ul class="space-y-1 md:space-y-2">
+                                <li><a href="/tutorial-penggunaan" class="footer-link text-xs md:text-sm text-gray-300 hover:text-gold-400">Tutorial Penggunaan</a></li>
+                                <li><a href="/faq" class="footer-link text-xs md:text-sm text-gray-300 hover:text-gold-400">FAQ</a></li>
+                                <li><a href="/kebijakan-privasi" class="footer-link text-xs md:text-sm text-gray-300 hover:text-gold-400">Kebijakan Privasi</a></li>
+                                <li><a href="/syarat-ketentuan" class="footer-link text-xs md:text-sm text-gray-300 hover:text-gold-400">Syarat & Ketentuan</a></li>
                             </ul>
                         </div>
-                        
+        
                         <div>
-                            <h3 class="text-gold-400 font-semibold mb-4 text-lg">Kontak</h3>
-                            <ul class="space-y-2">
-                                <li class="flex items-center">
-                                    <i class="fas fa-map-marker-alt text-gold-400 mr-2"></i>
-                                    <span class="text-gray-300">Desa Sojiwan, Jawa Tengah</span>
+                            <h3 class="text-gold-400 font-semibold mb-3 md:mb-4 text-base md:text-lg">Kontak</h3>
+                            <ul class="space-y-1 md:space-y-2">
+                                <li class="flex items-start">
+                                    <i class="fas fa-map-marker-alt text-gold-400 mr-2 mt-1 text-xs md:text-sm"></i>
+                                    <span class="text-xs md:text-sm text-gray-300">Desa Kebondalem Kidul, Jawa Tengah</span>
                                 </li>
-                                <li class="flex items-center">
-                                    <i class="fas fa-envelope text-gold-400 mr-2"></i>
-                                    <a href="mailto:kkn.sojiwan2025@example.com" class="footer-link text-gray-300 hover:text-gold-400">kkn.sojiwan2025@example.com</a>
+                                <li class="flex items-start">
+                                    <i class="fas fa-envelope text-gold-400 mr-2 mt-1 text-xs md:text-sm"></i>
+                                    <a href="mailto:desakebondalemkidul@gmail.com" class="footer-link text-xs md:text-sm text-gray-300 hover:text-gold-400">desakebondalemkidul@gmail.com</a>
                                 </li>
-                                <li class="flex items-center">
-                                    <i class="fas fa-phone-alt text-gold-400 mr-2"></i>
-                                    <a href="tel:+6281234567890" class="footer-link text-gray-300 hover:text-gold-400">+62 812-3456-7890</a>
+                                <li class="flex items-start">
+                                    <i class="fas fa-phone-alt text-gold-400 mr-2 mt-1 text-xs md:text-sm"></i>
+                                    <a href="tel:+62895323350805" class="footer-link text-xs md:text-sm text-gray-300 hover:text-gold-400">+62 8953-2335-0805</a>
                                 </li>
                             </ul>
-                            <div class="mt-4 flex space-x-4">
-                                <a href="#" class="footer-link text-gray-300 hover:text-gold-400 text-xl">
-                                    <i class="fab fa-facebook"></i>
-                                </a>
-                                <a href="#" class="footer-link text-gray-300 hover:text-gold-400 text-xl">
+                            <div class="mt-3 md:mt-4 flex space-x-3 md:space-x-4">
+                                <a href="https://www.instagram.com/sowansojiwan" class="footer-link text-gray-300 hover:text-gold-400 text-base md:text-xl">
                                     <i class="fab fa-instagram"></i>
                                 </a>
-                                <a href="#" class="footer-link text-gray-300 hover:text-gold-400 text-xl">
+                                <a href="https://wa.me/628562519826" class="footer-link text-gray-300 hover:text-gold-400 text-base md:text-xl">
                                     <i class="fab fa-whatsapp"></i>
                                 </a>
                             </div>
                         </div>
                     </div>
                 </div>
-                
-                <div class="border-t border-gray-700 mt-8 pt-6 text-center">
-                    <p class="text-gray-400 text-sm">
+        
+                <div class="border-t border-gray-700 mt-6 md:mt-8 pt-4 md:pt-6 text-center">
+                    <p class="text-gray-400 text-xs md:text-sm">
                         Sistem ini dikembangkan oleh Tim KKN UPN "VETERAN" YOGYAKARTA 2025 untuk Desa Kebondalem Kidul
                     </p>
                 </div>
@@ -960,7 +954,7 @@
                 editButton.disabled = true;
             }
 
-            const response = await fetch(`/api/surat-sktm/${id}`, {  // Sesuaikan dengan URL API Anda
+            const response = await fetch(`/api/surat-sktm/${id}`, { // Sesuaikan dengan URL API Anda
                 headers: { 'Accept': 'application/json' }
             });
 
@@ -982,12 +976,32 @@
             document.getElementById('edit_no_kk').value = data.no_kk || '';
             document.getElementById('edit_nik').value = data.nik || '';
             document.getElementById('edit_tempat_tanggal_lahir').value = data.tempat_tanggal_lahir || '';
-            document.getElementById('edit_jenis_kelamin').value = data.jenis_kelamin || '';
+            document.getElementById('edit_jenis_kelamin').value = data.jenis_kelamin || 'Laki-laki'; // Lebih deskriptif
             document.getElementById('edit_alamat').value = data.alamat || '';
             document.getElementById('edit_nomor_hp').value = data.nomor_hp || '';
             document.getElementById('edit_status_sktm').value = data.status || 'Diproses';
             document.getElementById('edit_tanggal_permohonan').value = data.tanggal_permohonan || '';
 
+            // Validasi nomor HP saat form submit (tetap ada)
+            const nomorHpInput = document.getElementById('edit_nomor_hp');
+            if (nomorHpInput.value && !nomorHpInput.value.startsWith('08')) {
+                showNotification('Nomor HP harus dimulai dengan 08', 'warning');
+            }
+
+            // Tambahkan atau hapus tombol WA berdasarkan status dan nomor_hp setelah data dimuat
+            const whatsappButtonContainer = document.getElementById('whatsappButtonEditSKTM');
+            whatsappButtonContainer.innerHTML = ''; // Bersihkan kontainer sebelum menambah tombol baru
+
+            if (data.status === 'Selesai' && data.nomor_hp) {
+                const whatsappLink = document.createElement('a');
+                whatsappLink.href = `https://wa.me/${data.nomor_hp}?text=Yth.%20${encodeURIComponent(data.nama)},%0ASurat%20Keterangan%20Tidak%20Mampu%20Anda%20dengan%20nomor%20${encodeURIComponent(data.nomor_surat || '...')}%20sudah%20selesai.%20Anda%20bisa%20mengambil%20di%20balai%20desa%20pukul%2008.00%20-%2015.00.`;
+                whatsappLink.target = '_blank';
+                whatsappLink.className = 'inline-flex items-center p-1 rounded hover:bg-teal-100 text-teal-600 hover:text-teal-800 mt-2';
+                whatsappLink.title = 'Kirim WA';
+                whatsappLink.innerHTML = '<i class="fab fa-whatsapp text-lg mr-2"></i> Kirim WA Pemberitahuan';
+
+                whatsappButtonContainer.appendChild(whatsappLink);
+            }
 
             editSuratSKTMModal.classList.remove('hidden');
 

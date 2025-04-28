@@ -1,254 +1,342 @@
-<!DOCTYPE html> 
- <html lang="en"> 
- <head> 
-  <meta charset="UTF-8"> 
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
-  <title>Surat Keterangan Tidak Mampu</title> 
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"> 
-  <style> 
-  /* Gaya umum untuk kertas */ 
-  .paper { 
-  width: 21cm; /* Ukuran kertas A4 */ 
-  min-height: 29.7cm; 
-  padding: 2cm; 
-  margin: 1cm auto; 
-  border: 1px solid #ccc; 
-  background-color: white; 
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1); 
-  font-family: 'Times New Roman', serif; 
-  } 
-  
-  /* Header surat */ 
-  .header { 
-  text-align: center; 
-  margin-bottom: 20px; 
-  } 
-  
-  .logo { 
-  max-width: 100px; 
-  height: auto; 
-  margin-bottom: 10px; 
-  } 
-  
-  .garis-bawah { 
-  border-bottom: 2px solid black; 
-  margin-top: 5px; 
-  } 
-  
-  .kode-desa { 
-  font-size: 14px; 
-  margin-top: 5px; 
-  } 
-  
-  /* Judul surat */ 
-  .judul-surat { 
-  text-align: center; 
-  margin-bottom: 20px; 
-  } 
-  
-  /* Isi surat */ 
-  .content { 
-  text-align: justify; 
-  line-height: 1.5; 
-  margin-bottom: 20px; 
-  } 
-  
-  .label { 
-  display: inline-block; 
-  width: 150px; 
-  font-weight: bold; 
-  } 
-  
-  .value { 
-  display: inline-block; 
-  } 
-  
-  .data-lain { 
-  display: flex; 
-  justify-content: space-between; 
-  margin-bottom: 5px; 
-  } 
-  
-  .data-lain-label { 
-  font-weight: bold; 
-  } 
-  
-  .data-lain-value { 
-  /* Gaya ditambahkan untuk memastikan nilai rata kanan */ 
-  text-align: right; 
-  flex: 1; /* Mengisi sisa ruang */ 
-  } 
-  
-  /* Blok tanda tangan */ 
-  .signature-block { 
-  display: flex; 
-  justify-content: flex-end; 
-  margin-top: 30px; 
-  } 
-  
-  .signature-container { 
-  text-align: center; 
-  } 
-  
-  .tanggal-ttd { 
-  margin-bottom: 5px; 
-  } 
-  
-  .signature-name { 
-  margin-top: 60px; 
-  font-weight: bold; 
-  } 
-  
-  /* Tombol */ 
-  .no-print { 
-  text-align: center; 
-  margin-top: 20px; 
-  } 
-  
-  .no-print button { 
-  padding: 12px 24px; 
-  border: none; 
-  border-radius: 6px; 
-  font-size: 16px; 
-  cursor: pointer; 
-  margin: 0 10px; 
-  transition: all 0.3s ease; 
-  display: inline-flex; 
-  align-items: center; 
-  gap: 8px; 
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); 
-  } 
-  
-  .btn-print { 
-  background-color: #28a745; 
-  color: white; 
-  } 
-  
-  .btn-back { 
-  background-color: #6c757d; 
-  color: white; 
-  } 
-  
-  .no-print button:hover { 
-  transform: translateY(-2px); 
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15); 
-  } 
-  
-  .no-print button:active { 
-  transform: translateY(0); 
-  } 
-  
-  /* Hanya untuk tampilan di browser */ 
-  @media screen { 
-  .no-print { 
-  display: block; 
-  text-align: center; 
-  margin-top: 20px; 
-  } 
-  } 
-  
-  /* Tidak muncul di PDF */ 
-  @media print { 
-  @page { 
-  size: A4; 
-  /* Margin yang disesuaikan sama dengan surat sebelumnya */ 
-  margin-top: 2cm; 
-  margin-bottom: 2cm; 
-  margin-left: 2.5cm; 
-  margin-right: 2cm; 
-  } 
-  
-  body { 
-  margin: 0 !important; 
-  padding: 0 !important; 
-  -webkit-print-color-adjust: exact; 
-  } 
-  
-  .paper { 
-  width: auto !important; 
-  min-height: auto !important; 
-  margin: 0 !important; 
-  padding: 0 !important; 
-  box-shadow: none !important; 
-  /* Menghilangkan border pada saat cetak */ 
-  border: none !important; 
-  background-color: transparent !important; 
-  } 
-  
-  .no-print { 
-  display: none !important; 
-  } 
-  } 
-  </style> 
- </head>
- <body> 
-    <div class="paper"> 
-     <div class="header"> 
-      <img class="logo" src="/image/logokebondalem-fix.png" alt="Logo Desa"> 
-      <h3>PEMERINTAH KABUPATEN KLATEN</h3> 
-      <h3>KECAMATAN PRAMBANAN</h3> 
-      <h2>DESA&nbsp;KEBONDALEM&nbsp;KIDUL</h2> 
-      <p>Sekretariat : Bero RT 002 RW 006, Kebondalem Kidul, Prambanan, Klaten. Pos 57454</p> 
-      <div class="garis-bawah"></div> 
-      <p class="kode-desa">No. Kode Desa/Kelurahan: 3310.012005</p> 
-     </div> 
-  
-     <div class="judul-surat"> 
-      <h3 style="font-size: 22px; font-weight: bold; ">SURAT KETERANGAN TIDAK MAMPU</h3> 
-      <p style="font-weight: bold; margin-top: -5px;">Nomor : <%= suratSKTM.nomor_surat || '' %></p> 
-     </div> 
-  
-     <div class="content"> 
-      <p>Yang bertanda tangan di bawah ini, Kepala Desa Kebondalem Kidul, Kecamatan Prambanan, Kabupaten Klaten, menerangkan bahwa:</p> 
-      <p><span class="label">Nama</span><span class="value">: <strong><%= suratSKTM.nama ? suratSKTM.nama.toUpperCase() : '' %></strong></span></p> 
-      <div class="data-lain"> 
-       <p class="data-lain-label">No. Kartu Keluarga</p> 
-       <p class="data-lain-value">: <%= suratSKTM.no_kk || '' %></p> 
-      </div> 
-      <div class="data-lain"> 
-       <p class="data-lain-label">Nomor Induk Kependudukan</p> 
-       <p class="data-lain-value">: <%= suratSKTM.nik || '' %></p> 
-      </div> 
-      <div class="data-lain"> 
-       <p class="data-lain-label">Tempat, Tanggal Lahir</p> 
-       <p class="data-lain-value">: <%= suratSKTM.tempat_tanggal_lahir || '' %></p> 
-      </div> 
-      <div class="data-lain"> 
-       <p class="data-lain-label">Jenis Kelamin</p> 
-       <p class="data-lain-value">: <%= suratSKTM.jenis_kelamin || '' %></p> 
-      </div> 
-      <div class="data-lain"> 
-       <p class="data-lain-label">Alamat</p> 
-       <p class="data-lain-value">: <%= suratSKTM.alamat || '' %></p> 
-      </div> 
-      <div class="data-lain"> 
-       <p class="data-lain-label">Nomor HP</p> 
-       <p class="data-lain-value">: <%= suratSKTM.nomor_hp || '' %></p> 
-      </div> 
-  
-      <p style="margin-top: 20px;">Adalah benar-benar warga Desa Kebondalem Kidul dan termasuk keluarga kurang mampu/tidak mampu. Surat keterangan ini dibuat untuk <%= suratSKTM.jenis_surat || 'keperluan lain' %>.</p> 
-      <p style="margin-top: 10px;">Demikian surat keterangan ini dibuat dengan sebenarnya, semoga menjadikan periksa dan dapat dipergunakan sebagaimana mestinya.</p> 
-     </div> 
-  
-     <div class="signature-block"> 
-      <div class="signature-container"> 
-       <div class="ttd-kanan"> 
-        <p class="tanggal-ttd">Kebondalem Kidul, <%= new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) %></p> 
-        <p >a.n Kepala Desa Kebondalem Kidul</p> 
-        <p>Sekretaris Desa</p> 
-        <div style="height: 60px;"></div> 
-        <p class="signature-name">DARU PURNOMO</p> 
-       </div> 
-      </div> 
-     </div> 
-  
-     <div class="no-print" style="text-align: center; margin-top: 30px;"> 
-      <button class="btn-print" onclick="window.print()"> 
-       <i class="fas fa-print"></i> Cetak 
-      </button> 
-      <button class="btn-back" onclick="window.history.back()"> 
-       <i class="fas fa-arrow-left"></i> Kembali 
-      </button> 
-     </div> 
-    </div> 
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cetak Surat Keterangan Tidak Mampu</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+      /* Global Styles */
+      body {
+          font-family: "Times New Roman", serif;
+          margin: 0;
+          padding: 0;
+          background-color: #f4f4f4;
+          display: flex;
+          justify-content: center;
+          align-items: flex-start;
+      }
+   
+      .paper {
+          width: 210mm; /* Ukuran A4 */
+          height: 297mm;
+          background-color: white;
+          padding: 1cm 2cm 2cm 2cm;
+          box-sizing: border-box;
+          box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+          position: relative;
+          margin: 20px auto;
+      }
+   
+      .header {
+          text-align: center;
+          margin-bottom: 30px;
+          position: relative;
+      }
+   
+      .logo {
+          width: 80px;
+          height: auto;
+          position: absolute;
+          left: 10px;
+          top: 5px;
+      }
+   
+      .header h3 {
+          margin: 5px 0;
+          font-size: 20px;
+          font-weight: normal;
+      }
+   
+      .header h2 {
+          font-size: 24px;
+          font-weight: bold;
+          margin: 5px 0;
+          letter-spacing: 1px;
+          word-spacing: 5px;
+      }
+   
+      .header p {
+          margin: 2px 0;
+          font-size: 13px;
+      }
+   
+      .garis-bawah {
+          border-bottom: 2px solid black;
+          margin: 10px 0 15px 0;
+      }
+   
+      .kode-desa {
+          text-align: left;
+          font-size: 14px;
+          margin-top: 10px;
+      }
+   
+      /* Judul Surat */
+      .judul-surat {
+          text-align: center;
+          margin: 5mm 0 7mm 0;
+      }
+   
+      .judul-surat h3 {
+          font-size: 22px;
+          font-weight: bold;
+          text-decoration: underline;
+          margin-bottom: 2mm;
+      }
+   
+      .judul-surat p {
+          font-size: 12pt;
+          font-weight: bold;
+          margin: 0;
+      }
+   
+      /* Isi Konten */
+      .content {
+          font-size: 12pt;
+          line-height: 1.5;
+          margin-left: 1.5cm; /* Ditambah dari 1cm ke 1.5cm */
+          text-align: left;
+      }
+   
+      .content p {
+          margin: 6px 0;
+          text-indent: 0;
+          display: flex;
+          align-items: baseline;
+      }
+   
+      .content p:first-child {
+          margin-top: 15px;
+          text-indent: 1.5cm; /* Ditambah dari 1cm ke 1.5cm */
+      }
+   
+      .content p:last-child {
+          text-indent: 1.5cm; /* Ditambah dari 1cm ke 1.5cm */
+      }
+   
+      .label {
+          width: 200px; /* Diperlebar dari 180px */
+          display: inline-block;
+          margin-right: 10px;
+          text-align: left;
+      }
+   
+      .value {
+          flex-grow: 1;
+          display: inline-block;
+          text-align: left;
+      }
+   
+      .bold {
+          font-weight: bold;
+      }
+   
+      /* Paragraf khusus dengan margin dan indent */
+      .special-paragraph {
+          margin-top: 2mm !important; /* Ditambah dari sebelumnya */
+          text-indent: 1.5cm !important; /* Ditambah indentasi */
+      }
+   
+      /* Tanda Tangan */
+   .tanggal-ttd {
+       margin-top: 15mm;
+       text-align: right;
+       font-size: 12pt;
+   }
+
+   .signature-container {
+       margin-top: 5px;
+       text-align: right;
+   }
+
+   .ttd-kanan {
+       text-align: right; /* Pastikan konten di dalam ttd-kanan rata kanan */
+   }
+
+   .sekretaris {
+       margin: 0;
+       font-size: 12pt;
+       text-align: right; /* Pastikan teks sekretaris rata kanan */
+   }
+
+   .daru-purnomo {
+       margin-top: 80px;
+       text-decoration: underline;
+       font-weight: bold;
+       font-size: 14pt;
+       text-align: right; /* Pastikan nama juga rata kanan */
+   }
+   
+      /* Tombol */
+      .no-print {
+          text-align: center;
+          margin-top: 30px;
+      }
+   
+      .btn-preview, .btn-print, .btn-save, .btn-back {
+          padding: 10px 20px;
+          border: none;
+          border-radius: 4px;
+          font-size: 14px;
+          cursor: pointer;
+          margin: 0 8px;
+          transition: all 0.3s ease;
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      }
+   
+      .btn-preview {
+          background-color: #17a2b8;
+          color: white;
+      }
+   
+      .btn-print {
+          background-color: #28a745;
+          color: white;
+      }
+   
+      .btn-save {
+          background-color: #007bff;
+          color: white;
+      }
+   
+      .btn-back {
+          background-color: #6c757d;
+          color: white;
+      }
+   
+      .no-print button:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+      }
+   
+      /* Print Styles */
+      @media print {
+          @page {
+              size: A4;
+              margin: 0;
+          }
+   
+          body {
+              background-color: white !important;
+              margin: 0 !important;
+              padding: 0 !important;
+          }
+   
+          .paper {
+              width: 100%;
+              height: 100%;
+              margin: 0;
+              padding: 2.5cm 2cm 2cm 2cm !important;
+              box-shadow: none;
+          }
+   
+          .no-print {
+              display: none !important;
+          }
+   
+          .logo {
+              width: 80px;
+              height: auto;
+          }
+      }
+     </style>
+   </head>
+   <body>
+      <div class="paper">
+          <div class="header">
+              <img class="logo" src="/image/logokebondalem-fix.png" alt="Logo Desa">
+              <h3>PEMERINTAH KABUPATEN KLATEN</h3>
+              <h3>KECAMATAN PRAMBANAN</h3>
+              <h2>DESA KEBONDALEM KIDUL</h2>
+              <p>Sekretariat : Bero RT 002 RW 006, Kebondalem Kidul, Prambanan, Klaten. Pos 57454</p>
+              <div class="garis-bawah"></div>
+              <p class="kode-desa">No. Kode Desa/Kelurahan: 3310.012005</p>
+          </div>
+   
+          <div class="judul-surat">
+              <h3>SURAT KETERANGAN TIDAK MAMPU</h3>
+              <p>Nomor : 460 / ...... / 05 / 2025</p>
+          </div>
+   
+          <div class="content">
+              <p>Yang bertanda tangan di bawah ini, Kepala Desa Kebondalem Kidul, Kecamatan Prambanan, Kabupaten Klaten, menerangkan bahwa:</p>
+   
+              <p><span class="label">Nama</span><span class="value">: <strong><%= suratSKTM.nama ? suratSKTM.nama.toUpperCase() : '' %></strong></span></p>
+              <p><span class="label">No. Kartu Keluarga</span><span class="value">: <%= suratSKTM.no_kk || '' %></span></p>
+              <p><span class="label">Nomor Induk Kependudukan</span><span class="value">: <%= suratSKTM.nik || '' %></span></p>
+              <p><span class="label">Tempat, Tanggal Lahir</span><span class="value">: <%= suratSKTM.tempat_tanggal_lahir || '' %></span></p>
+              <p><span class="label">Jenis Kelamin</span><span class="value">: <%= suratSKTM.jenis_kelamin || '' %></span></p>
+              <p><span class="label">Alamat</span><span class="value">: <%= suratSKTM.alamat || '' %></span></p>
+              <p><span class="label">Nomor HP</span><span class="value">: <%= suratSKTM.nomor_hp || '' %></span></p>
+   
+              <p class="special-paragraph">
+                  Termasuk dalam keluarga tidak mampu/miskin dan Tidak Mempunyai Jaminan Kesehatan apapun dan diusulkan menjadi Peserta Pekerja Bukan Penerima Upah Pemerintah Kabupaten Klaten (JAMKESDA).
+              </p>
+   
+              <p>
+                  Demikian surat keterangan ini kami buat agar dapat dipergunakan sebagaimana mestinya.
+              </p>
+          </div>
+   
+          <div class="tanggal-ttd">
+            Kebondalem Kidul, <%= new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) %>
+        </div>
+ 
+        <div class="signature-container">
+            <div class="ttd-kanan">
+                <p class="sekretaris">a.n Kepala Desa Kebondalem Kidul<br>Sekretaris Desa</p>
+                <p class="daru-purnomo">DARU PURNOMO</p>
+            </div>
+        </div>
+   
+          <div class="no-print">
+              <button class="btn-preview" onclick="previewPdf('<%= suratSKTM.id %>')">
+                  <i class="fas fa-eye"></i> Preview
+              </button>
+              <button class="btn-print" onclick="window.print()">
+                  <i class="fas fa-print"></i> Cetak
+              </button>
+              <button class="btn-save" onclick="savePdf('<%= suratSKTM.id %>')">
+                  <i class="fas fa-save"></i> Simpan
+              </button>
+              <button class="btn-back" onclick="window.history.back()">
+                  <i class="fas fa-arrow-left"></i> Kembali
+              </button>
+          </div>
+      </div>
+   
+      <script>
+          function previewPdf(suratId) {
+              window.open(`/download-pdf-sktm/${suratId}?action=preview`, '_blank',
+                  'width=900,height=1200,scrollbars=yes,resizable=yes');
+              if (window.focus) {
+                  window.focus();
+              }
+          }
+   
+          function savePdf(suratId) {
+              const namaFile = `Surat_SKTM_${suratId}_${new Date().toISOString().slice(0, 10)}.pdf`;
+              fetch(`/download-pdf-sktm/${suratId}?action=download`)
+                  .then(response => response.blob())
+                  .then(blob => {
+                      const url = window.URL.createObjectURL(blob);
+                      const a = document.createElement('a');
+                      a.href = url;
+                      a.download = namaFile;
+                      document.body.appendChild(a);
+                      a.click();
+                      window.URL.revokeObjectURL(url);
+                      document.body.removeChild(a);
+                  })
+                  .catch(error => {
+                      console.error('Error saving PDF:', error);
+                      alert('Gagal menyimpan PDF');
+                  });
+          }
+      </script>
    </body>
+   </html>

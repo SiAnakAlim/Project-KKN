@@ -104,78 +104,17 @@
     <!-- Navbar -->
     <nav class="bg-gradient-to-r from-gold-600 to-gold-500 p-4 text-white shadow-lg">
         <div class="container mx-auto flex justify-between items-center">
-            <div class="flex items-center space-x-3">
-                <button id="mobileMenuButton" class="md:hidden mr-2 text-white focus:outline-none">
-                    <i class="fas fa-bars text-xl"></i>
-                </button>
+            <div class="flex items-center space-x-3 ml">
                 <div class="bg-white p-2 rounded-lg shadow-md">
                     <i class="fas fa-envelope-open-text text-gold-600 text-xl"></i>
                 </div>
                 <span class="text-xl font-bold tracking-wide">Sistem Surat Desa</span>
             </div>
+    
             <div class="flex items-center space-x-4">
                 <div class="hidden md:block bg-gold-700 px-3 py-1 rounded-full text-sm font-medium animate-pulse-slow">
                     <i class="fas fa-circle text-xs mr-1"></i> Online
                 </div>
-    
-                <div class="relative">
-                    <button id="notificationBtn" class="p-2 rounded-full hover:bg-gold-700 relative">
-                        <i class="fas fa-bell text-xl"></i>
-                        <% if (notifications.filter(n => !n.is_read).length > 0) { %>
-                            <span class="notification-badge bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
-                                <%= notifications.filter(n => !n.is_read).length %>
-                            </span>
-                        <% } %>
-                    </button>
-                
-                    <div id="notificationDropdown" class="hidden absolute right-0 mt-2 bg-white rounded-md shadow-lg py-2 w-80 z-50">
-                        <div class="px-4 py-2 border-b border-gray-200 flex justify-between items-center">
-                            <h3 class="font-semibold text-gray-800">Notifikasi</h3>
-                            <span class="text-xs text-gold-600">
-                                <%= notifications.filter(n => !n.is_read).length %> baru
-                            </span>
-                        </div>
-                        <div class="max-h-60 overflow-y-auto" id="notificationsContainer">
-                            <% notifications.forEach(n => { %>
-                                <div class="px-4 py-2 hover:bg-gray-100 cursor-pointer border-b border-gray-200 notification-item"
-                                     data-type="<%= n.related_type %>" 
-                                     data-id="<%= n.related_id %>">
-                                    <p class="text-sm <%= n.is_read ? 'text-gray-500' : 'text-gray-700 font-semibold' %>">
-                                        <%= n.title %><br>
-                                        <strong>No. Surat:</strong> <%= n.nomor_surat %><br>
-                                        <strong>Nama:</strong> <%= n.nama %>
-                                    </p>
-                                    <p class="text-xs text-gray-400 mt-1">
-                                        <%= new Date(n.created_at).toLocaleString('id-ID') %>
-                                    </p>
-                                </div>
-                            <% }); %>
-                        </div>
-                        <div class="px-4 py-2 border-t border-gray-200 text-center">
-                            <a href="/notifications" class="text-sm text-gold-600 hover:underline">Lihat semua notifikasi</a>
-                        </div>
-                    </div>
-                </div>
-                
-    
-                <div class="relative">
-    <button id="historyBtn" class="p-2 rounded-full hover:bg-gold-700">
-        <i class="fas fa-history text-xl"></i>
-    </button>
-    <div id="historyDropdown" class="dropdown-content mt-2 bg-white rounded-md shadow-lg py-2 w-72 hidden">
-        <div class="px-4 py-2 border-b border-gray-200">
-            <h3 class="font-semibold text-gray-800">Riwayat Aktivitas Terakhir</h3>
-        </div>
-        <div id="activityList" class="max-h-60 overflow-y-auto">
-            <div class="px-4 py-3 text-center text-gray-500">
-                Klik untuk memuat riwayat
-            </div>
-        </div>
-        <div class="px-4 py-2 border-t border-gray-200 text-center">
-            <a href="/riwayat-lengkap" class="text-sm text-gold-600 hover:underline">Lihat riwayat lengkap</a>
-        </div>
-    </div>
-</div>
     
                 <div class="relative">
                     <div class="flex items-center space-x-2 cursor-pointer p-2" onclick="toggleProfileDropdown()">
@@ -184,7 +123,7 @@
                             <i class="fas fa-user text-gold-600"></i>
                         </div>
                     </div>
-        
+    
                     <div id="profileDropdown" class="absolute right-0 mt-2 w-64 bg-white rounded-md shadow-lg hidden z-10">
                         <div class="py-2">
                             <a href="/profil" class="block px-4 py-3 text-sm text-gray-700 hover:bg-gray-100 flex items-center">
@@ -196,8 +135,6 @@
                         </div>
                     </div>
                 </div>
-        
-    
             </div>
         </div>
     </nav>
@@ -260,20 +197,20 @@
         
             <div class="mt-8 mb-6 p-2 border-b border-gold-100">
                 <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-wider flex items-center">
-                    <i class="fas fa-cog mr-2 text-gold-500"></i> Administrasi
+                    <i class="fas fa-bell mr-2 text-gold-500"></i> Pemberitahuan & Riwayat
                 </h3>
             </div>
             <ul class="space-y-2">
                 <li>
-                    <a href="/statistik" class="sidebar-link flex items-center p-3 text-gray-700 hover:text-gold-700 hover:bg-golden-100 rounded-md transition-all animate-fade-in">
-                        <i class="fas fa-chart-pie mr-3 text-gold-600 w-5 text-center"></i>
-                        Statistik
+                    <a href="/notifikasi" class="sidebar-link flex items-center p-3 text-gray-700 hover:text-gold-700 hover:bg-golden-100 rounded-md transition-all animate-fade-in">
+                        <i class="fas fa-bell mr-3 text-gold-600 w-5 text-center"></i>
+                        Pemberitahuan
                     </a>
                 </li>
                 <li>
-                    <a href="/pengaturan" class="sidebar-link flex items-center p-3 text-gray-700 hover:text-gold-700 hover:bg-golden-100 rounded-md transition-all animate-fade-in">
-                        <i class="fas fa-cogs mr-3 text-gold-600 w-5 text-center"></i>
-                        Pengaturan
+                    <a href="/riwayat" class="sidebar-link flex items-center p-3 text-gray-700 hover:text-gold-700 hover:bg-golden-100 rounded-md transition-all animate-fade-in">
+                        <i class="fas fa-history mr-3 text-gold-600 w-5 text-center"></i>
+                        Riwayat
                     </a>
                 </li>
             </ul>
@@ -306,9 +243,9 @@
                                 <i class="fas fa-envelope text-lg md:text-xl"></i>
                             </div>
                         </div>
-                        <div class="mt-2 md:mt-3 text-xs text-gold-700 flex items-center">
+                        <!-- <div class="mt-2 md:mt-3 text-xs text-gold-700 flex items-center">
                             <i class="fas fa-arrow-up mr-1"></i> 12% dari bulan lalu
-                        </div>
+                        </div> -->
                     </div>
                 
                     <div class="bg-gradient-to-br from-gold-50 to-gold-100 border border-gold-200 rounded-xl p-4 md:p-5 shadow-sm card-hover">
@@ -321,9 +258,9 @@
                                 <i class="fas fa-clock text-lg md:text-xl"></i>
                             </div>
                         </div>
-                        <div class="mt-2 md:mt-3 text-xs text-gold-700 flex items-center">
+                        <!-- <div class="mt-2 md:mt-3 text-xs text-gold-700 flex items-center">
                             <i class="fas fa-arrow-down mr-1"></i> 3 dari kemarin
-                        </div>
+                        </div> -->
                     </div>
                 
                     <div class="bg-gradient-to-br from-gold-50 to-gold-100 border border-gold-200 rounded-xl p-4 md:p-5 shadow-sm card-hover">
@@ -336,9 +273,9 @@
                                 <i class="fas fa-check-circle text-lg md:text-xl"></i>
                             </div>
                         </div>
-                        <div class="mt-2 md:mt-3 text-xs text-gold-700 flex items-center">
+                        <!-- <div class="mt-2 md:mt-3 text-xs text-gold-700 flex items-center">
                             <i class="fas fa-arrow-up mr-1"></i> 8 dari kemarin
-                        </div>
+                        </div> -->
                     </div>
                 
                     <div class="bg-gradient-to-br from-gold-50 to-gold-100 border border-gold-200 rounded-xl p-4 md:p-5 shadow-sm card-hover">
@@ -351,9 +288,9 @@
                                 <i class="fas fa-times-circle text-lg md:text-xl"></i>
                             </div>
                         </div>
-                        <div class="mt-2 md:mt-3 text-xs text-gold-700 flex items-center">
+                        <!-- <div class="mt-2 md:mt-3 text-xs text-gold-700 flex items-center">
                             <i class="fas fa-equals mr-1"></i> Tidak berubah
-                        </div>
+                        </div> -->
                     </div>
                 </div>
 
@@ -420,7 +357,7 @@
                                     <button id="cariSuratSubmitBtn" class="bg-gold-500 hover:bg-gold-700 text-white font-bold py-3 px-4 rounded ml-2">Cari</button>
                                 </div>
                                 <div id="hasilPencarian" class="mt-4 p-4">
-                                    </div>
+                                </div>
                                 <div class="items-center px-4 py-3 mt-4">
                                     <button id="tutupCariModalBtn" class="px-4 py-3 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300">Tutup</button>
                                 </div>
@@ -428,21 +365,21 @@
                         </div>
                     </div>
                 
-                    <a href="/statistik" class="bg-white border border-gold-200 rounded-lg p-3 md:p-4 shadow-sm card-hover text-center h-full">
+                    <a href="/notifikasi" class="bg-white border border-gold-200 rounded-lg p-3 md:p-4 shadow-sm card-hover text-center h-full">
                         <div class="bg-gold-100 text-gold-600 p-2 md:p-3 rounded-full inline-block">
-                            <i class="fas fa-chart-bar text-lg md:text-xl"></i>
+                            <i class="fas fa-bell text-lg md:text-xl"></i>
                         </div>
-                        <h3 class="text-sm md:text-base font-medium mt-2">Lihat Statistik</h3>
-                        <p class="text-xs text-gray-500 mt-1">Analisis data surat</p>
+                        <h3 class="text-sm md:text-base font-medium mt-2">Pemberitahuan</h3>
+                        <p class="text-xs text-gray-500 mt-1">Informasi terbaru</p>
                     </a>
                 
-                    <a href="#" id="kirimKonfirmasiWA" class="bg-white border border-gold-200 rounded-lg p-3 md:p-4 shadow-sm card-hover text-center h-full">
-                         <div class="bg-gold-100 text-gold-600 p-2 md:p-3 rounded-full inline-block">
-                        <i class="fab fa-whatsapp text-lg md:text-xl"></i>
+                    <a href="/riwayat" class="bg-white border border-gold-200 rounded-lg p-3 md:p-4 shadow-sm card-hover text-center h-full">
+                        <div class="bg-gold-100 text-gold-600 p-2 md:p-3 rounded-full inline-block">
+                            <i class="fas fa-history text-lg md:text-xl"></i>
                         </div>
-                       <h3 class="text-sm md:text-base font-medium mt-2">Kirim Konfirmasi WA</h3>
-                         <p class="text-xs text-gray-500 mt-1">Notifikasi surat selesai</p>
-                         </a>
+                        <h3 class="text-sm md:text-base font-medium mt-2">Riwayat</h3>
+                        <p class="text-xs text-gray-500 mt-1">Surat yang pernah diajukan</p>
+                    </a>
                 </div>
                 
                 <style>
@@ -452,7 +389,7 @@
                     }
                 </style>
                             <!-- Recent Activity -->
-                <div>
+                <!-- <div>
                     <h2 class="text-lg md:text-xl font-semibold text-gray-800 mb-4 flex items-center">
                         <i class="fas fa-history text-gold-500 mr-2"></i> Aktivitas Terkini
                     </h2>
@@ -506,12 +443,15 @@
                             </table>
                         </div>
                     </div>
-                </div>
+                </div> -->
             </div>
+            <div id="notification-container" style="position: fixed; bottom: 20px; right: 20px; z-index: 1000; display: none; flex-direction: column; align-items: flex-end;">
+            </div>
+    
+        
         </main>
     </div>
 
-    <!-- Footer -->
     <footer class="bg-gray-800 text-white">
         <div class="container mx-auto px-4 md:px-6 py-6 md:py-8">
             <div class="flex flex-col md:flex-row justify-between">
@@ -523,22 +463,47 @@
                         <span class="text-lg md:text-xl font-bold">Sistem Surat Desa</span>
                     </div>
                     <p class="text-gray-400 text-xs md:text-sm max-w-xs">
-                        Sistem pelayanan surat menyurat digital untuk mempermudah administrasi warga Desa Sojiwan.
+                        Sistem pelayanan surat menyurat digital untuk mempermudah administrasi warga Desa Kebondalem Kidul.
                     </p>
                     <p class="text-gold-400 font-semibold mt-3 md:mt-4 text-sm md:text-base">© 2025 Tim KKN Sowan Sojiwan</p>
                 </div>
-                
+    
                 <div class="grid grid-cols-2 md:grid-cols-3 gap-6 md:gap-8">
                     <div>
                         <h3 class="text-gold-400 font-semibold mb-3 md:mb-4 text-base md:text-lg">Navigasi</h3>
                         <ul class="space-y-1 md:space-y-2">
                             <li><a href="/" class="footer-link text-xs md:text-sm text-gray-300 hover:text-gold-400">Beranda</a></li>
-                            <li><a href="/surat-pengantar" class="footer-link text-xs md:text-sm text-gray-300 hover:text-gold-400">Surat Pengantar</a></li>
-                            <li><a href="/page_statistik" class="footer-link text-xs md:text-sm text-gray-300 hover:text-gold-400">Statistik</a></li>
-                            <li><a href="/pengaturan" class="footer-link text-xs md:text-sm text-gray-300 hover:text-gold-400">Pengaturan</a></li>
+                            
+                            <li class="relative group">
+                                <a href="#" class="footer-link text-xs md:text-sm text-gray-300 hover:text-gold-400 flex items-center">
+                                    Surat 
+                                    <i class="fas fa-caret-down ml-1 text-gray-400 transition-transform duration-300 group-hover:rotate-180"></i>
+                                </a>
+                    
+                                <!-- Dropdown -->
+                                <ul class="absolute left-0 top-full mt-2 w-56 bg-gray-700 rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 ease-out z-20">
+                                    <li>
+                                        <a href="/surat-pengantar" class="block px-4 py-2 text-xs md:text-sm text-gray-300 hover:text-gold-400 whitespace-nowrap">Surat Pengantar</a>
+                                    </li>
+                                    <li>
+                                        <a href="/surat-tidak-mampu" class="block px-4 py-2 text-xs md:text-sm text-gray-300 hover:text-gold-400 whitespace-nowrap">Surat Keterangan Tidak Mampu</a>
+                                    </li>
+                                    <li>
+                                        <a href="/surat-beda-identitas" class="block px-4 py-2 text-xs md:text-sm text-gray-300 hover:text-gold-400 whitespace-nowrap">Surat Keterangan Beda Identitas</a>
+                                    </li>
+                                    <li>
+                                        <a href="/surat-usaha" class="block px-4 py-2 text-xs md:text-sm text-gray-300 hover:text-gold-400 whitespace-nowrap">Surat Keterangan Usaha</a>
+                                    </li>
+                                </ul>
+                            </li>
+                    
+                            <li><a href="/riwayat" class="footer-link text-xs md:text-sm text-gray-300 hover:text-gold-400">Riwayat</a></li>
+                            <li><a href="/notifikasi" class="footer-link text-xs md:text-sm text-gray-300 hover:text-gold-400">Pemberitahuan</a></li>
                         </ul>
                     </div>
                     
+                    
+    
                     <div>
                         <h3 class="text-gold-400 font-semibold mb-3 md:mb-4 text-base md:text-lg">Bantuan</h3>
                         <ul class="space-y-1 md:space-y-2">
@@ -548,7 +513,7 @@
                             <li><a href="/syarat-ketentuan" class="footer-link text-xs md:text-sm text-gray-300 hover:text-gold-400">Syarat & Ketentuan</a></li>
                         </ul>
                     </div>
-                    
+    
                     <div>
                         <h3 class="text-gold-400 font-semibold mb-3 md:mb-4 text-base md:text-lg">Kontak</h3>
                         <ul class="space-y-1 md:space-y-2">
@@ -558,28 +523,25 @@
                             </li>
                             <li class="flex items-start">
                                 <i class="fas fa-envelope text-gold-400 mr-2 mt-1 text-xs md:text-sm"></i>
-                                <a href="mailto:kkn.sojiwan2025@example.com" class="footer-link text-xs md:text-sm text-gray-300 hover:text-gold-400">kkn.sojiwan2025@example.com</a>
+                                <a href="mailto:desakebondalemkidul@gmail.com" class="footer-link text-xs md:text-sm text-gray-300 hover:text-gold-400">desakebondalemkidul@gmail.com</a>
                             </li>
                             <li class="flex items-start">
                                 <i class="fas fa-phone-alt text-gold-400 mr-2 mt-1 text-xs md:text-sm"></i>
-                                <a href="tel:+6281234567890" class="footer-link text-xs md:text-sm text-gray-300 hover:text-gold-400">+62 812-3456-7890</a>
+                                <a href="tel:+62895323350805" class="footer-link text-xs md:text-sm text-gray-300 hover:text-gold-400">+62 8953-2335-0805</a>
                             </li>
                         </ul>
                         <div class="mt-3 md:mt-4 flex space-x-3 md:space-x-4">
-                            <a href="#" class="footer-link text-gray-300 hover:text-gold-400 text-base md:text-xl">
-                                <i class="fab fa-facebook"></i>
-                            </a>
-                            <a href="#" class="footer-link text-gray-300 hover:text-gold-400 text-base md:text-xl">
+                            <a href="https://www.instagram.com/sowansojiwan" class="footer-link text-gray-300 hover:text-gold-400 text-base md:text-xl">
                                 <i class="fab fa-instagram"></i>
                             </a>
-                            <a href="#" class="footer-link text-gray-300 hover:text-gold-400 text-base md:text-xl">
+                            <a href="https://wa.me/628562519826" class="footer-link text-gray-300 hover:text-gold-400 text-base md:text-xl">
                                 <i class="fab fa-whatsapp"></i>
                             </a>
                         </div>
                     </div>
                 </div>
             </div>
-            
+    
             <div class="border-t border-gray-700 mt-6 md:mt-8 pt-4 md:pt-6 text-center">
                 <p class="text-gray-400 text-xs md:text-sm">
                     Sistem ini dikembangkan oleh Tim KKN UPN "VETERAN" YOGYAKARTA 2025 untuk Desa Kebondalem Kidul
@@ -824,5 +786,57 @@
                 notificationBtn.appendChild(newBadge);
             }
         }
+    });
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const notificationBtn = document.getElementById('notificationBtn');
+        const notificationDropdown = document.getElementById('notificationDropdown');
+        const markReadButtons = document.querySelectorAll('.mark-read-dropdown');
+
+        notificationBtn.addEventListener('click', () => {
+            notificationDropdown.classList.toggle('hidden');
+        });
+
+        document.addEventListener('click', (event) => {
+            if (!notificationBtn.contains(event.target) && !notificationDropdown.contains(event.target)) {
+                notificationDropdown.classList.add('hidden');
+            }
+        });
+
+        markReadButtons.forEach(button => {
+            button.addEventListener('click', function(event) {
+                event.preventDefault();
+                const notificationId = this.dataset.id;
+                fetch(`/mark-as-read/${notificationId}?redirect=/`) // Redirect kembali ke dashboard
+                    .then(response => {
+                        if (response.ok) {
+                            // Setelah berhasil ditandai, hilangkan notifikasi dari dropdown
+                            this.closest('.notification-item').remove();
+                            // Perbarui jumlah notifikasi yang belum dibaca
+                            const badge = document.querySelector('#notificationBtn .notification-badge');
+                            const headerCount = document.querySelector('#notificationDropdown h3 + span');
+                            let currentCount = parseInt(badge?.textContent || '0');
+                            if (currentCount > 0) {
+                                badge.textContent = (currentCount - 1).toString();
+                                headerCount.textContent = `${currentCount - 1} baru`;
+                                if (currentCount - 1 === 0) {
+                                    badge.classList.add('hidden');
+                                    headerCount.textContent = `0 baru`;
+                                }
+                            }
+                            // Jika tidak ada notifikasi lagi, tampilkan pesan
+                            if (document.querySelectorAll('.notification-item').length === 0) {
+                                document.getElementById('notificationsContainer').innerHTML = '<div class="px-4 py-2 text-center text-gray-600">Tidak ada notifikasi</div>';
+                            }
+                        } else {
+                            console.error('Gagal menandai notifikasi sebagai dibaca.');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error menandai notifikasi:', error);
+                    });
+            });
+        });
     });
 </script>

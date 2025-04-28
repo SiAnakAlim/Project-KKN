@@ -95,6 +95,113 @@
                 border-radius: 15px;
             }
         }
+        .creator-section {
+            margin-top: 2rem;
+            border-left: 4px solid #d4a900;
+            padding-left: 1rem;
+        }
+        
+        .creator-section h3 {
+            display: flex;
+            align-items: center;
+            color: #b08b00;
+            font-weight: 600;
+            margin-bottom: 0.7rem;
+        }
+        
+        .creator-list {
+            list-style: none;
+            padding-left: 0;
+        }
+        
+        .creator-item {
+            margin-bottom: 1rem;
+            position: relative;
+        }
+        
+        .creator-link {
+            color: #b08b00;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 8px;
+            background-color: rgba(255, 242, 204, 0.3);
+        }
+        
+        .creator-link:hover {
+            background-color: rgba(212, 169, 0, 0.2);
+            transform: translateY(-2px);
+        }
+        
+        .creator-card {
+            position: absolute;
+            background-color: #fff;
+            border: 2px solid #d4a900;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            width: 280px;
+            z-index: 100;
+            top: 100%;
+            left: 0;
+            margin-top: 10px;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            transform: translateY(10px);
+        }
+        
+        .creator-card.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+        
+        .creator-card img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin: 0 auto 15px;
+            display: block;
+            border: 3px solid #fff2cc;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .creator-card h4 {
+            color: #b08b00;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+        
+        .creator-card p {
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+            color: #5a5a5a;
+            text-align: center;
+        }
+        
+        .creator-card .university {
+            font-weight: 600;
+            color: #b08b00;
+            margin-top: 10px;
+        }
+        
+        @media screen and (max-width: 768px) {
+            .creator-card {
+                left: 50%;
+                transform: translateX(-50%) translateY(10px);
+                width: 250px;
+            }
+            
+            .creator-card.show {
+                transform: translateX(-50%) translateY(0);
+            }
+        }
     </style>
 </head>
 <body>
@@ -178,12 +285,40 @@
             <p>Sistem tidak ditujukan untuk digunakan oleh anak-anak di bawah usia yang ditentukan oleh hukum yang berlaku. Kami tidak secara sadar mengumpulkan informasi pribadi dari anak-anak. Jika Anda adalah orang tua atau wali dan yakin bahwa anak Anda telah memberikan informasi pribadi kepada kami, harap hubungi kami agar kami dapat mengambil tindakan yang sesuai.</p>
         </div>
 
+        <div class="creator-section">
+            <h3><i class="ph ph-code"></i> Pembuat Website</h3>
+            <p>Website ini dikembangkan oleh:</p>
+            <ul class="creator-list">
+                <li class="creator-item">
+                    <span class="creator-link" onclick="toggleCreatorCard('aryamukti')">Aryamukti Satria Hendrayana</span>
+                    <div id="aryamukti-card" class="creator-card">
+                        <img src="/image/foto.png" alt="Aryamukti Satria Hendrayana">
+                        <h4>Aryamukti Satria Hendrayana</h4>
+                        <p>Mahasiswa Informatika</p>
+                        <p>Pengembang Full Stack</p>
+                        <p>08562519826</p>
+                        <p class="university">UPN Veteran Yogyakarta</p>
+                    </div>
+                </li>
+                <li class="creator-item">
+                    <span class="creator-link" onclick="toggleCreatorCard('sayudha')">Sayudha Patria</span>
+                    <div id="sayudha-card" class="creator-card">
+                        <img src="/image/default-profile.png" alt="Sayudha Patria">
+                        <h4>Sayudha Patria</h4>
+                        <p>Mahasiswa Informatika</p>
+                        <p>Pengembang Backend</p>
+                        <p class="university">UPN Veteran Yogyakarta</p>
+                    </div>
+                </li>
+            </ul>
+        </div>
+
         <div class="section">
             <h3><i class="ph ph-envelope-simple"></i> Kontak</h3>
             <p>Jika Anda memiliki pertanyaan, komentar, atau permintaan terkait Kebijakan Privasi ini atau praktik privasi kami, silakan hubungi kami melalui:</p>
-            <p>Email: <strong>[Alamat Email Kontak Desa]</strong></p>
-            <p>Alamat Kantor Desa: <strong>[Alamat Lengkap Kantor Desa]</strong></p>
-            <p>Nomor Telepon Kantor Desa: <strong>[Nomor Telepon Kantor Desa]</strong></p>
+            <p>Email: <strong>desakebondalemkidul@gmail.com</strong></p>
+            <p>Alamat Kantor Desa: <strong>Jl. Candi Sojiwan RT 002 RW 006, Kebondalem Kidul, Prambanan, Klaten</strong></p>
+            <p>Nomor Telepon Kantor Desa: <strong> 0895323350805</strong></p>
         </div>
 
         <div class="section">
@@ -195,4 +330,36 @@
 
     <a href="/" class="back-home"><i class="ph ph-arrow-left mr-2"></i>Kembali</a>
 </body>
+<script>
+    // Add this script to handle the creator cards
+    function toggleCreatorCard(creatorId) {
+        // Hide all cards first
+        document.querySelectorAll('.creator-card').forEach(card => {
+            card.classList.remove('show');
+        });
+        
+        // Show the selected card
+        const card = document.getElementById(`${creatorId}-card`);
+        if (card) {
+            card.classList.toggle('show');
+        }
+        
+        // Close when clicking outside
+        document.addEventListener('click', function closeCard(e) {
+            if (!e.target.closest('.creator-link') && !e.target.closest('.creator-card')) {
+                document.querySelectorAll('.creator-card').forEach(card => {
+                    card.classList.remove('show');
+                });
+                document.removeEventListener('click', closeCard);
+            }
+        });
+    }
+    
+    // Close card when clicking on another creator link
+    document.querySelectorAll('.creator-link').forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.stopPropagation();
+        });
+    });
+</script>
 </html>

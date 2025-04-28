@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notifikasi - Sistem Surat Desa</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <style>
+        :root {
+            --primary-color: #f8d254;
+            --primary-light: #fdf1d1;
+            --secondary-color: #f0f0f0;
+            --dark-color: #343a40;
+            --success-color: #28a745;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .notification-header {
+            background-color: var(--primary-color);
+            color: var(--dark-color);
+            padding: 1.5rem;
+            border-radius: 0.5rem 0.5rem 0 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: relative;
+        }
+        
+        .back-button {
+            position: absolute;
+            left: 1.5rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--dark-color);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+        }
+        
+        .notification-card {
+            border-left: 4px solid var(--primary-color);
+            transition: all 0.3s ease;
+            margin-bottom: 1rem;
+            border-radius: 0.5rem;
+            overflow: hidden;
+        }
+        
+        .notification-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .notification-unread {
+            background-color: var(--primary-light);
+        }
+        
+        .notification-type {
+            background-color: var(--primary-color);
+            color: var(--dark-color);
+            padding: 0.25rem 0.75rem;
+            border-radius: 1rem;
+            font-size: 0.75rem;
+            font-weight: bold;
+            display: inline-block;
+            margin-right: 0.5rem;
+        }
+        
+        .badge-unread {
+            background-color: var(--success-color);
+            font-size: 0.7rem;
+            padding: 0.25rem 0.5rem;
+        }
+        
+        .time-ago {
+            font-size: 0.8rem;
+            color: #6c757d;
+            display: inline-block;
+        }
+        
+        .nav-pills .nav-link.active {
+            background-color: var(--primary-color);
+            color: var(--dark-color);
+            font-weight: 500;
+        }
+        
+        .nav-pills .nav-link {
+            color: var(--dark-color);
+            padding: 0.5rem 1rem;
+            margin-right: 0.5rem;
+            border-radius: 1rem;
+            font-size: 0.9rem;
+        }
+        
+        .nav-pills .nav-link:hover {
+            background-color: rgba(248, 210, 84, 0.2);
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: #6c757d;
+            background-color: white;
+            border-radius: 0.5rem;
+            margin-top: 1rem;
+        }
+        
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+        }
+        
+        .empty-state h4 {
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+        
+        .card-body {
+            padding: 1.25rem;
+        }
+        
+        .notification-content {
+            flex: 1;
+            min-width: 0;
+        }
+        
+        .notification-title {
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .notification-message {
+            color: #495057;
+            margin-bottom: 0.75rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        .notification-meta {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        
+        .view-btn {
+            white-space: nowrap;
+            margin-left: 1rem;
+            padding: 0.25rem 0.75rem;
+            font-size: 0.875rem;
+        }
+        
+        @media (max-width: 576px) {
+            .notification-header {
+                padding: 1rem 1rem 1rem 3.5rem;
+            }
+            
+            .back-button {
+                left: 1rem;
+            }
+            
+            .nav-pills {
+                flex-wrap: nowrap;
+                overflow-x: auto;
+                padding-bottom: 0.5rem;
+            }
+            
+            .nav-pills .nav-link {
+                white-space: nowrap;
+                margin-right: 0.25rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container py-4">
+        <div class="row">
+            <div class="col-lg-10 col-xl-8 mx-auto">
+                <div class="card shadow-sm">
+                    <div class="notification-header text-center">
+                        <a href="/" class="back-button">
+                            <i class="bi bi-arrow-left me-1"></i>
+                            <span class="d-none d-sm-inline">Kembali</span>
+                        </a>
+                        <h2 class="h4 mb-0"><i class="bi bi-bell-fill me-2"></i> Notifikasi</h2>
+                        <span class="badge bg-dark rounded-pill"><%= notifications.length %> Notifikasi</span>
+                    </div>
+                    
+                    <div class="card-body">
+                        <ul class="nav nav-pills mb-4" id="notificationTabs" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active" id="all-tab" data-bs-toggle="pill" data-bs-target="#all" type="button" role="tab">Semua</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="surat-tab" data-bs-toggle="pill" data-bs-target="#surat" type="button" role="tab">Surat Pengantar</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="ku-tab" data-bs-toggle="pill" data-bs-target="#ku" type="button" role="tab">Keterangan Usaha</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="kbi-tab" data-bs-toggle="pill" data-bs-target="#kbi" type="button" role="tab">Beda Identitas</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="sktm-tab" data-bs-toggle="pill" data-bs-target="#sktm" type="button" role="tab">Tidak Mampu</button>
+                            </li>
+                        </ul>
+                        
+                        <div class="tab-content" id="notificationTabsContent">
+                            <!-- Tab Semua Notifikasi -->
+                            <div class="tab-pane fade show active" id="all" role="tabpanel">
+                                <% if (notifications.length > 0) { %>
+                                    <% notifications.forEach(notif => { %>
+                                        <div class="card notification-card mb-3 <%= notif.is_read ? '' : 'notification-unread' %>">
+                                            <div class="card-body">
+                                                <div class="d-flex justify-content-between align-items-start">
+                                                    <div class="notification-content">
+                                                        <h5 class="notification-title">
+                                                            <%= notif.title %>
+                                                            <% if (!notif.is_read) { %>
+                                                                <span class="badge badge-unread rounded-pill ms-2">Baru</span>
+                                                            <% } %>
+                                                        </h5>
+                                                        <p class="notification-message"><%= notif.message %></p>
+                                                        <div class="notification-meta">
+                                                            <span class="notification-type"><%= notif.type.replace('surat_', '').toUpperCase() %></span>
+                                                            <small class="time-ago"><i class="bi bi-clock me-1"></i><%= formatTimeAgo(notif.created_at) %></small>
+                                                        </div>
+                                                    </div>
+                                                    <a href="/mark-as-read/<%= notif.id %>?redirect=/surat/<%= notif.related_type %>/detail/<%= notif.related_id %>" class="btn btn-sm btn-outline-dark view-btn">Lihat</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    <% }); %>
+                                <% } else { %>
+                                    <div class="empty-state">
+                                        <i class="bi bi-bell-slash"></i>
+                                        <h4>Tidak ada notifikasi</h4>
+                                        <p class="text-muted">Anda belum memiliki notifikasi saat ini</p>
+                                    </div>
+                                <% } %>
+                            </div>
+                            
+                            <!-- Tab Surat Pengantar -->
+                            <div class="tab-pane fade" id="surat" role="tabpanel">
+                                <% 
+                                    const suratNotifs = notifications.filter(n => n.type === 'surat');
+                                    if (suratNotifs.length > 0) { 
+                                %>
+                                    <% suratNotifs.forEach(notif => { %>
+                                        <div class="card notification-card mb-3 <%= notif.is_read ? '' : 'notification-unread' %>">
+                                            <div class="card-body">
+                                                <div class="d-flex justify-content-between align-items-start">
+                                                    <div class="notification-content">
+                                                        <h5 class="notification-title">
+                                                            <%= notif.title %>
+                                                            <% if (!notif.is_read) { %>
+                                                                <span class="badge badge-unread rounded-pill ms-2">Baru</span>
+                                                            <% } %>
+                                                        </h5>
+                                                        <p class="notification-message"><%= notif.message %></p>
+                                                        <div class="notification-meta">
+                                                            <small class="time-ago"><i class="bi bi-clock me-1"></i><%= formatTimeAgo(notif.created_at) %></small>
+                                                        </div>
+                                                    </div>
+                                                    <a href="/mark-as-read/<%= notif.id %>?redirect=/surat/detail/<%= notif.related_id %>" class="btn btn-sm btn-outline-dark view-btn">Lihat</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    <% }); %>
+                                <% } else { %>
+                                    <div class="empty-state">
+                                        <i class="bi bi-bell-slash"></i>
+                                        <h4>Tidak ada notifikasi Surat Pengantar</h4>
+                                        <p class="text-muted">Anda belum memiliki notifikasi untuk Surat Pengantar</p>
+                                    </div>
+                                <% } %>
+                            </div>
+                            
+                            <!-- Tab Keterangan Usaha -->
+                            <div class="tab-pane fade" id="ku" role="tabpanel">
+                                <% 
+                                    const kuNotifs = notifications.filter(n => n.type === 'surat_ku');
+                                    if (kuNotifs.length > 0) { 
+                                %>
+                                    <% kuNotifs.forEach(notif => { %>
+                                        <div class="card notification-card mb-3 <%= notif.is_read ? '' : 'notification-unread' %>">
+                                            <div class="card-body">
+                                                <div class="d-flex justify-content-between align-items-start">
+                                                    <div class="notification-content">
+                                                        <h5 class="notification-title">
+                                                            <%= notif.title %>
+                                                            <% if (!notif.is_read) { %>
+                                                                <span class="badge badge-unread rounded-pill ms-2">Baru</span>
+                                                            <% } %>
+                                                        </h5>
+                                                        <p class="notification-message"><%= notif.message %></p>
+                                                        <div class="notification-meta">
+                                                            <small class="time-ago"><i class="bi bi-clock me-1"></i><%= formatTimeAgo(notif.created_at) %></small>
+                                                        </div>
+                                                    </div>
+                                                    <a href="/mark-as-read/<%= notif.id %>?redirect=/surat-ku/detail/<%= notif.related_id %>" class="btn btn-sm btn-outline-dark view-btn">Lihat</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    <% }); %>
+                                <% } else { %>
+                                    <div class="empty-state">
+                                        <i class="bi bi-bell-slash"></i>
+                                        <h4>Tidak ada notifikasi Keterangan Usaha</h4>
+                                        <p class="text-muted">Anda belum memiliki notifikasi untuk Keterangan Usaha</p>
+                                    </div>
+                                <% } %>
+                            </div>
+                            
+                            <!-- Tab Beda Identitas -->
+                            <div class="tab-pane fade" id="kbi" role="tabpanel">
+                                <% 
+                                    const kbiNotifs = notifications.filter(n => n.type === 'surat_kbi');
+                                    if (kbiNotifs.length > 0) { 
+                                %>
+                                    <% kbiNotifs.forEach(notif => { %>
+                                        <div class="card notification-card mb-3 <%= notif.is_read ? '' : 'notification-unread' %>">
+                                            <div class="card-body">
+                                                <div class="d-flex justify-content-between align-items-start">
+                                                    <div class="notification-content">
+                                                        <h5 class="notification-title">
+                                                            <%= notif.title %>
+                                                            <% if (!notif.is_read) { %>
+                                                                <span class="badge badge-unread rounded-pill ms-2">Baru</span>
+                                                            <% } %>
+                                                        </h5>
+                                                        <p class="notification-message"><%= notif.message %></p>
+                                                        <div class="notification-meta">
+                                                            <small class="time-ago"><i class="bi bi-clock me-1"></i><%= formatTimeAgo(notif.created_at) %></small>
+                                                        </div>
+                                                    </div>
+                                                    <a href="/mark-as-read/<%= notif.id %>?redirect=/surat-kbi/detail/<%= notif.related_id %>" class="btn btn-sm btn-outline-dark view-btn">Lihat</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    <% }); %>
+                                <% } else { %>
+                                    <div class="empty-state">
+                                        <i class="bi bi-bell-slash"></i>
+                                        <h4>Tidak ada notifikasi Beda Identitas</h4>
+                                        <p class="text-muted">Anda belum memiliki notifikasi untuk Beda Identitas</p>
+                                    </div>
+                                <% } %>
+                            </div>
+                            
+                            <!-- Tab Tidak Mampu -->
+                            <div class="tab-pane fade" id="sktm" role="tabpanel">
+                                <% 
+                                    const sktmNotifs = notifications.filter(n => n.type === 'surat_sktm');
+                                    if (sktmNotifs.length > 0) { 
+                                %>
+                                    <% sktmNotifs.forEach(notif => { %>
+                                        <div class="card notification-card mb-3 <%= notif.is_read ? '' : 'notification-unread' %>">
+                                            <div class="card-body">
+                                                <div class="d-flex justify-content-between align-items-start">
+                                                    <div class="notification-content">
+                                                        <h5 class="notification-title">
+                                                            <%= notif.title %>
+                                                            <% if (!notif.is_read) { %>
+                                                                <span class="badge badge-unread rounded-pill ms-2">Baru</span>
+                                                            <% } %>
+                                                        </h5>
+                                                        <p class="notification-message"><%= notif.message %></p>
+                                                        <div class="notification-meta">
+                                                            <small class="time-ago"><i class="bi bi-clock me-1"></i><%= formatTimeAgo(notif.created_at) %></small>
+                                                        </div>
+                                                    </div>
+                                                    <a href="/mark-as-read/<%= notif.id %>?redirect=/surat-sktm/detail/<%= notif.related_id %>" class="btn btn-sm btn-outline-dark view-btn">Lihat</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    <% }); %>
+                                <% } else { %>
+                                    <div class="empty-state">
+                                        <i class="bi bi-bell-slash"></i>
+                                        <h4>Tidak ada notifikasi Tidak Mampu</h4>
+                                        <p class="text-muted">Anda belum memiliki notifikasi untuk Tidak Mampu</p>
+                                    </div>
+                                <% } %>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // SSE untuk notifikasi real-time
+        if (typeof(EventSource) !== "undefined") {
+            const eventSource = new EventSource("/notifications-stream");
+            
+            eventSource.onmessage = function(event) {
+                const data = JSON.parse(event.data);
+                
+                // Buat toast notifikasi
+                const toastHtml = `
+                    <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+                        <div class="toast show" role="alert" aria-live="assertive" aria-atomic="true">
+                            <div class="toast-header bg-warning">
+                                <strong class="me-auto">${data.title}</strong>
+                                <small class="text-dark">Baru saja</small>
+                                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                            </div>
+                            <div class="toast-body">
+                                ${data.message}
+                                <div class="mt-2 pt-2 border-top">
+                                    <a href="/mark-as-read/${data.id}?redirect=/surat/${data.type}/detail/${data.related_id}" class="btn btn-dark btn-sm">Lihat</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                // Tambahkan toast ke body
+                document.body.insertAdjacentHTML('beforeend', toastHtml);
+                
+                // Auto-hide toast setelah 5 detik
+                setTimeout(() => {
+                    const toast = document.querySelector('.toast');
+                    if (toast) {
+                        toast.classList.remove('show');
+                        setTimeout(() => toast.parentElement.remove(), 300);
+                    }
+                }, 5000);
+            };
+        }
+    </script>
+</body>
+</html>
