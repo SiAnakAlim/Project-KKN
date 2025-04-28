@@ -1,6 +1,6 @@
 # SojiwanBot : Otomatisasi Surat Desa dengan WhatsApp Bot & Web
 
-![Logo](image/logokebondalem.png) <!-- Logo project -->
+![Logo](web-display-node/public/image/logokebondalem-fix.png) <!-- Logo project -->
 
 **SojiwanBot** adalah sebuah project yang menggabungkan **WhatsApp Bot** dengan **Website** untuk menghasilkan surat-surat resmi desa, seperti surat pengantar dan surat keterangan belum menikah. Project ini bertujuan untuk memudahkan warga desa dalam mengajukan dan mengelola surat-surat penting secara digital.
 
