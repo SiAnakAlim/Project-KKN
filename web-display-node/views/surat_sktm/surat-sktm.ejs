@@ -317,15 +317,15 @@
                                                 <td class="p-3">
                                                     <% if (row.status === 'Diproses') { %>
                                                         <span class="px-3 py-1 rounded-full text-xs font-semibold bg-yellow-100 text-yellow-800">
-                                                            <i class="fas fa-clock mr-1"></i> <%= row.status %>
+                                                            <i class="fas fa-clock mr-1"></i> Diproses
                                                         </span>
                                                     <% } else if (row.status === 'Selesai') { %>
                                                         <span class="px-3 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-800">
-                                                            <i class="fas fa-check-circle mr-1"></i> <%= row.status %>
+                                                            <i class="fas fa-check-circle mr-1"></i> Selesai
                                                         </span>
                                                     <% } else if (row.status === 'Ditolak') { %>
                                                         <span class="px-3 py-1 rounded-full text-xs font-semibold bg-red-100 text-red-800">
-                                                            <i class="fas fa-times-circle mr-1"></i> <%= row.status %>
+                                                            <i class="fas fa-times-circle mr-1"></i> Ditolak
                                                         </span>
                                                     <% } %>
                                                 </td>
@@ -368,6 +368,35 @@
                                 <% } %>
                             </tbody>
                         </table>
+                    </div>
+                    <div class="flex justify-between items-center mt-6">
+                        <div class="text-sm text-gray-600">
+                            Menampilkan <%= currentPageSKTM * perPageSKTM - perPageSKTM + 1 %>-<%= Math.min(currentPageSKTM * perPageSKTM, totalItemsSKTM) %> dari <%= totalItemsSKTM %> surat
+                        </div>
+                        <div class="flex space-x-2">
+                            <% if (totalPagesSKTM > 1) { %>
+                                <% if (currentPageSKTM > 1) { %>
+                                    <a href="?page=<%= currentPageSKTM - 1 %>&perPage=<%= perPageSKTM %>&status=<%= currentStatusSKTM %>&search=<%= currentSearchSKTM %>"
+                                       class="inline-flex items-center justify-center px-3 py-1 rounded text-gray-500 bg-white hover:bg-gray-100">
+                                        <i class="fas fa-chevron-left text-sm"></i>
+                                    </a>
+                                <% } %>
+                    
+                                <% for (let i = 1; i <= totalPagesSKTM; i++) { %>
+                                    <a href="?page=<%= i %>&perPage=<%= perPageSKTM %>&status=<%= currentStatusSKTM %>&search=<%= currentSearchSKTM %>"
+                                       class="inline-flex items-center justify-center px-3 py-1 rounded hover:bg-gray-100 <%= i === currentPageSKTM ? 'bg-gold-600 text-white hover:bg-gold-700' : 'text-gray-700 bg-white' %>">
+                                        <%= i %>
+                                    </a>
+                                <% } %>
+                    
+                                <% if (currentPageSKTM < totalPagesSKTM) { %>
+                                    <a href="?page=<%= currentPageSKTM + 1 %>&perPage=<%= perPageSKTM %>&status=<%= currentStatusSKTM %>&search=<%= currentSearchSKTM %>"
+                                       class="inline-flex items-center justify-center px-3 py-1 rounded text-gray-500 bg-white hover:bg-gray-100">
+                                        <i class="fas fa-chevron-right text-sm"></i>
+                                    </a>
+                                <% } %>
+                            <% } %>
+                        </div>
                     </div>
                 </div>
                 
@@ -416,13 +445,14 @@
                                         class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gold-500 text-sm">
                                 </div>
 
+                        
                                 <div>
                                     <label for="new_jenis_kelamin" class="block text-sm font-medium text-gray-700 mb-1">Jenis Kelamin*</label>
                                     <select id="new_jenis_kelamin" name="jenis_kelamin" required
                                         class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gold-500 text-sm">
                                         <option value="">Pilih Jenis Kelamin</option>
-                                        <option value="Laki-laki">Laki-laki</option>
-                                        <option value="Perempuan">Perempuan</option>
+                                        <option value="L">L</option>
+                                        <option value="P">P</option>
                                     </select>
                                 </div>
 
@@ -514,14 +544,15 @@
                                         class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gold-500">
                                 </div>
                 
-                                <div>
-                                    <label for="edit_jenis_kelamin" class="block text-sm font-medium text-gray-700 mb-1">Jenis Kelamin*</label>
-                                    <select id="edit_jenis_kelamin" name="jenis_kelamin" required
-                                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gold-500">
-                                        <option value="L">L</option>
-                                        <option value="P">P</option>
-                                    </select>
-                                </div>
+                               <!-- Di dalam form editSuratSKTMForm -->
+<div>
+    <label for="edit_jenis_kelamin" class="block text-sm font-medium text-gray-700 mb-1">Jenis Kelamin*</label>
+    <select id="edit_jenis_kelamin" name="jenis_kelamin" required
+        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gold-500">
+        <option value="L">L</option>
+        <option value="P">P</option>
+    </select>
+</div>
                 
                                 <div>
                                     <label for="edit_alamat" class="block text-sm font-medium text-gray-700 mb-1">Alamat*</label>
@@ -562,6 +593,7 @@
                             </div>
                         </form>
                     </div>
+                    
                 </div>
             </main>
         </div>
@@ -666,6 +698,7 @@
         </footer>
     </div>
 
+
     <script>
         // Mobile sidebar toggle
         const mobileMenuButton = document.getElementById('mobileMenuButton');
@@ -753,291 +786,419 @@
     </script>
     
     <script>
-  document.addEventListener('DOMContentLoaded', () => {
-    //** 1. Elemen Modal dan Form**
-    const addSuratSKTMBtn = document.getElementById('addSuratSKTMBtn'); // Pastikan ada tombol ini
-    const addSuratSKTMModal = document.getElementById('addSuratSKTMModal');
-    const closeAddSKTMModal = document.getElementById('closeAddSKTMModal');
-    const cancelAddSKTMModal = document.getElementById('cancelAddSKTMModal');
-    const addSuratSKTMForm = document.getElementById('addSuratSKTMForm');
-
-    const editSuratSKTMModal = document.getElementById('editSuratSKTMModal');
-    const closeEditSKTMModal = document.getElementById('closeEditSKTMModal');
-    const cancelEditSKTMModal = document.getElementById('cancelEditSKTMModal');
-    const editSuratSKTMForm = document.getElementById('editSuratSKTMForm');
-
-    //** 2. Filter dan Pencarian (Jika Ada)**
-    const statusFilterSKTM = document.getElementById('statusFilterSKTM');
-    const perPageFilterSKTM = document.getElementById('perPageSKTM');
-    const searchInputSKTM = document.getElementById('searchInputSKTM');
-
-    //** 3. Inisialisasi Filter (Jika Ada)**
-    function initializeFilters() {
-        const urlParams = new URLSearchParams(window.location.search);
-        if (urlParams.has('status')) statusFilterSKTM.value = urlParams.get('status');
-        if (urlParams.has('perPage')) perPageFilterSKTM.value = urlParams.get('perPage');
-        if (urlParams.has('search')) searchInputSKTM.value = urlParams.get('search');
-    }
-
-    //** 4. Update Filter di URL (Jika Ada)**
-    function updateFilters() {
-        const params = new URLSearchParams();
-        if (statusFilterSKTM.value !== 'semua') params.set('status', statusFilterSKTM.value);
-        if (perPageFilterSKTM.value !== '10') params.set('perPage', perPageFilterSKTM.value);
-        if (searchInputSKTM.value.trim() !== '') params.set('search', searchInputSKTM.value.trim());
-        params.set('page', '1'); // Reset ke halaman 1 saat filter berubah
-        window.location.search = params.toString();
-    }
-
-    //** 5. Event Listeners untuk Filter (Jika Ada)**
-    function setupFilterListeners() {
-        if (statusFilterSKTM) statusFilterSKTM.addEventListener('change', updateFilters);
-        if (perPageFilterSKTM) perPageFilterSKTM.addEventListener('change', updateFilters);
-        if (searchInputSKTM) {
-            let searchTimeout;
-            searchInputSKTM.addEventListener('input', () => {
-                clearTimeout(searchTimeout);
-                searchTimeout = setTimeout(updateFilters, 500);
-            });
-            searchInputSKTM.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') updateFilters();
-            });
-        }
-    }
-
-    //** 6. Kontrol Modal**
-    function setupModalControls() {
-        // Add Surat SKTM Modal
-        if (addSuratSKTMBtn && addSuratSKTMModal) {
-            addSuratSKTMBtn.addEventListener('click', () => {
-                addSuratSKTMModal.classList.remove('hidden');
-                displayTanggalSKTM();
-            });
-        }
-
-        if (closeAddSKTMModal && cancelAddSKTMModal) {
-            const closeAddModal = () => addSuratSKTMModal.classList.add('hidden');
-            closeAddSKTMModal.addEventListener('click', closeAddModal);
-            cancelAddSKTMModal.addEventListener('click', closeAddModal);
-        }
-
-        // Edit Surat SKTM Modal
-        if (closeEditSKTMModal && cancelEditSKTMModal) {
-            const closeEditModal = () => editSuratSKTMModal.classList.add('hidden');
-            closeEditSKTMModal.addEventListener('click', closeEditModal);
-            cancelEditSKTMModal.addEventListener('click', closeEditModal);
-        }
-    }
-
-    //** 7. Penanganan Submit Form**
-    function setupFormHandlers() {
-        // Add Surat SKTM Form
-        if (addSuratSKTMForm) {
-            addSuratSKTMForm.addEventListener('submit', async (e) => {
-                e.preventDefault();
-
-                // Validasi Client-Side
-                const nikInput = document.getElementById('new_nik');
-                const kkInput = document.getElementById('new_no_kk');
-                if (!/^\d{16}$/.test(nikInput.value)) {
-                    showNotification('NIK harus 16 digit angka', 'error');
-                    nikInput.focus();
-                    return;
-                }
-                if (!/^\d{16}$/.test(kkInput.value)) {
-                    showNotification('Nomor KK harus 16 digit angka', 'error');
-                    kkInput.focus();
-                    return;
-                }
-
-                const formData = {
-                    nama: document.getElementById('new_nama').value,
-                    no_kk: kkInput.value,
-                    nik: nikInput.value,
-                    tempat_tanggal_lahir: document.getElementById('new_tempat_tanggal_lahir').value,
-                    jenis_kelamin: document.getElementById('new_jenis_kelamin').value,
-                    alamat: document.getElementById('new_alamat').value,
-                    nomor_hp: document.getElementById('new_nomor_hp').value,
-                    jenis_surat: 'sktm'
+        document.addEventListener('DOMContentLoaded', () => {
+            // ==================== CONSTANTS ====================
+            const API_BASE_URL = '/api/surat-sktm';
+            const SKTM_API_URL = '/surat-sktm';
+            
+            // ==================== DOM ELEMENTS ====================
+            // Modal Elements
+            const addSuratSKTMBtn = document.getElementById('addSuratSKTMBtn');
+            const addSuratSKTMModal = document.getElementById('addSuratSKTMModal');
+            const closeAddSKTMModal = document.getElementById('closeAddSKTMModal');
+            const cancelAddSKTMModal = document.getElementById('cancelAddSKTMModal');
+            const addSuratSKTMForm = document.getElementById('addSuratSKTMForm');
+            
+            const editSuratSKTMModal = document.getElementById('editSuratSKTMModal');
+            const closeEditSKTMModal = document.getElementById('closeEditSKTMModal');
+            const cancelEditSKTMModal = document.getElementById('cancelEditSKTMModal');
+            const editSuratSKTMForm = document.getElementById('editSuratSKTMForm');
+            
+            // Filter Elements
+            const statusFilterSKTM = document.getElementById('statusFilterSKTM');
+            const perPageFilterSKTM = document.getElementById('perPageSKTM');
+            const searchInputSKTM = document.getElementById('searchInputSKTM');
+            
+            // Form Elements
+            const displayNomorSuratSKTM = document.getElementById('display_nomor_surat_sktm');
+            const displayTanggalSKTMElement = document.getElementById('display_tanggal_sktm');
+        
+            // ==================== UTILITY FUNCTIONS ====================
+            /**
+             * Show notification to user
+             * @param {string} message - Notification message
+             * @param {string} type - Notification type (success, error, warning, info)
+             */
+            function showNotification(message, type = 'success') {
+                const colors = { 
+                    success: 'bg-green-500', 
+                    error: 'bg-red-500', 
+                    warning: 'bg-yellow-500', 
+                    info: 'bg-blue-500' 
                 };
-
+                const icons = { 
+                    success: 'fa-check-circle', 
+                    error: 'fa-exclamation-circle', 
+                    warning: 'fa-exclamation-triangle', 
+                    info: 'fa-info-circle' 
+                };
+        
+                const notification = document.createElement('div');
+                notification.className = `fixed top-4 right-4 ${colors[type]} text-white px-4 py-2 rounded-md shadow-lg flex items-center animate-fade-in z-50`;
+                notification.innerHTML = `<i class="fas ${icons[type]} mr-2"></i><span>${message}</span>`;
+                document.body.appendChild(notification);
+        
+                setTimeout(() => {
+                    notification.classList.add('opacity-0', 'transition-opacity', 'duration-300');
+                    setTimeout(() => notification.remove(), 300);
+                }, 3000);
+            }
+        
+            /**
+             * Format date to Indonesian locale
+             * @param {string} dateString - Date string to format
+             * @returns {string} Formatted date
+             */
+            function formatIndonesianDate(dateString) {
                 try {
-                    const response = await fetch('/surat-sktm', { // Sesuaikan dengan URL API Anda
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(formData)
-                    });
-
-                    const result = await response.json();
-
-                    if (response.ok && result.success) {
-                        showNotification('Surat SKTM berhasil ditambahkan', 'success');
-                        setTimeout(() => window.location.reload(), 1500); // Refresh halaman
-                    } else {
-                        showNotification(result.message || 'Gagal menambahkan Surat SKTM', 'error');
-                    }
-
+                    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+                    return new Date(dateString).toLocaleDateString('id-ID', options);
                 } catch (error) {
-                    console.error('Error:', error);
-                    showNotification('Terjadi kesalahan saat mengirim data', 'error');
+                    console.error('Error formatting date:', error);
+                    return dateString || 'Tanggal tidak valid';
                 }
-            });
-        }
-
-        // Edit Surat SKTM Form
-        if (editSuratSKTMForm) {
-            editSuratSKTMForm.addEventListener('submit', async (e) => {
-                e.preventDefault();
-
-                const id = document.getElementById('edit_id_sktm').value;
-                const formData = {
-                    nama: document.getElementById('edit_nama').value,
-                    no_kk: document.getElementById('edit_no_kk').value,
-                    nik: document.getElementById('edit_nik').value,
-                    tempat_tanggal_lahir: document.getElementById('edit_tempat_tanggal_lahir').value,
-                    jenis_kelamin: document.getElementById('edit_jenis_kelamin').value,
-                    alamat: document.getElementById('edit_alamat').value,
-                    nomor_hp: document.getElementById('edit_nomor_hp').value,
-                    status: document.getElementById('edit_status_sktm').value,
-                    jenis_surat: 'sktm',
-                    tanggal_permohonan: document.getElementById('edit_tanggal_permohonan').value
-                };
-
-                // Validasi Client-Side (Duplikasi dari Add, idealnya dibuat fungsi terpisah)
-                if (!/^\d{16}$/.test(formData.nik)) {
-                    showNotification('NIK harus 16 digit angka', 'error');
-                    return;
+            }
+        
+            /**
+             * Validate NIK and KK format
+             * @param {string} value - Value to validate
+             * @param {string} type - 'nik' or 'kk'
+             * @returns {boolean} True if valid
+             */
+            function validateNumberFormat(value, type) {
+                const regex = /^\d{16}$/;
+                if (!regex.test(value)) {
+                    showNotification(`${type === 'nik' ? 'NIK' : 'Nomor KK'} harus 16 digit angka`, 'error');
+                    return false;
                 }
-                if (!/^\d{16}$/.test(formData.no_kk)) {
-                    showNotification('Nomor KK harus 16 digit angka', 'error');
-                    return;
-                }
-
-                try {
-                    const response = await fetch(`/api/surat-sktm/${id}`, {  // Sesuaikan dengan URL API Anda
-                        method: 'PUT',
-                        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-                        body: JSON.stringify(formData)
+                return true;
+            }
+        
+            // ==================== FILTER FUNCTIONS ====================
+            /**
+             * Initialize filters from URL parameters
+             */
+            function initializeFilters() {
+                const urlParams = new URLSearchParams(window.location.search);
+                if (urlParams.has('status')) statusFilterSKTM.value = urlParams.get('status');
+                if (urlParams.has('perPage')) perPageFilterSKTM.value = urlParams.get('perPage');
+                if (urlParams.has('search')) searchInputSKTM.value = urlParams.get('search');
+            }
+        
+            /**
+             * Update filters in URL
+             */
+            function updateFilters() {
+                const params = new URLSearchParams();
+                if (statusFilterSKTM.value !== 'semua') params.set('status', statusFilterSKTM.value);
+                if (perPageFilterSKTM.value !== '10') params.set('perPage', perPageFilterSKTM.value);
+                if (searchInputSKTM.value.trim() !== '') params.set('search', searchInputSKTM.value.trim());
+                params.set('page', '1'); // Reset to first page when filters change
+                window.location.search = params.toString();
+            }
+        
+            /**
+             * Setup filter event listeners
+             */
+            function setupFilterListeners() {
+                if (statusFilterSKTM) statusFilterSKTM.addEventListener('change', updateFilters);
+                if (perPageFilterSKTM) perPageFilterSKTM.addEventListener('change', updateFilters);
+                if (searchInputSKTM) {
+                    let searchTimeout;
+                    searchInputSKTM.addEventListener('input', () => {
+                        clearTimeout(searchTimeout);
+                        searchTimeout = setTimeout(updateFilters, 500);
                     });
-
+                    searchInputSKTM.addEventListener('keypress', (e) => {
+                        if (e.key === 'Enter') updateFilters();
+                    });
+                }
+            }
+        
+            // ==================== MODAL FUNCTIONS ====================
+            /**
+             * Setup modal controls
+             */
+            function setupModalControls() {
+                // Add Surat SKTM Modal
+                if (addSuratSKTMBtn && addSuratSKTMModal) {
+                    addSuratSKTMBtn.addEventListener('click', () => {
+                        addSuratSKTMModal.classList.remove('hidden');
+                        displayTanggalSKTM();
+                        displayNomorSuratSKTM.textContent = 'Akan digenerate otomatis';
+                    });
+                }
+        
+                if (closeAddSKTMModal && cancelAddSKTMModal) {
+                    const closeAddModal = () => addSuratSKTMModal.classList.add('hidden');
+                    closeAddSKTMModal.addEventListener('click', closeAddModal);
+                    cancelAddSKTMModal.addEventListener('click', closeAddModal);
+                }
+        
+                // Edit Surat SKTM Modal
+                if (closeEditSKTMModal && cancelEditSKTMModal) {
+                    const closeEditModal = () => editSuratSKTMModal.classList.add('hidden');
+                    closeEditSKTMModal.addEventListener('click', closeEditModal);
+                    cancelEditSKTMModal.addEventListener('click', closeEditModal);
+                }
+            }
+        
+            /**
+             * Display current date in add form
+             */
+            function displayTanggalSKTM() {
+                const now = new Date();
+                displayTanggalSKTMElement.textContent = formatIndonesianDate(now);
+            }
+        
+            // ==================== FORM HANDLERS ====================
+            /**
+             * Setup form handlers
+             */
+            function setupFormHandlers() {
+                // Add Surat SKTM Form
+                if (addSuratSKTMForm) {
+                    addSuratSKTMForm.addEventListener('submit', async (e) => {
+                        e.preventDefault();
+        
+                        // Get form elements
+                        const nikInput = document.getElementById('new_nik');
+                        const kkInput = document.getElementById('new_no_kk');
+                        
+                        // Validate inputs
+                        if (!validateNumberFormat(nikInput.value, 'nik')) return;
+                        if (!validateNumberFormat(kkInput.value, 'kk')) return;
+        
+                        // Prepare form data
+                        const formData = {
+                            nama: document.getElementById('new_nama').value.trim(),
+                            no_kk: kkInput.value,
+                            nik: nikInput.value,
+                            tempat_tanggal_lahir: document.getElementById('new_tempat_tanggal_lahir').value.trim(),
+                            jenis_kelamin: document.getElementById('new_jenis_kelamin').value,
+                            alamat: document.getElementById('new_alamat').value.trim(),
+                            nomor_hp: document.getElementById('new_nomor_hp').value.trim(),
+                            jenis_surat: 'sktm'
+                        };
+        
+                        // Validate required fields
+                        if (!formData.nama || !formData.tempat_tanggal_lahir || !formData.jenis_kelamin || !formData.alamat) {
+                            showNotification('Semua field yang wajib diisi harus dilengkapi', 'error');
+                            return;
+                        }
+        
+                        try {
+                            // Show loading state
+                            const submitBtn = addSuratSKTMForm.querySelector('button[type="submit"]');
+                            const originalBtnText = submitBtn.innerHTML;
+                            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Menyimpan...';
+                            submitBtn.disabled = true;
+        
+                            const response = await fetch(SKTM_API_URL, {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify(formData)
+                            });
+        
+                            const result = await response.json();
+        
+                            // Restore button state
+                            submitBtn.innerHTML = originalBtnText;
+                            submitBtn.disabled = false;
+        
+                            if (response.ok && result.success) {
+                                showNotification('Surat SKTM berhasil ditambahkan', 'success');
+                                setTimeout(() => window.location.reload(), 1500);
+                            } else {
+                                const errorMsg = result.message || 'Gagal menambahkan Surat SKTM';
+                                if (result.error === 'INVALID_NIK_FORMAT' || result.error === 'INVALID_KK_FORMAT') {
+                                    showNotification('Format NIK/KK tidak valid (harus 16 digit angka)', 'error');
+                                } else {
+                                    showNotification(errorMsg, 'error');
+                                }
+                            }
+                        } catch (error) {
+                            console.error('Error:', error);
+                            showNotification('Terjadi kesalahan saat mengirim data', 'error');
+                        }
+                    });
+                }
+        
+                // Edit Surat SKTM Form
+                if (editSuratSKTMForm) {
+                    editSuratSKTMForm.addEventListener('submit', async (e) => {
+                        e.preventDefault();
+        
+                        const id = document.getElementById('edit_id_sktm').value;
+                        const formData = {
+                            nama: document.getElementById('edit_nama').value.trim(),
+                            no_kk: document.getElementById('edit_no_kk').value,
+                            nik: document.getElementById('edit_nik').value,
+                            tempat_tanggal_lahir: document.getElementById('edit_tempat_tanggal_lahir').value.trim(),
+                            jenis_kelamin: document.getElementById('edit_jenis_kelamin').value,
+                            alamat: document.getElementById('edit_alamat').value.trim(),
+                            nomor_hp: document.getElementById('edit_nomor_hp').value.trim(),
+                            status: document.getElementById('edit_status_sktm').value,
+                            jenis_surat: 'sktm',
+                            tanggal_permohonan: document.getElementById('edit_tanggal_permohonan').value
+                        };
+        
+                        // Validate inputs
+                        if (!validateNumberFormat(formData.nik, 'nik')) return;
+                        if (!validateNumberFormat(formData.no_kk, 'kk')) return;
+                        
+                        // Validate phone number if provided
+                        if (formData.nomor_hp && !formData.nomor_hp.startsWith('08')) {
+                            showNotification('Nomor HP harus dimulai dengan 08', 'warning');
+                            return;
+                        }
+        
+                        try {
+                            // Show loading state
+                            const submitBtn = editSuratSKTMForm.querySelector('button[type="submit"]');
+                            const originalBtnText = submitBtn.innerHTML;
+                            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Menyimpan...';
+                            submitBtn.disabled = true;
+        
+                            const response = await fetch(`${API_BASE_URL}/${id}`, {
+                                method: 'PUT',
+                                headers: { 
+                                    'Content-Type': 'application/json', 
+                                    'Accept': 'application/json' 
+                                },
+                                body: JSON.stringify(formData)
+                            });
+        
+                            const result = await response.json();
+        
+                            // Restore button state
+                            submitBtn.innerHTML = originalBtnText;
+                            submitBtn.disabled = false;
+        
+                            if (!response.ok) {
+                                throw new Error(result.message || 'Gagal memperbarui surat');
+                            }
+        
+                            showNotification('Surat berhasil diperbarui', 'success');
+                            setTimeout(() => window.location.reload(), 1500);
+                        } catch (error) {
+                            console.error('Error:', error);
+                            showNotification(error.message || 'Terjadi kesalahan saat memperbarui surat', 'error');
+                        }
+                    });
+                }
+            }
+        
+            // ==================== EDIT SURAT FUNCTION ====================
+            /**
+             * Edit Surat SKTM
+             * @param {string} id - Surat ID
+             */
+            window.editSuratSKTM = async (id) => {
+                try {
+                    const editButton = document.querySelector(`button[onclick="editSuratSKTM('${id}')"]`);
+                    if (editButton) {
+                        const originalHTML = editButton.innerHTML;
+                        editButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+                        editButton.disabled = true;
+                    }
+        
+                    const response = await fetch(`${API_BASE_URL}/${id}`, {
+                        headers: { 'Accept': 'application/json' }
+                    });
+        
                     const result = await response.json();
-
+        
                     if (!response.ok) {
-                        throw new Error(result.message || 'Gagal memperbarui surat');
+                        throw new Error(result.message || 'Gagal memuat data surat');
                     }
+        
+                    if (!result.success || !result.data) {
+                        throw new Error('Data tidak ditemukan');
+                    }
+        
+                    const data = result.data;
+        
+                    // Fill Edit Form
+                    document.getElementById('edit_id_sktm').value = data.id;
+                    document.getElementById('edit_nama').value = data.nama || '';
+                    document.getElementById('edit_no_kk').value = data.no_kk || '';
+                    document.getElementById('edit_nik').value = data.nik || '';
+                    document.getElementById('edit_tempat_tanggal_lahir').value = data.tempat_tanggal_lahir || '';
+                    document.getElementById('edit_jenis_kelamin').value = data.jenis_kelamin === 'P' ? 'P' : 'L';
+                    document.getElementById('edit_alamat').value = data.alamat || '';
+                    document.getElementById('edit_nomor_hp').value = data.nomor_hp || '';
+                    document.getElementById('edit_status_sktm').value = data.status || 'Diproses';
+                    document.getElementById('edit_tanggal_permohonan').value = data.tanggal_permohonan || '';
+        
+                    // Setup WhatsApp button if applicable
+                    const whatsappButtonContainer = document.getElementById('whatsappButtonEditSKTM');
+                    whatsappButtonContainer.innerHTML = '';
+        
+                    if (data.status === 'Selesai' && data.nomor_hp) {
+                        let nomorWhatsApp = data.nomor_hp;
+                        // Hapus bagian @s.whatsapp.net jika ada
+                        if (nomorWhatsApp.includes('@s.whatsapp.net')) {
+                            nomorWhatsApp = nomorWhatsApp.split('@')[0];
+                        }
+                        // Tambahkan kode negara jika belum ada
+                        if (nomorWhatsApp.startsWith('0')) {
+                            nomorWhatsApp = '+62' + nomorWhatsApp.substring(1);
+                        } else if (!nomorWhatsApp.startsWith('+')) {
+                            nomorWhatsApp = '+62' + nomorWhatsApp; // Asumsi default Indonesia jika tidak ada '0' atau '+'
+                        }
 
-                    showNotification('Surat berhasil diperbarui', 'success');
-                    setTimeout(() => window.location.reload(), 1500);
+                        const whatsappLink = document.createElement('a');
+                        whatsappLink.href = `https://wa.me/${nomorWhatsApp}?text=Yth.%20${encodeURIComponent(data.nama)},%0ASurat%20Keterangan%20Tidak%20Mampu%20Anda%20dengan%20nomor%20${encodeURIComponent(data.nomor_surat || '...')}%20sudah%20selesai.%20Anda%20bisa%20mengambil%20di%20balai%20desa%20pukul%2008.00%20-%2015.00.`;
+                        whatsappLink.className = 'inline-flex items-center px-3 py-1 rounded-md text-sm font-medium bg-green-100 text-green-800 hover:bg-green-200 mt-2';
+                        whatsappLink.title = 'Kirim WA';
+                        whatsappLink.innerHTML = '<i class="fab fa-whatsapp text-lg mr-2"></i> Kirim WA Pemberitahuan';
 
+                        whatsappButtonContainer.appendChild(whatsappLink);
+                    }
+        
+                    editSuratSKTMModal.classList.remove('hidden');
+        
+                    if (editButton) {
+                        editButton.innerHTML = '<i class="fas fa-edit"></i>';
+                        editButton.disabled = false;
+                    }
+        
                 } catch (error) {
                     console.error('Error:', error);
-                    showNotification(error.message || 'Terjadi kesalahan saat memperbarui surat', 'error');
+                    showNotification('Gagal memuat data surat: ' + (error.message || 'Terjadi kesalahan'), 'error');
+                    
+                    if (editButton) {
+                        editButton.innerHTML = '<i class="fas fa-edit"></i>';
+                        editButton.disabled = false;
+                    }
                 }
-            });
-        }
-    }
-
-    //** 8. Tampilkan Tanggal di Form Tambah**
-    function displayTanggalSKTM() {
-        const now = new Date();
-        const formattedDate = now.toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' });
-        document.getElementById('display_tanggal_sktm').textContent = formattedDate;
-    }
-
-    //** 9. Fungsi Edit Surat (Dipanggil dari Tabel)**
-    window.editSuratSKTM = async (id) => {
-        try {
-            const editButton = document.querySelector(`button[onclick="editSuratSKTM('${id}')"]`);
-            if (editButton) {
-                const originalHTML = editButton.innerHTML;
-                editButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
-                editButton.disabled = true;
+            };
+        
+            // ==================== INITIALIZATION ====================
+            function initialize() {
+                initializeFilters();
+                setupFilterListeners();
+                setupModalControls();
+                setupFormHandlers();
+                
+                // Add animation to table rows
+                const tableRows = document.querySelectorAll('tbody tr');
+                tableRows.forEach((row, index) => {
+                    row.style.opacity = '0';
+                    row.style.transform = 'translateY(20px)';
+                    row.style.transition = `opacity 0.3s ease, transform 0.3s ease ${index * 0.05}s`;
+                    
+                    setTimeout(() => {
+                        row.style.opacity = '1';
+                        row.style.transform = 'translateY(0)';
+                    }, 50);
+                });
             }
-
-            const response = await fetch(`/api/surat-sktm/${id}`, { // Sesuaikan dengan URL API Anda
-                headers: { 'Accept': 'application/json' }
-            });
-
-            const result = await response.json();
-
-            if (!response.ok) {
-                throw new Error(result.message || 'Gagal memuat data surat');
-            }
-
-            if (!result.success || !result.data) {
-                throw new Error('Data tidak ditemukan');
-            }
-
-            const data = result.data;
-
-            // Isi Form Edit
-            document.getElementById('edit_id_sktm').value = data.id;
-            document.getElementById('edit_nama').value = data.nama || '';
-            document.getElementById('edit_no_kk').value = data.no_kk || '';
-            document.getElementById('edit_nik').value = data.nik || '';
-            document.getElementById('edit_tempat_tanggal_lahir').value = data.tempat_tanggal_lahir || '';
-            document.getElementById('edit_jenis_kelamin').value = data.jenis_kelamin || 'Laki-laki'; // Lebih deskriptif
-            document.getElementById('edit_alamat').value = data.alamat || '';
-            document.getElementById('edit_nomor_hp').value = data.nomor_hp || '';
-            document.getElementById('edit_status_sktm').value = data.status || 'Diproses';
-            document.getElementById('edit_tanggal_permohonan').value = data.tanggal_permohonan || '';
-
-            // Validasi nomor HP saat form submit (tetap ada)
-            const nomorHpInput = document.getElementById('edit_nomor_hp');
-            if (nomorHpInput.value && !nomorHpInput.value.startsWith('08')) {
-                showNotification('Nomor HP harus dimulai dengan 08', 'warning');
-            }
-
-            // Tambahkan atau hapus tombol WA berdasarkan status dan nomor_hp setelah data dimuat
-            const whatsappButtonContainer = document.getElementById('whatsappButtonEditSKTM');
-            whatsappButtonContainer.innerHTML = ''; // Bersihkan kontainer sebelum menambah tombol baru
-
-            if (data.status === 'Selesai' && data.nomor_hp) {
-                const whatsappLink = document.createElement('a');
-                whatsappLink.href = `https://wa.me/${data.nomor_hp}?text=Yth.%20${encodeURIComponent(data.nama)},%0ASurat%20Keterangan%20Tidak%20Mampu%20Anda%20dengan%20nomor%20${encodeURIComponent(data.nomor_surat || '...')}%20sudah%20selesai.%20Anda%20bisa%20mengambil%20di%20balai%20desa%20pukul%2008.00%20-%2015.00.`;
-                whatsappLink.target = '_blank';
-                whatsappLink.className = 'inline-flex items-center p-1 rounded hover:bg-teal-100 text-teal-600 hover:text-teal-800 mt-2';
-                whatsappLink.title = 'Kirim WA';
-                whatsappLink.innerHTML = '<i class="fab fa-whatsapp text-lg mr-2"></i> Kirim WA Pemberitahuan';
-
-                whatsappButtonContainer.appendChild(whatsappLink);
-            }
-
-            editSuratSKTMModal.classList.remove('hidden');
-
-            if (editButton) {
-                editButton.innerHTML = '<i class="fas fa-edit"></i>';
-                editButton.disabled = false;
-            }
-
-        } catch (error) {
-            console.error('Error:', error);
-            showNotification('Gagal memuat data surat: ' + (error.message || 'Terjadi kesalahan'), 'error');
-        }
-    };
-
-    //** 10. Sistem Notifikasi**
-    function showNotification(message, type = 'success') {
-        const colors = { success: 'bg-green-500', error: 'bg-red-500', warning: 'bg-yellow-500', info: 'bg-blue-500' };
-        const icons = { success: 'fa-check-circle', error: 'fa-exclamation-circle', warning: 'fa-exclamation-triangle', info: 'fa-info-circle' };
-
-        const notification = document.createElement('div');
-        notification.className = `fixed top-4 right-4 ${colors[type]} text-white px-4 py-2 rounded-md shadow-lg flex items-center animate-fade-in z-50`;
-        notification.innerHTML = `<i class="fas ${icons[type]} mr-2"></i><span>${message}</span>`;
-        document.body.appendChild(notification);
-
-        setTimeout(() => {
-            notification.classList.add('opacity-0', 'transition-opacity', 'duration-300');
-            setTimeout(() => notification.remove(), 300);
-        }, 3000);
-    }
-
-    //** 11. Inisialisasi Semuanya**
-    initializeFilters();
-    setupFilterListeners();
-    setupModalControls();
-    setupFormHandlers();
-});
-    </script>
+        
+            // Start the application
+            initialize();
+        });
+        </script>
 </body>
 </html>

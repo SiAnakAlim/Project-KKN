@@ -33,11 +33,16 @@ app.use(flash());
 // Array untuk menyimpan clients yang terhubung ke SSE
 let notificationClients = [];
 
-// Route untuk menampilkan notifikasi
+// Route untuk menampilkan notifikasi dengan pagination
 app.get('/notifikasi', (req, res) => {
     if (!req.session.userId) {
         return res.redirect('/login');
     }
+
+    // Parameter pagination
+    const page = parseInt(req.query.page) || 1;
+    const pageSize = parseInt(req.query.size) || 10;
+    const activeTab = req.query.tab || 'all';
 
     const query = `
         SELECT n.*, 
@@ -68,6 +73,21 @@ app.get('/notifikasi', (req, res) => {
             return res.status(500).send('Internal Server Error');
         }
 
+        // Filter notifikasi berdasarkan tab
+        const filteredNotifications = {
+            all: results,
+            surat: results.filter(n => n.related_type === 'surat'),
+            ku: results.filter(n => n.related_type === 'surat_ku'),
+            kbi: results.filter(n => n.related_type === 'surat_kbi'),
+            sktm: results.filter(n => n.related_type === 'surat_sktm')
+        };
+
+        // Fungsi pagination
+        function paginate(array, currentPage, pageSize) {
+            const offset = (currentPage - 1) * pageSize;
+            return array.slice(offset, offset + pageSize);
+        }
+
         // Fungsi untuk menghitung time ago
         function formatTimeAgo(dateString) {
             const date = new Date(dateString);
@@ -81,8 +101,17 @@ app.get('/notifikasi', (req, res) => {
         }
 
         res.render('pemberitahuan/notifikasi', {
-            notifications: results,
-            formatTimeAgo: formatTimeAgo
+            notifications: paginate(filteredNotifications[activeTab], page, pageSize),
+            currentPage: page,
+            pageSize: pageSize,
+            totalPages: Math.ceil(filteredNotifications[activeTab].length / pageSize),
+            activeTab: activeTab,
+            formatTimeAgo: formatTimeAgo,
+            // Untuk filter tab
+            suratNotifs: filteredNotifications.surat,
+            kuNotifs: filteredNotifications.ku,
+            kbiNotifs: filteredNotifications.kbi,
+            sktmNotifs: filteredNotifications.sktm
         });
     });
 });
@@ -110,27 +139,33 @@ app.get('/mark-as-read/:id', (req, res) => {
 });
 
 // SSE endpoint untuk notifikasi real-time
+// Di SSE endpoint, tambahkan timeout dan heartbeat
 app.get('/notifications-stream', (req, res) => {
-    if (!req.session.userId) {
-        return res.status(403).end();
-    }
+    if (!req.session.userId) return res.status(403).end();
 
-    res.setHeader('Content-Type', 'text/event-stream');
-    res.setHeader('Cache-Control', 'no-cache');
-    res.setHeader('Connection', 'keep-alive');
+    // Setup headers
+    res.writeHead(200, {
+        'Content-Type': 'text/event-stream',
+        'Cache-Control': 'no-cache',
+        'Connection': 'keep-alive'
+    });
 
-    // Tambahkan client ke daftar notifikasi
     const clientId = Date.now();
-    const newClient = {
-        id: clientId,
-        userId: req.session.userId,
-        res
-    };
+    const newClient = { id: clientId, userId: req.session.userId, res };
+
+    // Heartbeat untuk menjaga koneksi
+    const heartbeatInterval = setInterval(() => {
+        res.write(':heartbeat\n\n');
+    }, 30000);
+
+    // Tambahkan client
     notificationClients.push(newClient);
 
+    // Handle cleanup
     req.on('close', () => {
+        clearInterval(heartbeatInterval);
+        notificationClients = notificationClients.filter(c => c.id !== clientId);
         console.log(`Client ${clientId} disconnected`);
-        notificationClients = notificationClients.filter(client => client.id !== clientId);
     });
 });
 
@@ -142,7 +177,6 @@ function sendNotification(userId, data) {
         }
     });
 }
-
 // Route untuk halaman tutorial penggunaan (tutorial-penggunaan.ejs)
 app.get('/tutorial-penggunaan', (req, res) => {
     res.render('footer/tutorial-penggunaan'); // Akan mencari file tutorial-penggunaan.ejs di dalam folder 'views/footer'
@@ -1157,16 +1191,16 @@ app.post('/api/surat-pengantar', (req, res) => {
                             }
 
                             // Kirim notifikasi real-time via SSE
-                            sendNotificationEvent({
-                                id: newId,
-                                type: 'surat',
-                                title: notificationTitle,
-                                message: notificationMessage,
-                                related_id: newId,
-                                nomor_surat: nomor_surat,
-                                nama: nama,
-                                created_at: new Date()
-                            });
+                            sendNotification(req.session.userId, {
+                                    id: newId,
+                                    type: 'surat',
+                                    title: notificationTitle,
+                                    message: notificationMessage,
+                                    related_id: newId,
+                                    nomor_surat: nomor_surat,
+                                    nama: nama,
+                                    created_at: new Date()
+                                });
 
                             // Respon sukses
                             res.status(201).json({
@@ -1206,19 +1240,21 @@ app.post('/api/surat-pengantar', (req, res) => {
 });
 
 // Route untuk update surat (PUT)
+// Route untuk update surat (PUT)
 app.put('/api/surat-pengantar/:id', express.json(), async (req, res) => {
     const suratId = req.params.id;
-    const { 
-        nama, 
-        tempat_tanggal_lahir, 
-        kewarganegaraan_agama, 
-        pekerjaan, 
-        tempat_domisili, 
-        daerah_asal, 
-        surat_bukti_diri, 
-        keperluan, 
-        tujuan, 
-        status 
+    const {
+        nama,
+        tempat_tanggal_lahir,
+        kewarganegaraan_agama,
+        pekerjaan,
+        tempat_domisili,
+        daerah_asal,
+        surat_bukti_diri,
+        keperluan,
+        tujuan,
+        status,
+        nomor_wa // Tambahkan nomor_wa di sini
     } = req.body;
 
     try {
@@ -1284,6 +1320,7 @@ app.put('/api/surat-pengantar/:id', express.json(), async (req, res) => {
                     keperluan = ?,
                     tujuan = ?,
                     status = ?,
+                    nomor_wa = ?,
                     updated_at = NOW()
                 WHERE id = ?
             `;
@@ -1298,6 +1335,7 @@ app.put('/api/surat-pengantar/:id', express.json(), async (req, res) => {
                 keperluan,
                 tujuan,
                 status,
+                nomor_wa,
                 suratId
             ], (err, result) => {
                 if (err) return reject(err);
@@ -1327,14 +1365,15 @@ app.put('/api/surat-pengantar/:id', express.json(), async (req, res) => {
         }
 
         // 5. Response sukses
-        res.json({ 
+        res.json({
             success: true,
             message: "Data surat pengantar berhasil diperbarui",
             data: {
                 id: suratId,
                 nomor_surat: currentData.nomor_surat,
                 tanggal_permohonan: currentData.tanggal_permohonan,
-                status: status
+                status: status,
+                nomor_wa: nomor_wa
             }
         });
 
@@ -1697,10 +1736,9 @@ sendNotification(req.session.userId, {
 });
 
 
-// PUT endpoint untuk update surat_ku
 app.put('/api/surat-ku/:id', express.json(), async (req, res) => {
     const suratKuId = req.params.id;
-    const { nama, no_ktp, alamat_ktp, jenis_usaha, alamat_usaha, lama_usaha, nama_bank, alamat_bank, status } = req.body;
+    const { nama, no_ktp, alamat_ktp, jenis_usaha, alamat_usaha, lama_usaha, nama_bank, alamat_bank, status, nomor_wa } = req.body;
 
     try {
         // Validasi input
@@ -1725,6 +1763,14 @@ app.put('/api/surat-ku/:id', express.json(), async (req, res) => {
             return res.status(400).json({
                 success: false,
                 message: "Status tidak valid"
+            });
+        }
+
+        // Validasi format nomor WA (opsional, bisa disesuaikan)
+        if (nomor_wa && !/^\+?\d+$/.test(nomor_wa)) {
+            return res.status(400).json({
+                success: false,
+                message: "Format Nomor WA tidak valid"
             });
         }
 
@@ -1757,12 +1803,13 @@ app.put('/api/surat-ku/:id', express.json(), async (req, res) => {
                     nama_bank = ?,
                     alamat_bank = ?,
                     status = ?,
+                    nomor_wa = ?,
                     updated_at = NOW()
                 WHERE id = ?
             `;
             db.query(sql, [
                 nama, no_ktp, alamat_ktp, jenis_usaha, alamat_usaha,
-                lama_usaha, nama_bank, alamat_bank, status, suratKuId
+                lama_usaha, nama_bank, alamat_bank, status, nomor_wa, suratKuId
             ], (err, result) => {
                 if (err) return reject(err);
                 resolve(result);
@@ -1798,7 +1845,8 @@ app.put('/api/surat-ku/:id', express.json(), async (req, res) => {
             data: {
                 id: suratKuId,
                 nomor_surat: currentData.nomor_surat,
-                status: status
+                status: status,
+                nomor_wa: nomor_wa
             }
         });
 
@@ -2428,11 +2476,11 @@ app.post('/surat-kbi', (req, res) => {
 // PUT endpoint untuk update surat_kbi
 app.put('/api/surat-kbi/:id', express.json(), async (req, res) => {
     const suratKBIId = req.params.id;
-    const { nama, nik, no_kk, tertera, nama_lagi, tertera_lagi, norek, status, keperluan_surat } = req.body; // Tambahkan keperluan_surat
+    const { nama, nik, no_kk, tertera, nama_lagi, tertera_lagi, norek, status, keperluan_surat, nomor_wa } = req.body;
 
     try {
         // Validasi input
-        if (!nama || !nik || !no_kk || !tertera || !nama_lagi || !tertera_lagi || !status || !keperluan_surat) { // Tambahkan keperluan_surat
+        if (!nama || !nik || !no_kk || !tertera || !nama_lagi || !tertera_lagi || !status || !keperluan_surat) {
             return res.status(400).json({
                 success: false,
                 message: "Semua field utama harus diisi"
@@ -2493,11 +2541,12 @@ app.put('/api/surat-kbi/:id', express.json(), async (req, res) => {
                     norek = ?,
                     status = ?,
                     updated_at = NOW(),
-                    keperluan_surat = ?
+                    keperluan_surat = ?,
+                    nomor_wa = ?
                 WHERE id = ?
             `;
             db.query(sql, [
-                nama, nik, no_kk, tertera, nama_lagi, tertera_lagi, norek, status, keperluan_surat, suratKBIId
+                nama, nik, no_kk, tertera, nama_lagi, tertera_lagi, norek, status, keperluan_surat, nomor_wa, suratKBIId
             ], (err, result) => {
                 if (err) return reject(err);
                 resolve(result);
@@ -2534,7 +2583,8 @@ app.put('/api/surat-kbi/:id', express.json(), async (req, res) => {
                 id: suratKBIId,
                 nomor_surat: currentData.nomor_surat,
                 status: status,
-                keperluan_surat: keperluan_surat
+                keperluan_surat: keperluan_surat,
+                nomor_wa: nomor_wa
             }
         });
 
@@ -2929,6 +2979,7 @@ app.get('/surat-sktm', (req, res) => {
 });
 
 // API endpoint untuk menambahkan surat_sktm baru
+// API endpoint untuk menambahkan surat_sktm baru
 app.post('/surat-sktm', (req, res) => {
     try {
         // Validasi field yang diperlukan
@@ -2991,62 +3042,65 @@ app.post('/surat-sktm', (req, res) => {
                 });
             }
 
-            // 1. Insert data surat_sktm
-            const insertSql = `INSERT INTO surat_sktm
-                (nomor_surat, nama, nik, no_kk,
-                 tempat_tanggal_lahir, jenis_kelamin, alamat, nomor_hp,
-                 jenis_surat, status, tanggal_permohonan)
-                VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+           // 1. Insert data surat_sktm
+const insertSql = `
+    INSERT INTO surat_sktm(nomor_surat, nama, nik, no_kk,
+        tempat_tanggal_lahir, jenis_kelamin, alamat, nomor_hp,
+        jenis_surat, status, tanggal_permohonan)
+    VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+`;
+db.query(insertSql, [
+nama,
+nik,
+no_kk,
+tempat_tanggal_lahir,
+jenis_kelamin,
+alamat,
+nomor_hp,
+jenisSuratSKTM,
+status,
+tanggal_permohonan
+], (insertErr, insertResult) => {
+if (insertErr) {
+    return db.rollback(() => {
+        console.error('Error inserting surat_sktm:', insertErr);
+        res.status(500).json({
+            success: false,
+            message: 'Gagal menyimpan surat keterangan Tidak Mampu',
+            error: insertErr.message
+        });
+    });
+}
 
-            db.query(insertSql, [
-                nama,
-                nik,
-                no_kk,
-                tempat_tanggal_lahir,
-                jenis_kelamin,
-                alamat,
-                nomor_hp,
-                jenisSuratSKTM,
-                status,
-                tanggal_permohonan
-            ], (insertErr, insertResult) => {
-                if (insertErr) {
-                    return db.rollback(() => {
-                        console.error('Error inserting surat_sktm:', insertErr);
-                        res.status(500).json({
-                            success: false,
-                            message: 'Gagal menyimpan surat keterangan Tidak Mampu',
-                            error: insertErr.message
-                        });
-                    });
-                }
+const newId = insertResult.insertId;
+const tahun = new Date().getFullYear();
+const nomor_surat = `SKTM/${String(newId).padStart(3, '0')}/${tahun}`;
 
-                const newId = insertResult.insertId;
-                const tahun = new Date().getFullYear();
-                const nomor_surat = `SKTM/<span class="math-inline">\{String\(newId\)\.padStart\(3, '0'\)\}/</span>{tahun}`;
 
-                // 2. Update nomor surat
-                const updateSql = "UPDATE surat_sktm SET nomor_surat = ? WHERE id = ?";
-                db.query(updateSql, [nomor_surat, newId], (updateErr) => {
-                    if (updateErr) {
-                        return db.rollback(() => {
-                            console.error('Error updating nomor surat (SKTM):', updateErr);
-                            res.status(500).json({
-                                success: false,
-                                message: 'Gagal mengupdate nomor surat',
-                                error: updateErr.message
-                            });
-                        });
-                    }
+// 2. Update nomor surat
+const updateSql = "UPDATE surat_sktm SET nomor_surat = ? WHERE id = ?";
+db.query(updateSql, [nomor_surat, newId], (updateErr) => {
+    if (updateErr) {
+        return db.rollback(() => {
+            console.error('Error updating nomor surat (SKTM):', updateErr);
+            res.status(500).json({
+                success: false,
+                message: 'Gagal mengupdate nomor surat',
+                error: updateErr.message
+            });
+        });
+    }
 
                     // 3. Buat notifikasi
                     const notificationTitle = 'Surat Keterangan Tidak Mampu Baru';
-                    const notificationMessage = `Surat SKTM untuk <span class="math-inline">\{nama\} \(</span>{nomor_surat}) berhasil dibuat`;
+                    const notificationMessage = `Surat SKTM untuk ${nama} (${nomor_surat}) berhasil dibuat`;
 
-                    const notifSql = `INSERT INTO notifications
-                        (user_id, type, title, message, related_id, related_type, is_read, created_at)
-                        VALUES (?, ?, ?, ?, ?, ?, 0, NOW())`;
 
+                    const notifSql = `
+                        INSERT INTO notifications
+                            (user_id, type, title, message, related_id, related_type, is_read, created_at)
+                        VALUES (?, ?, ?, ?, ?, ?, 0, NOW())
+                    `;
                     db.query(notifSql, [
                         req.session.userId,
                         'surat_sktm',
@@ -3293,7 +3347,111 @@ app.get('/api/surat-sktm/:id', (req, res) => {
         });
     });
 });
+app.put('/surat-sktm/:id', express.json(), async (req, res) => {
+    try {
+        const suratSKTMId = req.params.id;
+        const { jabatan_penandatangan, jabatan_sebenarnya, nama_penandatangan } = req.body;
 
+        // Update the database
+        const [result] = await db.query(`
+            UPDATE surat_sktm SET
+                jabatan_penandatangan = ?,
+                jabatan_sebenarnya = ?,
+                nama_penandatangan = ?,
+                updated_at = NOW()
+            WHERE id = ?
+        `, [
+            jabatan_penandatangan,
+            jabatan_sebenarnya,
+            nama_penandatangan,
+            suratSKTMId
+        ]);
+
+        res.json({
+            success: true,
+            message: "Informasi penandatangan berhasil diperbarui"
+        });
+
+    } catch (error) {
+        console.error('Error updating signatory info:', error);
+        res.status(500).json({
+            success: false,
+            message: "Gagal memperbarui informasi penandatangan"
+        });
+    }
+});
+
+// PUT endpoint untuk update informasi penandatangan surat SKTM
+app.put('/api/surat-sktm/signatory/:id', express.json(), async (req, res) => {
+    try {
+        const suratSKTMId = req.params.id;
+        const { jabatan_penandatangan, jabatan_sebenarnya, nama_penandatangan } = req.body;
+
+        // Validasi input
+        if (!jabatan_penandatangan || !jabatan_sebenarnya || !nama_penandatangan) {
+            return res.status(400).json({
+                success: false,
+                message: "Semua field penandatangan harus diisi"
+            });
+        }
+
+        // Update database menggunakan callback style untuk konsistensi
+        const updateSignatory = () => new Promise((resolve, reject) => {
+            const sql = `
+                UPDATE surat_sktm SET
+                    jabatan_penandatangan = ?,
+                    jabatan_sebenarnya = ?,
+                    nama_penandatangan = ?,
+                    updated_at = NOW()
+                WHERE id = ?
+            `;
+            db.query(sql, [
+                jabatan_penandatangan,
+                jabatan_sebenarnya,
+                nama_penandatangan,
+                suratSKTMId
+            ], (err, result) => {
+                if (err) return reject(err);
+                resolve(result);
+            });
+        });
+
+        const result = await updateSignatory();
+
+        if (result.affectedRows === 0) {
+            return res.status(404).json({
+                success: false,
+                message: "Surat tidak ditemukan atau tidak ada perubahan"
+            });
+        }
+
+        // Catat aktivitas
+        try {
+            await logActivity(
+                req.session.userId,
+                'update_signatory',
+                'surat_sktm',
+                suratSKTMId,
+                `Memperbarui informasi penandatangan surat SKTM`
+            );
+        } catch (logError) {
+            console.error('Gagal mencatat aktivitas:', logError);
+        }
+
+        res.json({
+            success: true,
+            message: "Informasi penandatangan berhasil diperbarui"
+        });
+
+    } catch (error) {
+        console.error('Error updating signatory info:', error);
+        res.status(500).json({
+            success: false,
+            message: "Gagal memperbarui informasi penandatangan",
+            error: process.env.NODE_ENV === 'development' ? error.message : undefined
+        });
+    }
+});
 // Route Cetak Surat Keterangan Tidak Mampu
 app.get('/cetak-surat-sktm/:id', (req, res) => {
     const suratSKTMId = req.params.id;

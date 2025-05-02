@@ -119,7 +119,7 @@
                                     </div>
                                 </div>
 
-                                 <div class="grid grid-cols-4 gap-2 items-start">
+                                <div class="grid grid-cols-4 gap-2 items-start">
                                     <div class="col-span-1 flex justify-between">
                                         <p class="text-sm font-medium text-gray-500">No. Kartu Keluarga</p>
                                         <p class="text-gray-500 mr-2">:</p>
@@ -138,8 +138,6 @@
                                         <p class="text-sm text-gray-800"><%= suratSKTM.nik %></p>
                                     </div>
                                 </div>
-
-                               
                             </div>
 
                             <div class="space-y-5">
@@ -206,33 +204,118 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="bg-white rounded-xl shadow-xl overflow-hidden border border-gray-200 mt-6">
+                    <div class="bg-white px-6 py-4 border-b border-gray-200">
+                        <h2 class="text-lg font-semibold text-gray-800 flex items-center">
+                            <i class="fas fa-pen-fancy text-gold-600 mr-2"></i>
+                            Informasi Penandatangan
+                        </h2>
+                    </div>
+                
+                    <div class="p-6">
+                        <form id="signatoryForm" class="space-y-5" data-surat-id="<%= suratSKTM.id %>">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <!-- Jabatan Penandatangan -->
+                                <div>
+                                    <label for="jabatan_penandatangan" class="block text-sm font-medium text-gray-700 mb-1">
+                                        Jabatan Penandatangan
+                                    </label>
+                                    <div class="relative">
+                                        <input type="text" id="jabatan_penandatangan" name="jabatan_penandatangan"
+                                            value="<%= suratSKTM.jabatan_penandatangan %>"
+                                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gold-500 focus:border-gold-500 transition-all"
+                                            placeholder="a.n Kepala Desa Kebondalem Kidul">
+                                        <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-gray-400">
+                                            <i class="fas fa-user-tie"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                
+                                <!-- Jabatan Sebenarnya -->
+                                <div>
+                                    <label for="jabatan_sebenarnya" class="block text-sm font-medium text-gray-700 mb-1">
+                                        Jabatan Sebenarnya
+                                    </label>
+                                    <div class="relative">
+                                        <input type="text" id="jabatan_sebenarnya" name="jabatan_sebenarnya"
+                                            value="<%= suratSKTM.jabatan_sebenarnya %>"
+                                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gold-500 focus:border-gold-500 transition-all"
+                                            placeholder="Sekretaris Desa">
+                                        <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-gray-400">
+                                            <i class="fas fa-id-card"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                
+                                <!-- Nama Penandatangan -->
+                                <div class="md:col-span-2">
+                                    <label for="nama_penandatangan" class="block text-sm font-medium text-gray-700 mb-1">
+                                        Nama Penandatangan
+                                    </label>
+                                    <div class="relative">
+                                        <input type="text" id="nama_penandatangan" name="nama_penandatangan"
+                                            value="<%= suratSKTM.nama_penandatangan %>"
+                                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gold-500 focus:border-gold-500 transition-all"
+                                            placeholder="DARU PURNOMO">
+                                        <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-gray-400">
+                                            <i class="fas fa-signature"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                
+                            <div class="flex justify-end space-x-3 pt-4 border-t border-gray-200">
+                                <button type="button" onclick="resetForm()"
+                                    class="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-lg transition-all flex items-center">
+                                    <i class="fas fa-undo mr-2"></i> Reset
+                                </button>
+                                <button type="submit"
+                                    class="px-4 py-2 bg-gold-600 hover:bg-gold-700 text-white rounded-lg shadow-md transition-all flex items-center hover:shadow-lg">
+                                    <i class="fas fa-save mr-2"></i> Simpan Perubahan
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
+
     <script>
-        // Download PDF
-        function downloadPdf(pdfFile) {
-            const downloadLink = document.createElement('a');
-            downloadLink.href = `/public/pdf/${pdfFile}`;
-            downloadLink.download = pdfFile;
-            document.body.appendChild(downloadLink);
-            downloadLink.click();
-            document.body.removeChild(downloadLink);
+     document.getElementById('signatoryForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    const form = this;
+    const suratId = form.dataset.suratId;
+    const formData = {
+        jabatan_penandatangan: document.getElementById('jabatan_penandatangan').value,
+        jabatan_sebenarnya: document.getElementById('jabatan_sebenarnya').value,
+        nama_penandatangan: document.getElementById('nama_penandatangan').value
+    };
 
-            // Show toast notification
-            showToast('File sedang diunduh...', 'bg-gold-500');
+    try {
+        const response = await fetch(`/api/surat-sktm/signatory/${suratId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(formData)
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+            showToast('Perubahan berhasil disimpan!', 'bg-green-500');
+            setTimeout(() => location.reload(), 1500);
+        } else {
+            showToast('Gagal menyimpan perubahan: ' + (result.message || ''), 'bg-red-500');
         }
-
-        // Print PDF
-        function printPdf(pdfFile) {
-            const pdfWindow = window.open(`/public/pdf/${pdfFile}`, '_blank');
-            pdfWindow.onload = function() {
-                pdfWindow.print();
-            };
-
-            // Show toast notification
-            showToast('Membuka dokumen untuk dicetak...', 'bg-green-500');
-        }
+    } catch (error) {
+        showToast('Terjadi kesalahan: ' + error.message, 'bg-red-500');
+        console.error('Error:', error);
+    }
+});
 
         // Show toast notification
         function showToast(message, bgColor) {
@@ -251,6 +334,42 @@
                 }, 300);
             }, 3000);
         }
+        function resetForm() {
+    // Ambil nilai default dari form data attributes
+    const form = document.getElementById('signatoryForm');
+    
+    // Reset ke nilai default dari database
+    document.getElementById('jabatan_penandatangan').value = 'a.n Kepala Desa Kebondalem Kidul';
+    document.getElementById('jabatan_sebenarnya').value = 'Sekretaris Desa';
+    document.getElementById('nama_penandatangan').value = 'DARU PURNOMO';
+    
+    showToast('Form telah direset ke nilai default', 'bg-blue-500');
+}
+        // Download PDF (fungsi ini mungkin tidak terpakai di UI saat ini)
+        function downloadPdf(pdfFile) {
+            const downloadLink = document.createElement('a');
+            downloadLink.href = `/public/pdf/${pdfFile}`;
+            downloadLink.download = pdfFile;
+            document.body.appendChild(downloadLink);
+            downloadLink.click();
+            document.body.removeChild(downloadLink);
+            showToast('File sedang diunduh...', 'bg-gold-500');
+        }
+
+        // Print PDF
+        function printPdf() {
+            const printUrl = `/cetak-surat-sktm/<%= suratSKTM.id %>`;
+            window.open(printUrl, '_blank');
+            showToast('Membuka dokumen untuk dicetak...', 'bg-green-500');
+        }
+
+        // Mengubah fungsi cetak agar sesuai dengan tombol "Cetak Surat"
+        document.querySelectorAll('a[href="/cetak-surat-sktm/<%= suratSKTM.id %>"]').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                printPdf();
+            });
+        });
     </script>
 </body>
 </html>

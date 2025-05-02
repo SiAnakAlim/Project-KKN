@@ -134,7 +134,7 @@
    
       /* Paragraf khusus dengan margin dan indent */
       .special-paragraph {
-          margin-top: 2mm !important; /* Ditambah dari sebelumnya */
+          margin-top: 5mm !important; /* Ditambah dari sebelumnya */
           text-indent: 1.5cm !important; /* Ditambah indentasi */
       }
    
@@ -273,23 +273,38 @@
               <p><span class="label">Alamat</span><span class="value">: <%= suratSKTM.alamat || '' %></span></p>
               <p><span class="label">Nomor HP</span><span class="value">: <%= suratSKTM.nomor_hp || '' %></span></p>
    
-              <p class="special-paragraph">
+              <p class="special-paragraph" ">
                   Termasuk dalam keluarga tidak mampu/miskin dan Tidak Mempunyai Jaminan Kesehatan apapun dan diusulkan menjadi Peserta Pekerja Bukan Penerima Upah Pemerintah Kabupaten Klaten (JAMKESDA).
               </p>
    
-              <p>
+              <p style="margin-top: 10px;">
                   Demikian surat keterangan ini kami buat agar dapat dipergunakan sebagaimana mestinya.
               </p>
           </div>
    
-          <div class="tanggal-ttd">
+          <div class="tanggal-ttd" style="margin-right: 10px;">
             Kebondalem Kidul, <%= new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) %>
         </div>
  
         <div class="signature-container">
-            <div class="ttd-kanan">
-                <p class="sekretaris">a.n Kepala Desa Kebondalem Kidul<br>Sekretaris Desa</p>
-                <p class="daru-purnomo">DARU PURNOMO</p>
+            <div class="ttd-kanan" style="text-align: right;">
+                <% if (suratSKTM.jabatan_penandatangan) { %>
+                    <p class="an-kepala-desa" style="margin-bottom: 5px; margin-top: -3px; margin-right: 3px;">
+                        <%= suratSKTM.jabatan_penandatangan %>
+                    </p>
+                <% } %>
+                
+                <% if (suratSKTM.jabatan_sebenarnya) { %>
+                    <p class="sekretaris-desa" style="margin-bottom: 80px; margin-top: -2px; margin-right: 60px;">
+                        <%= suratSKTM.jabatan_sebenarnya %>
+                    </p>
+                <% } %>
+                
+                <% if (suratSKTM.nama_penandatangan) { %>
+                    <p class="nama-penandatangan" style="margin-top: 70px; margin-right: 32px;">
+                        <strong><u><%= suratSKTM.nama_penandatangan %></u></strong>
+                    </p>
+                <% } %>
             </div>
         </div>
    

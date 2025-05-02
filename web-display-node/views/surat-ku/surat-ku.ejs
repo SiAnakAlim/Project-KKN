@@ -346,13 +346,24 @@
                                                                 title="Edit">
                                                             <i class="fas fa-edit"></i>
                                                         </button>
-                                                        <% if (row.status === 'Selesai') { %>
-                                                            <a href="https://wa.me/<%= row.nomor_wa %>?text=Yth.%20Bapak/Ibu,%20surat%20keterangan%20usaha%20Anda%20dengan%20nomor%20<%= row.nomor_surat %>%20sudah%20jadi.%20Anda%20bisa%20mengambilnya%20di%20balai%20desa%20pukul%208%20sampai%2015."
-                                                               target="_blank"
-                                                               class="inline-flex items-center p-1 rounded hover:bg-green-100 text-green-600 hover:text-green-800"
-                                                               title="Hubungi via WhatsApp">
-                                                                <i class="fab fa-whatsapp text-lg"></i>
-                                                            </a>
+                                                        <% if (row.status === 'Selesai' && row.nomor_wa) { %>
+                                                            <%
+                                                                let nomorWhatsAppTable = row.nomor_wa;
+                                                                if (nomorWhatsAppTable.includes('@s.whatsapp.net')) {
+                                                                    nomorWhatsAppTable = nomorWhatsAppTable.split('@')[0];
+                                                                }
+                                                                if (nomorWhatsAppTable.startsWith('0')) {
+                                                                    nomorWhatsAppTable = '+62' + nomorWhatsAppTable.substring(1);
+                                                                } else if (!nomorWhatsAppTable.startsWith('+')) {
+                                                                    nomorWhatsAppTable = '+62' + nomorWhatsAppTable;
+                                                                }
+                                                            %>
+                                                            <a href="https://wa.me/<%= nomorWhatsAppTable %>?text=Yth.%20<%= encodeURIComponent(row.nama) %>,%0ASurat%20Pengantar%20Anda%20dengan%20nomor%20<%= encodeURIComponent(row.nomor_surat || '...') %>%20sudah%20selesai.%20Anda%20bisa%20mengambilnya%20di%20kantor%20desa%20pada%20jam%20kerja."
+                                                                target="_blank"
+                                                                class="inline-flex items-center p-1 rounded hover:bg-green-100 text-green-600 hover:text-green-800"
+                                                                title="Hubungi via WhatsApp">
+                                                                 <i class="fab fa-whatsapp text-lg"></i>
+                                                             </a>
                                                         <% } %>
                                                     </div>
                                                 </td>
@@ -528,7 +539,6 @@
                     </div>
                 </div>
                 
-                <!-- Edit Surat Modal -->
                 <div id="editSuratKUModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
                     <div class="bg-white rounded-lg shadow-xl w-full max-w-2xl max-h-screen overflow-y-auto">
                         <div class="flex justify-between items-center border-b p-4">
@@ -590,6 +600,12 @@
                                 </div>
                 
                                 <div>
+                                    <label for="edit_nomor_wa_ku" class="block text-sm font-medium text-gray-700 mb-1">Nomor Konfirmasi WA</label>
+                                    <input type="text" id="edit_nomor_wa_ku" name="nomor_wa"
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gold-500">
+                                </div>
+                
+                                <div>
                                     <label for="edit_status_ku" class="block text-sm font-medium text-gray-700 mb-1">Status*</label>
                                     <select id="edit_status_ku" name="status" required
                                         class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gold-500">
@@ -600,13 +616,17 @@
                                 </div>
                             </div>
                 
-                            <div class="mt-6 flex justify-end space-x-3">
-                                <button type="button" id="cancelEditKUModal" class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-100">
-                                    Batal
-                                </button>
-                                <button type="submit" class="px-4 py-2 bg-gold-600 text-white rounded-md hover:bg-gold-700">
-                                    <i class="fas fa-save mr-2"></i> Simpan Perubahan
-                                </button>
+                            <div class="mt-6 flex justify-between items-center">
+                                <div id="whatsappButtonEditKU">
+                                </div>
+                                <div class="space-x-3">
+                                    <button type="button" id="cancelEditKUModal" class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-100">
+                                        Batal
+                                    </button>
+                                    <button type="submit" class="px-4 py-2 bg-gold-600 text-white rounded-md hover:bg-gold-700">
+                                        <i class="fas fa-save mr-2"></i> Simpan Perubahan
+                                    </button>
+                                </div>
                             </div>
                         </form>
                     </div>
@@ -952,59 +972,60 @@
         });
 
         // Edit Surat KU Form
-        if (editSuratKUForm) {
-            editSuratKUForm.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                
-                const id = document.getElementById('edit_id_ku').value;
-                const formData = {
-                    nama: document.getElementById('edit_nama_ku').value,
-                    no_ktp: document.getElementById('edit_no_ktp_ku').value,
-                    alamat_ktp: document.getElementById('edit_alamat_ktp_ku').value,
-                    jenis_usaha: document.getElementById('edit_jenis_usaha_ku').value,
-                    alamat_usaha: document.getElementById('edit_alamat_usaha_ku').value,
-                    lama_usaha: document.getElementById('edit_lama_usaha_ku').value,
-                    nama_bank: document.getElementById('edit_nama_bank_ku').value,
-                    alamat_bank: document.getElementById('edit_alamat_bank_ku').value,
-                    status: document.getElementById('edit_status_ku').value
-                };
+if (editSuratKUForm) {
+    editSuratKUForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
 
-                // Client-side validation
-                if (!/^\d{16}$/.test(formData.no_ktp)) {
-                    showNotification('NIK harus 16 digit angka', 'error');
-                    return;
-                }
+        const id = document.getElementById('edit_id_ku').value;
+        const formData = {
+            nama: document.getElementById('edit_nama_ku').value,
+            no_ktp: document.getElementById('edit_no_ktp_ku').value,
+            alamat_ktp: document.getElementById('edit_alamat_ktp_ku').value,
+            jenis_usaha: document.getElementById('edit_jenis_usaha_ku').value,
+            alamat_usaha: document.getElementById('edit_alamat_usaha_ku').value,
+            lama_usaha: document.getElementById('edit_lama_usaha_ku').value,
+            nama_bank: document.getElementById('edit_nama_bank_ku').value,
+            alamat_bank: document.getElementById('edit_alamat_bank_ku').value,
+            status: document.getElementById('edit_status_ku').value,
+            nomor_wa: document.getElementById('edit_nomor_wa_ku').value // Tambahkan nomor_wa ke formData
+        };
 
-                try {
-                    const response = await fetch(`/api/surat-ku/${id}`, {
-                        method: 'PUT',
-                        headers: { 
-                            'Content-Type': 'application/json',
-                            'Accept': 'application/json'
-                        },
-                        body: JSON.stringify(formData)
-                    });
-
-                    // Check content type before parsing JSON
-                    const contentType = response.headers.get('content-type');
-                    if (!contentType?.includes('application/json')) {
-                        throw new Error(await response.text() || 'Invalid response from server');
-                    }
-
-                    const result = await response.json();
-
-                    if (!response.ok) {
-                        throw new Error(result.message || 'Gagal memperbarui surat');
-                    }
-
-                    showNotification('Surat berhasil diperbarui', 'success');
-                    setTimeout(() => window.location.reload(), 1500);
-                } catch (error) {
-                    console.error('Error:', error);
-                    showNotification(error.message || 'Terjadi kesalahan saat memperbarui surat', 'error');
-                }
-            });
+        // Client-side validation
+        if (!/^\d{16}$/.test(formData.no_ktp)) {
+            showNotification('NIK harus 16 digit angka', 'error');
+            return;
         }
+
+        try {
+            const response = await fetch(`/api/surat-ku/${id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            });
+
+            // Check content type before parsing JSON
+            const contentType = response.headers.get('content-type');
+            if (!contentType?.includes('application/json')) {
+                throw new Error(await response.text() || 'Invalid response from server');
+            }
+
+            const result = await response.json();
+
+            if (!response.ok) {
+                throw new Error(result.message || 'Gagal memperbarui surat');
+            }
+
+            showNotification('Surat berhasil diperbarui', 'success');
+            setTimeout(() => window.location.reload(), 1500);
+        } catch (error) {
+            console.error('Error:', error);
+            showNotification(error.message || 'Terjadi kesalahan saat memperbarui surat', 'error');
+        }
+    });
+}
     }
 
     // Display current date in add form
@@ -1020,6 +1041,23 @@
 
     // Global edit function
     window.editSuratKU = async (id) => {
+        const editSuratKUModal = document.getElementById('editSuratKUModal');
+        const editSuratKUForm = document.getElementById('editSuratKUForm');
+        const closeEditKUModal = document.getElementById('closeEditKUModal');
+        const cancelEditKUModal = document.getElementById('cancelEditKUModal');
+        const whatsappButtonContainer = document.getElementById('whatsappButtonEditKU');
+        const nomorWaInput = document.getElementById('edit_nomor_wa_ku'); // Get the nomor WA input
+
+        // Function to close the modal
+        const closeModal = () => {
+            editSuratKUModal.classList.add('hidden');
+            whatsappButtonContainer.innerHTML = ''; // Clear WhatsApp button when modal is closed
+        };
+
+        // Event listeners for closing the modal
+        closeEditKUModal.addEventListener('click', closeModal);
+        cancelEditKUModal.addEventListener('click', closeModal);
+
         try {
             // Show loading state
             const editButton = document.querySelector(`button[onclick="editSuratKU('${id}')"]`);
@@ -1058,7 +1096,7 @@
             }
 
             const data = result.data;
-            
+
             // Fill edit form
             document.getElementById('edit_id_ku').value = data.id;
             document.getElementById('edit_nama_ku').value = data.nama || '';
@@ -1070,6 +1108,34 @@
             document.getElementById('edit_nama_bank_ku').value = data.nama_bank || '';
             document.getElementById('edit_alamat_bank_ku').value = data.alamat_bank || '';
             document.getElementById('edit_status_ku').value = data.status || 'Diproses';
+            nomorWaInput.value = data.nomor_wa || ''; // Isi nomor WA
+
+            // Remove the readonly attribute to make it editable
+            nomorWaInput.removeAttribute('readonly');
+
+            // Setup WhatsApp button if applicable
+            whatsappButtonContainer.innerHTML = ''; // Clear previous button
+            if (data.status === 'Selesai' && data.nomor_wa) {
+                let nomorWhatsApp = data.nomor_wa;
+                // Hapus bagian @s.whatsapp.net jika ada
+                if (nomorWhatsApp.includes('@s.whatsapp.net')) {
+                    nomorWhatsApp = nomorWhatsApp.split('@')[0];
+                }
+                // Tambahkan kode negara jika belum ada
+                if (nomorWhatsApp.startsWith('0')) {
+                    nomorWhatsApp = '+62' + nomorWhatsApp.substring(1);
+                } else if (!nomorWhatsApp.startsWith('+')) {
+                    nomorWhatsApp = '+62' + nomorWhatsApp; // Asumsi default Indonesia jika tidak ada '0' atau '+'
+                }
+
+                const whatsappLink = document.createElement('a');
+                whatsappLink.href = `https://wa.me/${nomorWhatsApp}?text=Yth.%20${encodeURIComponent(data.nama)},%0ASurat%20Keterangan%20Usaha%20Anda%20dengan%20nomor%20${encodeURIComponent(data.nomor_surat || '...')}%20sudah%20selesai.%20Anda%20bisa%20mengambil%20di%20kantor%20desa%20pada%20jam%20kerja.`;
+                whatsappLink.className = 'inline-flex items-center px-3 py-1 rounded-md text-sm font-medium bg-green-100 text-green-800 hover:bg-green-200 mt-2';
+                whatsappLink.title = 'Kirim WA';
+                whatsappLink.innerHTML = '<i class="fab fa-whatsapp text-lg mr-2"></i> Kirim WA Pemberitahuan';
+
+                whatsappButtonContainer.appendChild(whatsappLink);
+            }
 
             // Show modal
             editSuratKUModal.classList.remove('hidden');
@@ -1082,6 +1148,14 @@
         } catch (error) {
             console.error('Error:', error);
             showNotification('Gagal memuat data surat: ' + (error.message || 'Terjadi kesalahan'), 'error');
+
+            // Ensure button is reset even on error
+            const editButton = document.querySelector(`button[onclick="editSuratKU('${id}')"]`);
+            if (editButton && editButton.innerHTML.includes('fa-spinner')) {
+                const originalHTML = editButton.innerHTML;
+                editButton.innerHTML = originalHTML;
+                editButton.disabled = false;
+            }
         }
     };
 
@@ -1093,7 +1167,7 @@
             warning: 'bg-yellow-500',
             info: 'bg-blue-500'
         };
-        
+
         const icons = {
             success: 'fa-check-circle',
             error: 'fa-exclamation-circle',
@@ -1108,7 +1182,7 @@
             <span>${message}</span>
         `;
         document.body.appendChild(notification);
-        
+
         setTimeout(() => {
             notification.classList.add('opacity-0', 'transition-opacity', 'duration-300');
             setTimeout(() => notification.remove(), 300);

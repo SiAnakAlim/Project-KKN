@@ -17,228 +17,189 @@
             align-items: flex-start;
         }
     
-       .paper {
-           width: 210mm; /* Ukuran A4 */
-           height: 297mm;
-           background-color: white;
-           padding: 1cm 2cm 2cm 2cm;
-           box-sizing: border-box;
-           box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-           position: relative;
-           margin: 20px auto;
-       }
+        .paper {
+            width: 210mm;
+            height: 297mm;
+            background-color: white;
+            padding: 1.5cm 2cm 2cm 2cm;
+            box-sizing: border-box;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            position: relative;
+            margin: 20px auto;
+            line-height: 1.5;
+        }
     
-       .header {
-        text-align: center;
-        margin-bottom: 30px;
-    }
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
     
-    .logo {
-        width: 80px; /* Kembalikan ukuran logo */
-        height: auto; /* Tambahkan height: auto untuk menjaga aspek rasio */
-        position: absolute;
-        left: 40px;
-        top: 40px;
-    }
+        .logo {
+            width: 80px;
+            height: auto;
+            position: absolute;
+            left: 70px;
+            top: 75px;
+        }
     
-    .header h3 {
-        margin: 5px 0;
-        font-size: 20px;
-        font-weight: normal;
-    }
+        .header h3 {
+            margin: 5px 0;
+            font-size: 20px;
+            font-weight: normal;
+        }
     
-    .header h2 {
-        font-size: 24px;
-        font-weight: bold;
-        margin: 5px 0;
-        letter-spacing: 1px;
-        word-spacing: 5px;
-    }
+        .header h2 {
+            font-size: 24px;
+            font-weight: bold;
+            margin: 5px 0;
+            letter-spacing: 1px;
+            word-spacing: 5px;
+        }
     
-    .header p {
-        margin: 2px 0;
-        font-size: 13px;
-    }
+        .header p {
+            margin: 2px 0;
+            font-size: 13px;
+        }
     
-    .header .line {
-        width: 100%;
-        height: 2px;
-        background-color: black;
-        margin-top: 10px;
-        margin-bottom: 15px;
-    }
+        .header .line {
+            width: 100%;
+            height: 2px;
+            background-color: black;
+            margin-top: 10px;
+            margin-bottom: 15px;
+        }
     
-    .kode-desa {
-        text-align: left;
-        font-size: 14px;
-        margin-top: 10px;
-    }
+      
     
-       .garis-bawah {
-           border-bottom: 2px solid black;
-           margin: 3mm 0;
-       }
+        .garis-bawah {
+            border-bottom: 2px solid black;
+            margin: 5px 0 10px 0;
+        }
     
-       .kode-desa {
-           text-align: left;
-           font-size: 10pt;
-           margin-top: 3mm;
-       }
+        .kode-desa {
+            text-align: left;
+            font-size: 14px;
+            margin-top: 10px;
+        }
     
-       /* Judul Surat */
-       .judul-surat {
-           text-align: center;
-           margin: 5mm 0 7mm 0;
-       }
+        /* Judul Surat */
+        .judul-surat {
+            text-align: center;
+            margin-top: 30px;
+            margin-bottom: 20px;
+        }
+        .judul-surat h3 {
+            font-size: 22px;
+            font-weight: bold;
+            margin-bottom: 5px;
+            text-decoration: underline;
+        }
     
-       .judul-surat h3 {
-           font-size: 14pt;
-           font-weight: bold;
-           text-decoration: underline;
-           margin-bottom: 2mm;
-       }
+        .judul-surat p {
+            font-size: 16px;
+            font-weight: bold;
+            margin-top: -5px;
+            letter-spacing: 1px;
+        }
     
-       .judul-surat p {
-           font-size: 12pt;
-           font-weight: bold;
-           margin: 0;
-       }
+        /* Isi Konten */
+        .content {
+            font-size: 14px;
+            line-height: 1.8;
+            margin: 0;
+        }
     
-       /* Isi Konten */
-       .content {
-           font-size: 12pt;
-           line-height: 1.5;
-           margin: 0 0 0 0cm;
-           text-align: justify;
-       }
+        .content p {
+            margin: 8px 0;
+            text-indent: 1cm;
+        }
     
-       .content p {
-           margin: 4mm 0;
-           text-indent: 1cm;
-       }
+        .label {
+            display: inline-block;
+            width: 120px;
+        }
     
-       .data-table {
-           width: 100%;
-           margin: 5mm 0 5mm 1.5cm;
-           border-collapse: collapse;
-           font-size: 12pt;
-       }
+        .value {
+            display: inline-block;
+        }
     
-       .data-table td {
-           padding: 1mm 2mm;
-           vertical-align: top;
-       }
+        /* Tanda Tangan */
+        .signature-container {
+            width: 100%;
+            margin-top: 50px;
+            text-align: right;
+        }
     
-       .data-table td:first-child {
-           width: 35%;
-           padding-left: 0;
-       }
+        .signature-place-date {
+            margin-bottom: 5px;
+        }
     
-       .data-table .bold {
-           font-weight: bold;
-       }
+        .signature-name {
+            margin-top: 60px;
+            text-decoration: underline;
+            font-weight: bold;
+        }
     
-       /* Tanda Tangan */
-       .signature-block {
-           margin-top: 25mm;
-           width: 100%;
-       }
+        .signature-title {
+            margin: 5px 0;
+            font-size: 14px;
+        }
     
-       .signature-container {
-           width: 300px;
-           margin-left: auto;
-           margin-right: 0px;
-           text-align: center;
-       }
+        /* Tombol */
+        .no-print {
+            text-align: center;
+            margin-top: 30px;
+        }
     
-       .signature-place-date {
-           margin-bottom: 5mm;
-       }
+        .btn-print, .btn-back {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            font-size: 14px;
+            cursor: pointer;
+            margin: 0 8px;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
     
-       .signature-name {
-           margin-top: 80px;
-           text-decoration: underline;
-           font-weight: bold;
-           padding-bottom: 5px;
-       }
+        .btn-print {
+            background-color: #28a745;
+            color: white;
+        }
     
-       .signature-title {
-           margin: 5px 0;
-           font-size: 12pt; /* Kembalikan ukuran font title */
-       }
+        .btn-back {
+            background-color: #6c757d;
+            color: white;
+        }
     
-       .signature-line {
-           width: 200px;
-           margin-top: 60px;
-           margin-left: auto;
-       }
+        /* Print Styles */
+        @media print {
+            @page {
+                size: A4;
+                margin: 0;
+            }
     
-       /* Tombol */
-       .no-print {
-           text-align: center;
-           margin-top: 70px;
-       }
+            body {
+                background-color: white !important;
+                margin: 0 !important;
+                padding: 0 !important;
+            }
     
-       .btn-print, .btn-back {
-           padding: 10px 20px; /* Kembalikan padding tombol */
-           border: none;
-           border-radius: 4px;
-           font-size: 14px; /* Kembalikan ukuran font tombol */
-           cursor: pointer;
-           margin: 0 8px;
-           transition: all 0.3s ease;
-           display: inline-flex;
-           align-items: center;
-           gap: 6px;
-           box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-       }
+            .paper {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 2cm !important;
+                box-shadow: none;
+            }
     
-       .btn-print {
-           background-color: #28a745;
-           color: white;
-       }
-    
-       .btn-back {
-           background-color: #6c757d;
-           color: white;
-       }
-    
-       .no-print button:hover {
-           transform: translateY(-2px);
-           box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-       }
-    
-       /* Print Styles */
-       @media print {
-           @page {
-               size: A4;
-               margin: 0;
-           }
-    
-           body {
-               background-color: white !important;
-               margin: 0 !important;
-               padding: 0 !important;
-           }
-    
-           .paper {
-               width: 100%;
-               height: 100%;
-               margin: 0;
-               padding: 2.5cm 2cm 2cm 2cm !important;
-               box-shadow: none;
-           }
-    
-           .no-print {
-               display: none !important;
-           }
-    
-           .logo {
-               width: 80px; /* Pastikan ukuran logo saat cetak juga */
-               height: auto; /* Jaga aspek rasio saat cetak */
-           }
-       }
-      </style>
+            .no-print {
+                display: none !important;
+            }
+        }
+    </style>
 </head>
 <body>
     <div class="paper">
@@ -246,62 +207,84 @@
             <img class="logo" src="/image/logokebondalem-fix.png" alt="Logo Desa">
             <h3>PEMERINTAH KABUPATEN KLATEN</h3>
             <h3>KECAMATAN PRAMBANAN</h3>
-            <h2>DESA&nbsp;KEBONDALEM&nbsp;KIDUL</h2>
+            <h2>DESA KEBONDALEM KIDUL</h2>
             <p>Sekretariat : Bero RT 002 RW 006, Kebondalem Kidul, Prambanan, Klaten. Pos 57454</p>
             <div class="garis-bawah"></div>
             <p class="kode-desa">No. Kode Desa/Kelurahan: 3310.012005</p>
         </div>
         
         <div class="judul-surat">
-            <h3 style="font-size: 22px; font-weight: bold; ">SURAT KETERANGAN USAHA</h3>
-            <p style="font-weight: bold; margin-top: -5px;">Nomor : 581 / &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; / 05 / 2025</p>
+            <h3>SURAT KETERANGAN USAHA</h3>
+            <p>Nomor : 581 / &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; / 05 / 2025</p>
         </div>
 
         <div class="content">
-            <p>Yang bertanda tangan di bawah ini :</p>
-            <p><span class="label">Nama</span><span class="value">: <strong>DARU PURNOMO</strong></span></p>
-            <p><span class="label">Jabatan</span><span class="value">: Plt. Kepala Desa Kebondalem Kidul, Prambanan, Klaten</span></p>
-            
-            <p style="margin-top: 15px;">Selanjutnya menerangkan dengan sebenar-benarnya bahwa orang tersebut ini memiliki usaha dengan data sebagai berikut :</p>
-            
-            <p><span class="label">Nama</span><span class="value">: <strong><%= suratKU.nama ? suratKU.nama.toUpperCase() : '' %></strong></span></p>
-            <p><span class="label">Tempat/Tgl. Lahir</span><span class="value">: <%= suratKU.tempat_tanggal_lahir || '' %></span></p>
-            <p><span class="label">No. KTP</span><span class="value">: <%= suratKU.no_ktp || '' %></span></p>
-            <p><span class="label">Alamat KTP</span><span class="value">: <%= suratKU.alamat_ktp || '' %></span></p>
-            <p><span class="label">Jenis Usaha</span><span class="value">: <%= suratKU.jenis_usaha || '' %></span></p>
-            <p><span class="label">Alamat Usaha</span><span class="value">: <%= suratKU.alamat_usaha || '' %></span></p>
-            <p><span class="label">Lama Usaha</span><span class="value">: <%= suratKU.lama_usaha || '' %></span></p>
-            
-            <p style="margin-top: 15px;">
-                Surat keterangan ini khusus untuk keperluan mengajukan kredit pada di 
-                <strong>&nbsp;<%= suratKU.nama_bank || 'BNI' %>&nbsp;</strong> 
-                <%= suratKU.alamat_bank ? suratKU.alamat_bank + '.' : 'aaaaa.' %>
-            </p>
-            <p style="margin-top: 15px;">Demikian kepada yang berkepentingan harap menjadikan maklum.</p>
-        </div>
-
-        <div class="tanggal-ttd">
-            Kebondalem Kidul, <%= new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) %>
-        </div>
+            <p style="margin-top: 0; margin-bottom: 10px;">Yang bertanda tangan di bawah ini :</p>
         
-        <!-- Bagian tanda tangan -->
-        <div class="signature-container" style="margin-top: -16px; margin-left: -7px;">
-            <div class="ttd-kanan">
-                <p class="sekretaris">Plt. Kepala Desa Kebondalem Kidul</p>
-                <br><br><br><br> <!-- Jarak tanda tangan -->
-                <p class="daru-purnomo" style="margin-right: 55px;"><strong>DARU PURNOMO</strong></p>
+            <table style="margin-left: 2cm; margin-bottom: 15px; border-collapse: collapse; width: auto;">
+                <tr>
+                    <td style="width: 150px; vertical-align: top; padding-right: 10px;">Nama</td>
+                    <td style="vertical-align: top;">: <strong>DARU PURNOMO</strong></td>
+                </tr>
+                <tr>
+                    <td style="vertical-align: top; padding-right: 10px;">Jabatan</td>
+                    <td style="vertical-align: top;">: Plt. Kepala Desa Kebondalem Kidul, Prambanan, Klaten</td>
+                </tr>
+            </table>
+        
+            <div style="margin-bottom: 10px; margin-left: 1cm;">
+                <p style="display: inline; margin-top: 0; margin-bottom: 0; margin-right: 5px;">Selanjutnya menerangkan dengan sebenar-benarnya bahwa orang tersebut ini memiliki usaha dengan data</p>
+                <p style="display: inline; margin-top: 0; margin-bottom: 0;">sebagai berikut :</p>
             </div>
+        
+            <table style="margin-left: 2cm; margin-bottom: 15px; border-collapse: collapse; width: auto;">
+                <tr>
+                    <td style="width: 150px; vertical-align: top; padding-right: 10px;">Nama</td>
+                    <td style="vertical-align: top;">: <strong><%= suratKU.nama ? suratKU.nama.toUpperCase() : '' %></strong></td>
+                </tr>
+                <tr>
+                    <td style="vertical-align: top; padding-right: 10px;">Tempat/Tgl. Lahir</td>
+                    <td style="vertical-align: top;">: <%= suratKU.tempat_tanggal_lahir || '' %></td>
+                </tr>
+                <tr>
+                    <td style="vertical-align: top; padding-right: 10px;">No. KTP</td>
+                    <td style="vertical-align: top;">: <%= suratKU.no_ktp || '' %></td>
+                </tr>
+                <tr>
+                    <td style="vertical-align: top; padding-right: 10px;">Alamat KTP</td>
+                    <td style="vertical-align: top;">: <%= suratKU.alamat_ktp || '' %></td>
+                </tr>
+                <tr>
+                    <td style="vertical-align: top; padding-right: 10px;">Jenis Usaha</td>
+                    <td style="vertical-align: top;">: <%= suratKU.jenis_usaha || '' %></td>
+                </tr>
+                <tr>
+                    <td style="vertical-align: top; padding-right: 10px;">Alamat Usaha</td>
+                    <td style="vertical-align: top;">: <%= suratKU.alamat_usaha || '' %></td>
+                </tr>
+                <tr>
+                    <td style="vertical-align: top; padding-right: 10px;">Lama Usaha</td>
+                    <td style="vertical-align: top;">: <%= suratKU.lama_usaha || '' %> Tahun</td>
+                </tr>
+            </table>
+        
+            <p style="margin-top: 20px; margin-bottom: 10px;">Surat keterangan ini khusus untuk keperluan mengajukan kredit pada di <strong><%= suratKU.nama_bank || 'BNI' %></strong> <%= suratKU.alamat_bank ? suratKU.alamat_bank + '.' : '.' %></p>
+        
+            <p style="margin-top: 25px; margin-bottom: 0;">Demikian kepada yang berkepentingan harap menjadikan maklum.</p>
         </div>
 
-        <div class="no-print" style="text-align: center; margin-top: 30px;">
-            <button class="btn-preview" onclick="previewPdf('<%= suratKU.id %>')">
-                <i class="fas fa-eye"></i> Preview
-            </button>
+        <div class="signature-container" style="margin-top: 30px;">
+            <div class="signature-place-date" style="margin-right: 10px;">
+                Kebondalem Kidul, <%= new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) %>
+            </div>
+            <div class="signature-title" style="margin-right: 20px;">Plt. Kepala Desa Kebondalem Kidul</div>
+            <div style="height: 27px;"></div> <!-- Space for signature -->
+            <div class="signature-name" style="margin-right: 50px;">DARU PURNOMO</div>
+        </div>
+
+        <div class="no-print">
             <button class="btn-print" onclick="window.print()">
                 <i class="fas fa-print"></i> Cetak
-            </button>
-            <button class="btn-save" onclick="savePdf('<%= suratKU.id %>')">
-                <i class="fas fa-save"></i> Simpan
             </button>
             <button class="btn-back" onclick="window.history.back()">
                 <i class="fas fa-arrow-left"></i> Kembali
@@ -311,15 +294,11 @@
 
     <script>
         function previewPdf(suratId) {
-            window.open(`/download-pdf-ku/${suratId}?action=preview`, '_blank', 
-                'width=900,height=1200,scrollbars=yes,resizable=yes');
-            if (window.focus) {
-                window.focus();
-            }
+            window.open(`/download-pdf-ku/${suratId}?action=preview`, '_blank');
         }
 
         function savePdf(suratId) {
-            const namaFile = `Surat_${suratId}_${new Date().toISOString().slice(0, 10)}.pdf`;
+            const namaFile = `Surat_Keterangan_Usaha_${suratId}.pdf`;
             fetch(`/download-pdf-ku/${suratId}?action=download`)
                 .then(response => response.blob())
                 .then(blob => {
@@ -331,14 +310,8 @@
                     a.click();
                     window.URL.revokeObjectURL(url);
                     document.body.removeChild(a);
-                })
-                .catch(error => {
-                    console.error('Error saving PDF:', error);
-                    alert('Gagal menyimpan PDF');
                 });
         }
-
-        
     </script>
 </body>
 </html>

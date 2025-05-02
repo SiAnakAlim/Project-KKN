@@ -13,6 +13,8 @@
             --secondary-color: #f0f0f0;
             --dark-color: #343a40;
             --success-color: #28a745;
+            --danger-color: #dc3545;
+            --info-color: #17a2b8;
         }
         
         body {
@@ -38,6 +40,11 @@
             text-decoration: none;
             display: flex;
             align-items: center;
+            transition: all 0.2s ease;
+        }
+        
+        .back-button:hover {
+            transform: translateY(-50%) translateX(-2px);
         }
         
         .notification-card {
@@ -46,15 +53,17 @@
             margin-bottom: 1rem;
             border-radius: 0.5rem;
             overflow: hidden;
+            border: 1px solid rgba(0,0,0,0.05);
         }
         
         .notification-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
         }
         
         .notification-unread {
             background-color: var(--primary-light);
+            border-left: 4px solid var(--success-color);
         }
         
         .notification-type {
@@ -66,6 +75,25 @@
             font-weight: bold;
             display: inline-block;
             margin-right: 0.5rem;
+        }
+        
+        .type-surat {
+            background-color: var(--primary-color);
+        }
+        
+        .type-ku {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        
+        .type-kbi {
+            background-color: #e2e3e5;
+            color: #383d41;
+        }
+        
+        .type-sktm {
+            background-color: #f8d7da;
+            color: #721c24;
         }
         
         .badge-unread {
@@ -84,6 +112,7 @@
             background-color: var(--primary-color);
             color: var(--dark-color);
             font-weight: 500;
+            border: 1px solid rgba(0,0,0,0.1);
         }
         
         .nav-pills .nav-link {
@@ -92,10 +121,13 @@
             margin-right: 0.5rem;
             border-radius: 1rem;
             font-size: 0.9rem;
+            transition: all 0.2s ease;
+            border: 1px solid transparent;
         }
         
         .nav-pills .nav-link:hover {
             background-color: rgba(248, 210, 84, 0.2);
+            border-color: rgba(0,0,0,0.1);
         }
         
         .empty-state {
@@ -105,12 +137,14 @@
             background-color: white;
             border-radius: 0.5rem;
             margin-top: 1rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         }
         
         .empty-state i {
             font-size: 3rem;
             margin-bottom: 1rem;
             color: var(--primary-color);
+            opacity: 0.7;
         }
         
         .empty-state h4 {
@@ -128,11 +162,12 @@
         }
         
         .notification-title {
-            font-weight: 500;
+            font-weight: 600;
             margin-bottom: 0.5rem;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+            color: var(--dark-color);
         }
         
         .notification-message {
@@ -142,6 +177,7 @@
             -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
             overflow: hidden;
+            line-height: 1.4;
         }
         
         .notification-meta {
@@ -156,6 +192,59 @@
             margin-left: 1rem;
             padding: 0.25rem 0.75rem;
             font-size: 0.875rem;
+            transition: all 0.2s ease;
+        }
+        
+        .mark-all-read {
+            position: absolute;
+            right: 1.5rem;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.9rem;
+        }
+        
+        .notification-count {
+            position: absolute;
+            top: -0.5rem;
+            right: -0.5rem;
+            font-size: 0.7rem;
+            min-width: 1.25rem;
+            height: 1.25rem;
+        }
+        
+        .tab-pane {
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .pagination-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 1.5rem;
+            padding: 0.75rem 0;
+            border-top: 1px solid #eee;
+        }
+        
+        .page-size-selector {
+            display: flex;
+            align-items: center;
+        }
+        
+        .page-size-selector label {
+            margin-right: 0.5rem;
+            font-size: 0.9rem;
+            color: #6c757d;
+        }
+        
+        .page-size-selector select {
+            border-radius: 0.25rem;
+            padding: 0.25rem 0.5rem;
+            border: 1px solid #ced4da;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
         
         @media (max-width: 576px) {
@@ -171,16 +260,50 @@
                 flex-wrap: nowrap;
                 overflow-x: auto;
                 padding-bottom: 0.5rem;
+                -webkit-overflow-scrolling: touch;
             }
             
             .nav-pills .nav-link {
                 white-space: nowrap;
                 margin-right: 0.25rem;
+                font-size: 0.8rem;
+                padding: 0.4rem 0.8rem;
+            }
+            
+            .mark-all-read {
+                position: static;
+                transform: none;
+                margin-top: 0.5rem;
+                text-align: center;
+                display: block;
+                width: 100%;
+            }
+            
+            .notification-title {
+                font-size: 1rem;
+            }
+            
+            .pagination-container {
+                flex-direction: column;
+                gap: 1rem;
             }
         }
     </style>
 </head>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Head content tetap sama seperti sebelumnya -->
+</head>
 <body>
+    <% 
+    // Fungsi helper untuk template
+    function paginate(array, currentPage, pageSize) {
+        const offset = (currentPage - 1) * pageSize;
+        return array.slice(offset, offset + pageSize);
+    }
+    %>
+
     <div class="container py-4">
         <div class="row">
             <div class="col-lg-10 col-xl-8 mx-auto">
@@ -191,25 +314,46 @@
                             <span class="d-none d-sm-inline">Kembali</span>
                         </a>
                         <h2 class="h4 mb-0"><i class="bi bi-bell-fill me-2"></i> Notifikasi</h2>
-                        <span class="badge bg-dark rounded-pill"><%= notifications.length %> Notifikasi</span>
+                        <div class="position-relative d-inline-block">
+                            <span class="badge bg-dark rounded-pill"><%= notifications.length %> Notifikasi</span>
+                            <% const unreadCount = notifications.filter(n => !n.is_read).length; %>
+                            <% if (unreadCount > 0) { %>
+                                <span class="badge bg-danger rounded-pill notification-count"><%= unreadCount %></span>
+                            <% } %>
+                        </div>
+                        <% if (notifications.length > 0) { %>
+                            <a href="/mark-all-read" class="mark-all-read btn btn-sm btn-outline-dark">
+                                <i class="bi bi-check-all me-1"></i>Tandai semua telah dibaca
+                            </a>
+                        <% } %>
                     </div>
                     
                     <div class="card-body">
                         <ul class="nav nav-pills mb-4" id="notificationTabs" role="tablist">
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link active" id="all-tab" data-bs-toggle="pill" data-bs-target="#all" type="button" role="tab">Semua</button>
+                                <button class="nav-link active" id="all-tab" data-bs-toggle="pill" data-bs-target="#all" type="button" role="tab">
+                                    <i class="bi bi-list-check me-1"></i>Semua
+                                </button>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="surat-tab" data-bs-toggle="pill" data-bs-target="#surat" type="button" role="tab">Surat Pengantar</button>
+                                <button class="nav-link" id="surat-tab" data-bs-toggle="pill" data-bs-target="#surat" type="button" role="tab">
+                                    <i class="bi bi-envelope-paper me-1"></i>Pengantar
+                                </button>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="ku-tab" data-bs-toggle="pill" data-bs-target="#ku" type="button" role="tab">Keterangan Usaha</button>
+                                <button class="nav-link" id="ku-tab" data-bs-toggle="pill" data-bs-target="#ku" type="button" role="tab">
+                                    <i class="bi bi-shop me-1"></i>Usaha
+                                </button>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="kbi-tab" data-bs-toggle="pill" data-bs-target="#kbi" type="button" role="tab">Beda Identitas</button>
+                                <button class="nav-link" id="kbi-tab" data-bs-toggle="pill" data-bs-target="#kbi" type="button" role="tab">
+                                    <i class="bi bi-person-badge me-1"></i>Identitas
+                                </button>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="sktm-tab" data-bs-toggle="pill" data-bs-target="#sktm" type="button" role="tab">Tidak Mampu</button>
+                                <button class="nav-link" id="sktm-tab" data-bs-toggle="pill" data-bs-target="#sktm" type="button" role="tab">
+                                    <i class="bi bi-heart-pulse me-1"></i>Tidak Mampu
+                                </button>
                             </li>
                         </ul>
                         
@@ -217,7 +361,10 @@
                             <!-- Tab Semua Notifikasi -->
                             <div class="tab-pane fade show active" id="all" role="tabpanel">
                                 <% if (notifications.length > 0) { %>
-                                    <% notifications.forEach(notif => { %>
+                                    <% 
+                                    const allNotifications = paginate(notifications, currentPage, pageSize);
+                                    %>
+                                    <% allNotifications.forEach(notif => { %>
                                         <div class="card notification-card mb-3 <%= notif.is_read ? '' : 'notification-unread' %>">
                                             <div class="card-body">
                                                 <div class="d-flex justify-content-between align-items-start">
@@ -230,20 +377,65 @@
                                                         </h5>
                                                         <p class="notification-message"><%= notif.message %></p>
                                                         <div class="notification-meta">
-                                                            <span class="notification-type"><%= notif.type.replace('surat_', '').toUpperCase() %></span>
+                                                            <span class="notification-type type-<%= notif.related_type.replace('surat_', '') %>">
+                                                                <%= notif.related_type.replace('surat_', '').toUpperCase() %>
+                                                            </span>
                                                             <small class="time-ago"><i class="bi bi-clock me-1"></i><%= formatTimeAgo(notif.created_at) %></small>
                                                         </div>
                                                     </div>
-                                                    <a href="/mark-as-read/<%= notif.id %>?redirect=/surat/<%= notif.related_type %>/detail/<%= notif.related_id %>" class="btn btn-sm btn-outline-dark view-btn">Lihat</a>
+                                                    <a href="/mark-as-read/<%= notif.id %>?redirect=/<%= notif.related_type %>/<%= notif.related_id %>" 
+                                                       class="btn btn-sm btn-outline-dark view-btn">
+                                                        <i class="bi bi-eye me-1"></i>Lihat
+                                                    </a>
                                                 </div>
                                             </div>
                                         </div>
                                     <% }); %>
+                                    
+                                    <div class="pagination-container">
+                                        <div class="page-size-selector">
+                                            <label for="pageSize">Tampilkan:</label>
+                                            <select id="pageSize" class="form-select form-select-sm" style="width: auto;">
+                                                <option value="5" <%= pageSize === 5 ? 'selected' : '' %>>5</option>
+                                                <option value="10" <%= pageSize === 10 ? 'selected' : '' %>>10</option>
+                                                <option value="15" <%= pageSize === 15 ? 'selected' : '' %>>15</option>
+                                            </select>
+                                        </div>
+                                        
+                                        <nav>
+                                            <ul class="pagination pagination-sm mb-0">
+                                                <% if (currentPage > 1) { %>
+                                                    <li class="page-item">
+                                                        <a class="page-link" href="?page=<%= currentPage - 1 %>&size=<%= pageSize %><%= activeTab ? '&tab=' + activeTab : '' %>">
+                                                            <i class="bi bi-chevron-left"></i>
+                                                        </a>
+                                                    </li>
+                                                <% } %>
+                                                
+                                                <% for (let i = 1; i <= totalPages; i++) { %>
+                                                    <li class="page-item <%= i === currentPage ? 'active' : '' %>">
+                                                        <a class="page-link" href="?page=<%= i %>&size=<%= pageSize %><%= activeTab ? '&tab=' + activeTab : '' %>"><%= i %></a>
+                                                    </li>
+                                                <% } %>
+                                                
+                                                <% if (currentPage < totalPages) { %>
+                                                    <li class="page-item">
+                                                        <a class="page-link" href="?page=<%= currentPage + 1 %>&size=<%= pageSize %><%= activeTab ? '&tab=' + activeTab : '' %>">
+                                                            <i class="bi bi-chevron-right"></i>
+                                                        </a>
+                                                    </li>
+                                                <% } %>
+                                            </ul>
+                                        </nav>
+                                    </div>
                                 <% } else { %>
                                     <div class="empty-state">
                                         <i class="bi bi-bell-slash"></i>
                                         <h4>Tidak ada notifikasi</h4>
                                         <p class="text-muted">Anda belum memiliki notifikasi saat ini</p>
+                                        <a href="/" class="btn btn-sm btn-outline-primary mt-2">
+                                            <i class="bi bi-arrow-left me-1"></i>Kembali ke Beranda
+                                        </a>
                                     </div>
                                 <% } %>
                             </div>
@@ -251,10 +443,12 @@
                             <!-- Tab Surat Pengantar -->
                             <div class="tab-pane fade" id="surat" role="tabpanel">
                                 <% 
-                                    const suratNotifs = notifications.filter(n => n.type === 'surat');
-                                    if (suratNotifs.length > 0) { 
+                                const suratNotifs = notifications.filter(n => n.related_type === 'surat');
+                                const suratTotalPages = Math.ceil(suratNotifs.length / pageSize);
+                                if (suratNotifs.length > 0) { 
                                 %>
-                                    <% suratNotifs.forEach(notif => { %>
+                                    <% const paginatedSurat = paginate(suratNotifs, currentPage, pageSize); %>
+                                    <% paginatedSurat.forEach(notif => { %>
                                         <div class="card notification-card mb-3 <%= notif.is_read ? '' : 'notification-unread' %>">
                                             <div class="card-body">
                                                 <div class="d-flex justify-content-between align-items-start">
@@ -270,14 +464,54 @@
                                                             <small class="time-ago"><i class="bi bi-clock me-1"></i><%= formatTimeAgo(notif.created_at) %></small>
                                                         </div>
                                                     </div>
-                                                    <a href="/mark-as-read/<%= notif.id %>?redirect=/surat/detail/<%= notif.related_id %>" class="btn btn-sm btn-outline-dark view-btn">Lihat</a>
+                                                    <a href="/mark-as-read/<%= notif.id %>?redirect=/surat/<%= notif.related_id %>" 
+                                                       class="btn btn-sm btn-outline-dark view-btn">
+                                                        <i class="bi bi-eye me-1"></i>Lihat
+                                                    </a>
                                                 </div>
                                             </div>
                                         </div>
                                     <% }); %>
+                                    
+                                    <div class="pagination-container">
+                                        <div class="page-size-selector">
+                                            <label for="pageSizeSurat">Tampilkan:</label>
+                                            <select id="pageSizeSurat" class="form-select form-select-sm" style="width: auto;">
+                                                <option value="5" <%= pageSize === 5 ? 'selected' : '' %>>5</option>
+                                                <option value="10" <%= pageSize === 10 ? 'selected' : '' %>>10</option>
+                                                <option value="15" <%= pageSize === 15 ? 'selected' : '' %>>15</option>
+                                            </select>
+                                        </div>
+                                        
+                                        <nav>
+                                            <ul class="pagination pagination-sm mb-0">
+                                                <% if (currentPage > 1) { %>
+                                                    <li class="page-item">
+                                                        <a class="page-link" href="?page=<%= currentPage - 1 %>&size=<%= pageSize %>&tab=surat">
+                                                            <i class="bi bi-chevron-left"></i>
+                                                        </a>
+                                                    </li>
+                                                <% } %>
+                                                
+                                                <% for (let i = 1; i <= suratTotalPages; i++) { %>
+                                                    <li class="page-item <%= i === currentPage ? 'active' : '' %>">
+                                                        <a class="page-link" href="?page=<%= i %>&size=<%= pageSize %>&tab=surat"><%= i %></a>
+                                                    </li>
+                                                <% } %>
+                                                
+                                                <% if (currentPage < suratTotalPages) { %>
+                                                    <li class="page-item">
+                                                        <a class="page-link" href="?page=<%= currentPage + 1 %>&size=<%= pageSize %>&tab=surat">
+                                                            <i class="bi bi-chevron-right"></i>
+                                                        </a>
+                                                    </li>
+                                                <% } %>
+                                            </ul>
+                                        </nav>
+                                    </div>
                                 <% } else { %>
                                     <div class="empty-state">
-                                        <i class="bi bi-bell-slash"></i>
+                                        <i class="bi bi-envelope-slash"></i>
                                         <h4>Tidak ada notifikasi Surat Pengantar</h4>
                                         <p class="text-muted">Anda belum memiliki notifikasi untuk Surat Pengantar</p>
                                     </div>
@@ -287,10 +521,12 @@
                             <!-- Tab Keterangan Usaha -->
                             <div class="tab-pane fade" id="ku" role="tabpanel">
                                 <% 
-                                    const kuNotifs = notifications.filter(n => n.type === 'surat_ku');
-                                    if (kuNotifs.length > 0) { 
+                                const kuNotifs = notifications.filter(n => n.related_type === 'surat_ku');
+                                const kuTotalPages = Math.ceil(kuNotifs.length / pageSize);
+                                if (kuNotifs.length > 0) { 
                                 %>
-                                    <% kuNotifs.forEach(notif => { %>
+                                    <% const paginatedKU = paginate(kuNotifs, currentPage, pageSize); %>
+                                    <% paginatedKU.forEach(notif => { %>
                                         <div class="card notification-card mb-3 <%= notif.is_read ? '' : 'notification-unread' %>">
                                             <div class="card-body">
                                                 <div class="d-flex justify-content-between align-items-start">
@@ -306,14 +542,54 @@
                                                             <small class="time-ago"><i class="bi bi-clock me-1"></i><%= formatTimeAgo(notif.created_at) %></small>
                                                         </div>
                                                     </div>
-                                                    <a href="/mark-as-read/<%= notif.id %>?redirect=/surat-ku/detail/<%= notif.related_id %>" class="btn btn-sm btn-outline-dark view-btn">Lihat</a>
+                                                    <a href="/mark-as-read/<%= notif.id %>?redirect=/surat_ku/<%= notif.related_id %>" 
+                                                       class="btn btn-sm btn-outline-dark view-btn">
+                                                        <i class="bi bi-eye me-1"></i>Lihat
+                                                    </a>
                                                 </div>
                                             </div>
                                         </div>
                                     <% }); %>
+                                    
+                                    <div class="pagination-container">
+                                        <div class="page-size-selector">
+                                            <label for="pageSizeKU">Tampilkan:</label>
+                                            <select id="pageSizeKU" class="form-select form-select-sm" style="width: auto;">
+                                                <option value="5" <%= pageSize === 5 ? 'selected' : '' %>>5</option>
+                                                <option value="10" <%= pageSize === 10 ? 'selected' : '' %>>10</option>
+                                                <option value="15" <%= pageSize === 15 ? 'selected' : '' %>>15</option>
+                                            </select>
+                                        </div>
+                                        
+                                        <nav>
+                                            <ul class="pagination pagination-sm mb-0">
+                                                <% if (currentPage > 1) { %>
+                                                    <li class="page-item">
+                                                        <a class="page-link" href="?page=<%= currentPage - 1 %>&size=<%= pageSize %>&tab=ku">
+                                                            <i class="bi bi-chevron-left"></i>
+                                                        </a>
+                                                    </li>
+                                                <% } %>
+                                                
+                                                <% for (let i = 1; i <= kuTotalPages; i++) { %>
+                                                    <li class="page-item <%= i === currentPage ? 'active' : '' %>">
+                                                        <a class="page-link" href="?page=<%= i %>&size=<%= pageSize %>&tab=ku"><%= i %></a>
+                                                    </li>
+                                                <% } %>
+                                                
+                                                <% if (currentPage < kuTotalPages) { %>
+                                                    <li class="page-item">
+                                                        <a class="page-link" href="?page=<%= currentPage + 1 %>&size=<%= pageSize %>&tab=ku">
+                                                            <i class="bi bi-chevron-right"></i>
+                                                        </a>
+                                                    </li>
+                                                <% } %>
+                                            </ul>
+                                        </nav>
+                                    </div>
                                 <% } else { %>
                                     <div class="empty-state">
-                                        <i class="bi bi-bell-slash"></i>
+                                        <i class="bi bi-shop-slash"></i>
                                         <h4>Tidak ada notifikasi Keterangan Usaha</h4>
                                         <p class="text-muted">Anda belum memiliki notifikasi untuk Keterangan Usaha</p>
                                     </div>
@@ -323,10 +599,12 @@
                             <!-- Tab Beda Identitas -->
                             <div class="tab-pane fade" id="kbi" role="tabpanel">
                                 <% 
-                                    const kbiNotifs = notifications.filter(n => n.type === 'surat_kbi');
-                                    if (kbiNotifs.length > 0) { 
+                                const kbiNotifs = notifications.filter(n => n.related_type === 'surat_kbi');
+                                const kbiTotalPages = Math.ceil(kbiNotifs.length / pageSize);
+                                if (kbiNotifs.length > 0) { 
                                 %>
-                                    <% kbiNotifs.forEach(notif => { %>
+                                    <% const paginatedKBI = paginate(kbiNotifs, currentPage, pageSize); %>
+                                    <% paginatedKBI.forEach(notif => { %>
                                         <div class="card notification-card mb-3 <%= notif.is_read ? '' : 'notification-unread' %>">
                                             <div class="card-body">
                                                 <div class="d-flex justify-content-between align-items-start">
@@ -342,14 +620,54 @@
                                                             <small class="time-ago"><i class="bi bi-clock me-1"></i><%= formatTimeAgo(notif.created_at) %></small>
                                                         </div>
                                                     </div>
-                                                    <a href="/mark-as-read/<%= notif.id %>?redirect=/surat-kbi/detail/<%= notif.related_id %>" class="btn btn-sm btn-outline-dark view-btn">Lihat</a>
+                                                    <a href="/mark-as-read/<%= notif.id %>?redirect=/surat_kbi/<%= notif.related_id %>" 
+                                                       class="btn btn-sm btn-outline-dark view-btn">
+                                                        <i class="bi bi-eye me-1"></i>Lihat
+                                                    </a>
                                                 </div>
                                             </div>
                                         </div>
                                     <% }); %>
+                                    
+                                    <div class="pagination-container">
+                                        <div class="page-size-selector">
+                                            <label for="pageSizeKBI">Tampilkan:</label>
+                                            <select id="pageSizeKBI" class="form-select form-select-sm" style="width: auto;">
+                                                <option value="5" <%= pageSize === 5 ? 'selected' : '' %>>5</option>
+                                                <option value="10" <%= pageSize === 10 ? 'selected' : '' %>>10</option>
+                                                <option value="15" <%= pageSize === 15 ? 'selected' : '' %>>15</option>
+                                            </select>
+                                        </div>
+                                        
+                                        <nav>
+                                            <ul class="pagination pagination-sm mb-0">
+                                                <% if (currentPage > 1) { %>
+                                                    <li class="page-item">
+                                                        <a class="page-link" href="?page=<%= currentPage - 1 %>&size=<%= pageSize %>&tab=kbi">
+                                                            <i class="bi bi-chevron-left"></i>
+                                                        </a>
+                                                    </li>
+                                                <% } %>
+                                                
+                                                <% for (let i = 1; i <= kbiTotalPages; i++) { %>
+                                                    <li class="page-item <%= i === currentPage ? 'active' : '' %>">
+                                                        <a class="page-link" href="?page=<%= i %>&size=<%= pageSize %>&tab=kbi"><%= i %></a>
+                                                    </li>
+                                                <% } %>
+                                                
+                                                <% if (currentPage < kbiTotalPages) { %>
+                                                    <li class="page-item">
+                                                        <a class="page-link" href="?page=<%= currentPage + 1 %>&size=<%= pageSize %>&tab=kbi">
+                                                            <i class="bi bi-chevron-right"></i>
+                                                        </a>
+                                                    </li>
+                                                <% } %>
+                                            </ul>
+                                        </nav>
+                                    </div>
                                 <% } else { %>
                                     <div class="empty-state">
-                                        <i class="bi bi-bell-slash"></i>
+                                        <i class="bi bi-person-x"></i>
                                         <h4>Tidak ada notifikasi Beda Identitas</h4>
                                         <p class="text-muted">Anda belum memiliki notifikasi untuk Beda Identitas</p>
                                     </div>
@@ -359,10 +677,12 @@
                             <!-- Tab Tidak Mampu -->
                             <div class="tab-pane fade" id="sktm" role="tabpanel">
                                 <% 
-                                    const sktmNotifs = notifications.filter(n => n.type === 'surat_sktm');
-                                    if (sktmNotifs.length > 0) { 
+                                const sktmNotifs = notifications.filter(n => n.related_type === 'surat_sktm');
+                                const sktmTotalPages = Math.ceil(sktmNotifs.length / pageSize);
+                                if (sktmNotifs.length > 0) { 
                                 %>
-                                    <% sktmNotifs.forEach(notif => { %>
+                                    <% const paginatedSKTM = paginate(sktmNotifs, currentPage, pageSize); %>
+                                    <% paginatedSKTM.forEach(notif => { %>
                                         <div class="card notification-card mb-3 <%= notif.is_read ? '' : 'notification-unread' %>">
                                             <div class="card-body">
                                                 <div class="d-flex justify-content-between align-items-start">
@@ -378,14 +698,54 @@
                                                             <small class="time-ago"><i class="bi bi-clock me-1"></i><%= formatTimeAgo(notif.created_at) %></small>
                                                         </div>
                                                     </div>
-                                                    <a href="/mark-as-read/<%= notif.id %>?redirect=/surat-sktm/detail/<%= notif.related_id %>" class="btn btn-sm btn-outline-dark view-btn">Lihat</a>
+                                                    <a href="/mark-as-read/<%= notif.id %>?redirect=/surat_sktm/<%= notif.related_id %>" 
+                                                       class="btn btn-sm btn-outline-dark view-btn">
+                                                        <i class="bi bi-eye me-1"></i>Lihat
+                                                    </a>
                                                 </div>
                                             </div>
                                         </div>
                                     <% }); %>
+                                    
+                                    <div class="pagination-container">
+                                        <div class="page-size-selector">
+                                            <label for="pageSizeSKTM">Tampilkan:</label>
+                                            <select id="pageSizeSKTM" class="form-select form-select-sm" style="width: auto;">
+                                                <option value="5" <%= pageSize === 5 ? 'selected' : '' %>>5</option>
+                                                <option value="10" <%= pageSize === 10 ? 'selected' : '' %>>10</option>
+                                                <option value="15" <%= pageSize === 15 ? 'selected' : '' %>>15</option>
+                                            </select>
+                                        </div>
+                                        
+                                        <nav>
+                                            <ul class="pagination pagination-sm mb-0">
+                                                <% if (currentPage > 1) { %>
+                                                    <li class="page-item">
+                                                        <a class="page-link" href="?page=<%= currentPage - 1 %>&size=<%= pageSize %>&tab=sktm">
+                                                            <i class="bi bi-chevron-left"></i>
+                                                        </a>
+                                                    </li>
+                                                <% } %>
+                                                
+                                                <% for (let i = 1; i <= sktmTotalPages; i++) { %>
+                                                    <li class="page-item <%= i === currentPage ? 'active' : '' %>">
+                                                        <a class="page-link" href="?page=<%= i %>&size=<%= pageSize %>&tab=sktm"><%= i %></a>
+                                                    </li>
+                                                <% } %>
+                                                
+                                                <% if (currentPage < sktmTotalPages) { %>
+                                                    <li class="page-item">
+                                                        <a class="page-link" href="?page=<%= currentPage + 1 %>&size=<%= pageSize %>&tab=sktm">
+                                                            <i class="bi bi-chevron-right"></i>
+                                                        </a>
+                                                    </li>
+                                                <% } %>
+                                            </ul>
+                                        </nav>
+                                    </div>
                                 <% } else { %>
                                     <div class="empty-state">
-                                        <i class="bi bi-bell-slash"></i>
+                                        <i class="bi bi-heartbreak"></i>
                                         <h4>Tidak ada notifikasi Tidak Mampu</h4>
                                         <p class="text-muted">Anda belum memiliki notifikasi untuk Tidak Mampu</p>
                                     </div>
@@ -419,7 +779,7 @@
                             <div class="toast-body">
                                 ${data.message}
                                 <div class="mt-2 pt-2 border-top">
-                                    <a href="/mark-as-read/${data.id}?redirect=/surat/${data.type}/detail/${data.related_id}" class="btn btn-dark btn-sm">Lihat</a>
+                                    <a href="/mark-as-read/${data.id}?redirect=/${data.related_type}/${data.related_id}" class="btn btn-dark btn-sm">Lihat</a>
                                 </div>
                             </div>
                         </div>
@@ -437,8 +797,115 @@
                         setTimeout(() => toast.parentElement.remove(), 300);
                     }
                 }, 5000);
+                
+                // Update notification count
+                const countBadge = document.querySelector('.notification-count');
+                if (countBadge) {
+                    const currentCount = parseInt(countBadge.textContent);
+                    countBadge.textContent = currentCount + 1;
+                } else {
+                    const badgeContainer = document.querySelector('.position-relative.d-inline-block');
+                    if (badgeContainer) {
+                        badgeContainer.insertAdjacentHTML('beforeend', 
+                            '<span class="badge bg-danger rounded-pill notification-count">1</span>');
+                    }
+                }
+                
+                // Refresh notifikasi jika di tab yang sesuai
+                const activeTab = new URLSearchParams(window.location.search).get('tab') || 'all';
+                if (activeTab === 'all' || activeTab === data.related_type.replace('surat_', '')) {
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 2000);
+                }
             };
         }
+        
+        // Tab switching
+        document.querySelectorAll('#notificationTabs .nav-link').forEach(tab => {
+            tab.addEventListener('click', (e) => {
+                const tabId = e.target.getAttribute('data-bs-target').substring(1);
+                const url = new URL(window.location.href);
+                url.searchParams.set('tab', tabId);
+                url.searchParams.set('page', 1); // Reset ke halaman 1 saat ganti tab
+                window.history.pushState({}, '', url);
+                
+                // Animasi transisi tab
+                document.querySelectorAll('.tab-pane').forEach(pane => {
+                    pane.style.opacity = 0;
+                    setTimeout(() => {
+                        pane.style.opacity = 1;
+                    }, 300);
+                });
+            });
+        });
+        
+        // Page size selector change handler
+        document.querySelectorAll('select[id^="pageSize"]').forEach(select => {
+            select.addEventListener('change', function() {
+                const url = new URL(window.location.href);
+                const activeTab = new URLSearchParams(window.location.search).get('tab') || 'all';
+                
+                url.searchParams.set('size', this.value);
+                url.searchParams.set('page', 1);
+                
+                // Pertahankan tab aktif jika ada
+                if (activeTab && activeTab !== 'all') {
+                    url.searchParams.set('tab', activeTab);
+                }
+                
+                window.location.href = url.toString();
+            });
+        });
+        
+        // Preserve tab state when paginating
+        document.addEventListener('DOMContentLoaded', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const activeTab = urlParams.get('tab') || 'all';
+            
+            // Aktifkan tab yang sesuai
+            const tabElement = document.querySelector(`#${activeTab}-tab`);
+            if (tabElement) {
+                new bootstrap.Tab(tabElement).show();
+            }
+            
+            // Update semua link pagination untuk menyertakan tab aktif
+            document.querySelectorAll('.pagination a.page-link').forEach(link => {
+                const href = new URL(link.href);
+                if (!href.searchParams.has('tab') && activeTab !== 'all') {
+                    href.searchParams.set('tab', activeTab);
+                    link.href = href.toString();
+                }
+            });
+            
+            // Sinkronkan semua select box page size
+            const pageSize = urlParams.get('size') || 10;
+            document.querySelectorAll('select[id^="pageSize"]').forEach(select => {
+                select.value = pageSize;
+                
+                // Tambahkan event listener jika belum ada
+                if (!select.hasAttribute('data-listener-added')) {
+                    select.addEventListener('change', function() {
+                        const url = new URL(window.location.href);
+                        url.searchParams.set('size', this.value);
+                        url.searchParams.set('page', 1);
+                        window.location.href = url.toString();
+                    });
+                    select.setAttribute('data-listener-added', 'true');
+                }
+            });
+        });
+        
+        // Tangani popstate (back/forward button)
+        window.addEventListener('popstate', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const activeTab = urlParams.get('tab') || 'all';
+            
+            const tabElement = document.querySelector(`#${activeTab}-tab`);
+            if (tabElement) {
+                new bootstrap.Tab(tabElement).show();
+            }
+        });
     </script>
 </body>
 </html>

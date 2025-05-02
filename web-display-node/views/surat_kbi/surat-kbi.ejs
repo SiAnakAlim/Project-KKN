@@ -346,8 +346,19 @@
                                                                 title="Edit">
                                                             <i class="fas fa-edit"></i>
                                                         </button>
-                                                        <% if (row.status === 'Selesai') { %>
-                                                            <a href="https://wa.me/<%= row.nomor_wa %>?text=Yth.%20Bapak/Ibu,%20surat%20keterangan%20beda%20identitas%20Anda%20dengan%20nomor%20<%= row.nomor_surat %>%20sudah%20jadi.%20Anda%20bisa%20mengambilnya%20di%20balai%20desa%20pukul%208%20sampai%2015."
+                                                        <% if (row.status === 'Selesai' && row.nomor_wa) { %>
+                                                            <%
+                                                                let nomorWhatsAppTableKBI = row.nomor_wa;
+                                                                if (nomorWhatsAppTableKBI.includes('@s.whatsapp.net')) {
+                                                                    nomorWhatsAppTableKBI = nomorWhatsAppTableKBI.split('@')[0];
+                                                                }
+                                                                if (nomorWhatsAppTableKBI.startsWith('0')) {
+                                                                    nomorWhatsAppTableKBI = '+62' + nomorWhatsAppTableKBI.substring(1);
+                                                                } else if (!nomorWhatsAppTableKBI.startsWith('+')) {
+                                                                    nomorWhatsAppTableKBI = '+62' + nomorWhatsAppTableKBI;
+                                                                }
+                                                            %>
+                                                            <a href="https://wa.me/<%= nomorWhatsAppTableKBI %>?text=Yth.%20<%= encodeURIComponent(row.nama) %>,%0ASurat%20Keterangan%20Beda%20Identitas%20Anda%20dengan%20nomor%20<%= encodeURIComponent(row.nomor_surat) %>%20sudah%20selesai.%20Anda%20bisa%20mengambilnya%20di%20kantor%20desa%20pada%20jam%20kerja."
                                                                target="_blank"
                                                                class="inline-flex items-center p-1 rounded hover:bg-green-100 text-green-600 hover:text-green-800"
                                                                title="Hubungi via WhatsApp">
@@ -521,92 +532,96 @@
 </div>
                 
                 <!-- Edit Surat Modal -->
-<div id="editSuratKBIModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
-    <div class="bg-white rounded-lg shadow-xl w-full max-w-2xl max-h-screen overflow-y-auto">
-        <div class="flex justify-between items-center border-b p-4">
-            <h3 class="text-xl font-semibold text-gray-800">Edit Surat Beda Identitas</h3>
-            <button id="closeEditKBIModal" class="text-gray-500 hover:text-gray-700">
-                <i class="fas fa-times"></i>
-            </button>
-        </div>
-        <form id="editSuratKBIForm" class="p-6">
-            <input type="hidden" id="edit_id_kbi" name="id">
-            <input type="hidden" id="edit_jenis_surat" name="jenis_surat" value="kbi">
-            <input type="hidden" id="edit_tanggal_permohonan" name="tanggal_permohonan">
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <!-- Data Utama -->
-                <div>
-                    <label for="edit_nama" class="block text-sm font-medium text-gray-700 mb-1">Nama Lengkap*</label>
-                    <input type="text" id="edit_nama" name="nama" required
-                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gold-500">
+                <div id="editSuratKBIModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
+                    <div class="bg-white rounded-lg shadow-xl w-full max-w-2xl max-h-screen overflow-y-auto">
+                        <div class="flex justify-between items-center border-b p-4">
+                            <h3 class="text-xl font-semibold text-gray-800">Edit Surat Beda Identitas</h3>
+                            <button id="closeEditKBIModal" class="text-gray-500 hover:text-gray-700">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                        <form id="editSuratKBIForm" class="p-6">
+                            <input type="hidden" id="edit_id_kbi" name="id">
+                            <input type="hidden" id="edit_jenis_surat" name="jenis_surat" value="kbi">
+                            <input type="hidden" id="edit_tanggal_permohonan" name="tanggal_permohonan">
+                
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label for="edit_nama" class="block text-sm font-medium text-gray-700 mb-1">Nama Lengkap*</label>
+                                    <input type="text" id="edit_nama" name="nama" required
+                                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gold-500">
+                                </div>
+                
+                                <div>
+                                    <label for="edit_no_kk" class="block text-sm font-medium text-gray-700 mb-1">Nomor KK*</label>
+                                    <input type="text" id="edit_no_kk" name="no_kk" required
+                                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gold-500">
+                                </div>
+                
+                                <div>
+                                    <label for="edit_nik" class="block text-sm font-medium text-gray-700 mb-1">NIK*</label>
+                                    <input type="text" id="edit_nik" name="nik" required
+                                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gold-500">
+                                </div>
+                
+                                <div>
+                                    <label for="edit_keperluan_surat" class="block text-sm font-medium text-gray-700 mb-1">Keperluan Surat*</label>
+                                    <input type="text" id="edit_keperluan_surat" name="keperluan_surat" required
+                                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gold-500">
+                                </div>
+                
+                                <div>
+                                    <label for="edit_tertera" class="block text-sm font-medium text-gray-700 mb-1">Nama yang Tertera*</label>
+                                    <input type="text" id="edit_tertera" name="tertera" required
+                                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gold-500">
+                                </div>
+                
+                                <div>
+                                    <label for="edit_nama_lagi" class="block text-sm font-medium text-gray-700 mb-1">Dokumen Tertera*</label>
+                                    <input type="text" id="edit_nama_lagi" name="nama_lagi" required
+                                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gold-500">
+                                </div>
+                
+                                <div>
+                                    <label for="edit_norek" class="block text-sm font-medium text-gray-700 mb-1">Nomor Rekening</label>
+                                    <input type="text" id="edit_norek" name="norek"
+                                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gold-500">
+                                </div>
+                
+                                <div>
+                                    <label for="edit_tertera_lagi" class="block text-sm font-medium text-gray-700 mb-1">Dokumen Tertera Lainnya</label>
+                                    <input type="text" id="edit_tertera_lagi" name="tertera_lagi"
+                                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gold-500">
+                                </div>
+                
+                                <div>
+                                    <label for="edit_nomor_wa" class="block text-sm font-medium text-gray-700 mb-1">Nomor WhatsApp</label>
+                                    <input type="text" id="edit_nomor_wa" name="nomor_wa"
+                                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gold-500">
+                                </div>
+                
+                                <div>
+                                    <label for="edit_status_kbi" class="block text-sm font-medium text-gray-700 mb-1">Status*</label>
+                                    <select id="edit_status_kbi" name="status" required
+                                            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gold-500">
+                                        <option value="Diproses">Diproses</option>
+                                        <option value="Selesai">Selesai</option>
+                                        <option value="Ditolak">Ditolak</option>
+                                    </select>
+                                </div>
+                            </div>
+                
+                            <div class="mt-6 flex justify-end space-x-3">
+                                <button type="button" id="cancelEditKBIModal" class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-100">
+                                    Batal
+                                </button>
+                                <button type="submit" class="px-4 py-2 bg-gold-600 text-white rounded-md hover:bg-gold-700">
+                                    <i class="fas fa-save mr-2"></i> Simpan Perubahan
+                                </button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
-
-                <div>
-                    <label for="edit_no_kk" class="block text-sm font-medium text-gray-700 mb-1">Nomor KK*</label>
-                    <input type="text" id="edit_no_kk" name="no_kk" required
-                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gold-500">
-                </div>
-
-                <div>
-                    <label for="edit_nik" class="block text-sm font-medium text-gray-700 mb-1">NIK*</label>
-                    <input type="text" id="edit_nik" name="nik" required
-                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gold-500">
-                </div>
-
-                <div>
-                    <label for="edit_keperluan_surat" class="block text-sm font-medium text-gray-700 mb-1">Keperluan Surat*</label>
-                    <input type="text" id="edit_keperluan_surat" name="keperluan_surat" required
-                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gold-500">
-                </div>
-
-                <!-- Data Beda Identitas -->
-                <div>
-                    <label for="edit_tertera" class="block text-sm font-medium text-gray-700 mb-1">Nama yang Tertera*</label>
-                    <input type="text" id="edit_tertera" name="tertera" required
-                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gold-500">
-                </div>
-
-                <div>
-                    <label for="edit_nama_lagi" class="block text-sm font-medium text-gray-700 mb-1">Dokumen Tertera*</label>
-                    <input type="text" id="edit_nama_lagi" name="nama_lagi" required
-                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gold-500">
-                </div>
-
-                <div>
-                    <label for="edit_norek" class="block text-sm font-medium text-gray-700 mb-1">Nomor Rekening</label>
-                    <input type="text" id="edit_norek" name="norek"
-                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gold-500">
-                </div>
-
-                <div>
-                    <label for="edit_tertera_lagi" class="block text-sm font-medium text-gray-700 mb-1">Dokumen Tertera Lainnya</label>
-                    <input type="text" id="edit_tertera_lagi" name="tertera_lagi"
-                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gold-500">
-                </div>
-
-                <div>
-                    <label for="edit_status_kbi" class="block text-sm font-medium text-gray-700 mb-1">Status*</label>
-                    <select id="edit_status_kbi" name="status" required
-                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gold-500">
-                        <option value="Diproses">Diproses</option>
-                        <option value="Selesai">Selesai</option>
-                        <option value="Ditolak">Ditolak</option>
-                    </select>
-                </div>
-            </div>
-
-            <div class="mt-6 flex justify-end space-x-3">
-                <button type="button" id="cancelEditKBIModal" class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-100">
-                    Batal
-                </button>
-                <button type="submit" class="px-4 py-2 bg-gold-600 text-white rounded-md hover:bg-gold-700">
-                    <i class="fas fa-save mr-2"></i> Simpan Perubahan
-                </button>
-            </div>
-        </form>
-    </div>
-</div>
             </main>
         </div>
 
@@ -948,65 +963,72 @@ function setupFormHandlers() {
     });
 
     // Edit Surat KBI Form
-    if (editSuratKBIForm) {
-        editSuratKBIForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            
-            const id = document.getElementById('edit_id_kbi').value;
-            const formData = {
-                nama: document.getElementById('edit_nama').value,
-                no_kk: document.getElementById('edit_no_kk').value,
-                nik: document.getElementById('edit_nik').value,
-                tertera: document.getElementById('edit_tertera').value,
-                norek: document.getElementById('edit_norek').value || null,
-                nama_lagi: document.getElementById('edit_nama_lagi').value,
-                tertera_lagi: document.getElementById('edit_tertera_lagi').value || null,
-                keperluan_surat: document.getElementById('edit_keperluan_surat').value,
-                jenis_surat: 'kbi',
-                status: document.getElementById('edit_status_kbi').value,
-                tanggal_permohonan: document.getElementById('edit_tanggal_permohonan').value
-            };
+if (editSuratKBIForm) {
+    editSuratKBIForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
 
-            // Client-side validation
-            if (!/^\d{16}$/.test(formData.nik)) {
-                showNotification('NIK harus 16 digit angka', 'error');
-                return;
+        const id = document.getElementById('edit_id_kbi').value;
+        const formData = {
+            nama: document.getElementById('edit_nama').value,
+            no_kk: document.getElementById('edit_no_kk').value,
+            nik: document.getElementById('edit_nik').value,
+            tertera: document.getElementById('edit_tertera').value,
+            norek: document.getElementById('edit_norek').value || null,
+            nama_lagi: document.getElementById('edit_nama_lagi').value,
+            tertera_lagi: document.getElementById('edit_tertera_lagi').value || null,
+            keperluan_surat: document.getElementById('edit_keperluan_surat').value,
+            jenis_surat: 'kbi',
+            status: document.getElementById('edit_status_kbi').value,
+            tanggal_permohonan: document.getElementById('edit_tanggal_permohonan').value,
+            nomor_wa: document.getElementById('edit_nomor_wa').value || null // Tambahkan nomor_wa
+        };
+
+        // Client-side validation
+        if (!/^\d{16}$/.test(formData.nik)) {
+            showNotification('NIK harus 16 digit angka', 'error');
+            return;
+        }
+
+        if (!/^\d{16}$/.test(formData.no_kk)) {
+            showNotification('Nomor KK harus 16 digit angka', 'error');
+            return;
+        }
+
+        // Validasi nomor WA (opsional, bisa disesuaikan)
+        if (formData.nomor_wa && !/^\d+$/.test(formData.nomor_wa)) {
+            showNotification('Nomor WhatsApp harus berupa angka', 'error');
+            return;
+        }
+
+        try {
+            const response = await fetch(`/api/surat-kbi/${id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            });
+
+            const contentType = response.headers.get('content-type');
+            if (!contentType?.includes('application/json')) {
+                throw new Error(await response.text() || 'Invalid response from server');
             }
 
-            if (!/^\d{16}$/.test(formData.no_kk)) {
-                showNotification('Nomor KK harus 16 digit angka', 'error');
-                return;
+            const result = await response.json();
+
+            if (!response.ok) {
+                throw new Error(result.message || 'Gagal memperbarui surat');
             }
 
-            try {
-                const response = await fetch(`/api/surat-kbi/${id}`, {
-                    method: 'PUT',
-                    headers: { 
-                        'Content-Type': 'application/json',
-                        'Accept': 'application/json'
-                    },
-                    body: JSON.stringify(formData)
-                });
-
-                const contentType = response.headers.get('content-type');
-                if (!contentType?.includes('application/json')) {
-                    throw new Error(await response.text() || 'Invalid response from server');
-                }
-
-                const result = await response.json();
-
-                if (!response.ok) {
-                    throw new Error(result.message || 'Gagal memperbarui surat');
-                }
-
-                showNotification('Surat berhasil diperbarui', 'success');
-                setTimeout(() => window.location.reload(), 1500);
-            } catch (error) {
-                console.error('Error:', error);
-                showNotification(error.message || 'Terjadi kesalahan saat memperbarui surat', 'error');
-            }
-        });
-    }
+            showNotification('Surat berhasil diperbarui', 'success');
+            setTimeout(() => window.location.reload(), 1500);
+        } catch (error) {
+            console.error('Error:', error);
+            showNotification(error.message || 'Terjadi kesalahan saat memperbarui surat', 'error');
+        }
+    });
+}
 }
 
     // Display current date in add form
@@ -1020,7 +1042,26 @@ function setupFormHandlers() {
         document.getElementById('display_tanggal_kbi').textContent = formattedDate;
     }
 
-    window.editSuratKBI = async (id) => {
+   // Global edit function
+window.editSuratKBI = async (id) => {
+    const editSuratKBIModal = document.getElementById('editSuratKBIModal');
+    const editSuratKBIForm = document.getElementById('editSuratKBIForm');
+    const closeEditKBIModal = document.getElementById('closeEditKBIModal');
+    const cancelEditKBIModal = document.getElementById('cancelEditKBIModal');
+    const whatsappButtonContainerKBI = document.getElementById('whatsappButtonEditKBI'); // Dapatkan kontainer dari HTML
+
+    // Function to close the modal
+    const closeModalKBI = () => {
+        editSuratKBIModal.classList.add('hidden');
+        if (whatsappButtonContainerKBI) {
+            whatsappButtonContainerKBI.innerHTML = ''; // Clear WhatsApp button when modal is closed
+        }
+    };
+
+    // Event listeners for closing the modal
+    closeEditKBIModal.addEventListener('click', closeModalKBI);
+    cancelEditKBIModal.addEventListener('click', closeModalKBI);
+
     try {
         // Show loading state
         const editButton = document.querySelector(`button[onclick="editSuratKBI('${id}')"]`);
@@ -1028,6 +1069,14 @@ function setupFormHandlers() {
             const originalHTML = editButton.innerHTML;
             editButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
             editButton.disabled = true;
+
+            // Reset button after 3 seconds if error occurs
+            setTimeout(() => {
+                if (editButton.innerHTML.includes('fa-spinner')) {
+                    editButton.innerHTML = originalHTML;
+                        editButton.disabled = false;
+                }
+            }, 3000);
         }
 
         const response = await fetch(`/api/surat-kbi/${id}`, {
@@ -1050,7 +1099,8 @@ function setupFormHandlers() {
         }
 
         const data = result.data;
-        
+        console.log("Data dari API:", data); // Tambahkan ini untuk debugging
+
         // Fill edit form
         document.getElementById('edit_id_kbi').value = data.id;
         document.getElementById('edit_nama').value = data.nama || '';
@@ -1064,6 +1114,35 @@ function setupFormHandlers() {
         document.getElementById('edit_jenis_surat').value = data.jenis_surat || 'kbi';
         document.getElementById('edit_tanggal_permohonan').value = data.tanggal_permohonan || '';
         document.getElementById('edit_status_kbi').value = data.status || 'Diproses';
+        document.getElementById('edit_nomor_wa').value = data.nomor_wa || ''; // Isi nomor_wa
+
+        // Setup WhatsApp button if applicable
+        if (whatsappButtonContainerKBI) {
+            whatsappButtonContainerKBI.innerHTML = ''; // Clear previous content
+
+            if (data.status === 'Selesai' && data.nomor_wa) {
+                let nomorWhatsAppKBI = data.nomor_wa;
+                // Hapus bagian @s.whatsapp.net jika ada
+                if (nomorWhatsAppKBI.includes('@s.whatsapp.net')) {
+                    nomorWhatsAppKBI = nomorWhatsAppKBI.split('@')[0];
+                }
+                // Tambahkan kode negara jika belum ada
+                if (nomorWhatsAppKBI.startsWith('0')) {
+                    nomorWhatsAppKBI = '+62' + nomorWhatsAppKBI.substring(1);
+                } else if (!nomorWhatsAppKBI.startsWith('+')) {
+                    nomorWhatsAppKBI = '+62' + nomorWhatsAppKBI; // Asumsi default Indonesia jika tidak ada '0' atau '+'
+                }
+
+                const whatsappLinkKBI = document.createElement('a');
+                whatsappLinkKBI.href = `https://wa.me/${nomorWhatsAppKBI}?text=Yth.%20${encodeURIComponent(data.nama)},%0ASurat%20Keterangan%20Beda%20Identitas%20Anda%20dengan%20nomor%20${encodeURIComponent(data.nomor_surat || '...')}%20sudah%20selesai.%20Anda%20bisa%20mengambilnya%20di%20kantor%20desa%20pada%20jam%20kerja.`;
+                whatsappLinkKBI.className = 'inline-flex items-center px-3 py-1 rounded-md text-sm font-medium bg-green-100 text-green-800 hover:bg-green-200 mt-2';
+                whatsappLinkKBI.title = 'Kirim WA';
+                whatsappLinkKBI.innerHTML = '<i class="fab fa-whatsapp text-lg mr-2"></i> Kirim WA Pemberitahuan';
+
+                // Append the WhatsApp button to the container yang sudah ada di HTML
+                whatsappButtonContainerKBI.appendChild(whatsappLinkKBI);
+            }
+        }
 
         // Show modal
         editSuratKBIModal.classList.remove('hidden');
@@ -1076,6 +1155,14 @@ function setupFormHandlers() {
     } catch (error) {
         console.error('Error:', error);
         showNotification('Gagal memuat data surat: ' + (error.message || 'Terjadi kesalahan'), 'error');
+
+        // Ensure button is reset even on error
+        const editButton = document.querySelector(`button[onclick="editSuratKBI('${id}')"]`);
+        if (editButton && editButton.innerHTML.includes('fa-spinner')) {
+            const originalHTML = editButton.innerHTML;
+            editButton.innerHTML = originalHTML;
+            editButton.disabled = false;
+        }
     }
 };
 
@@ -1115,6 +1202,7 @@ function setupFormHandlers() {
     setupModalControls();
     setupFormHandlers();
 });
+
     </script>
 </body>
 </html>

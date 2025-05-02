@@ -336,12 +336,23 @@
                                                         <i class="fas fa-edit"></i>
                                                     </button>
                                                     <% if (row.status === 'Selesai') { %>
-                                                        <a href="https://wa.me/<%= row.nomor_wa %>?text=Yth.%20<%= encodeURIComponent(row.nama) %>,%0ASurat%20pengantar%20Anda%20dengan%20nomor%20<%= encodeURIComponent(row.nomor_surat) %>%20sudah%20selesai.%20Anda%20bisa%20mengambil%20di%20balai%20desa%20pukul%2008.00%20-%2015.00."
-                                                        class="text-teal-600 hover:text-teal-800 p-1 rounded hover:bg-teal-50"
-                                                        title="Kirim WA"
-                                                        target="_blank">
-                                                            <i class="fab fa-whatsapp"></i>
-                                                        </a>
+                                                        <% if (row.nomor_wa) { %>
+                                                            <%
+                                                            // Format nomor WA: hapus semua karakter non-digit, hilangkan 0 depan, tambahkan 62
+                                                            let cleanNumber = row.nomor_wa.toString().replace(/\D/g, '');
+                                                            let whatsappNumber = cleanNumber.startsWith('0') ? '62' + cleanNumber.substring(1) : cleanNumber;
+                                                            %>
+                                                            <a href="https://wa.me/<%= whatsappNumber %>?text=Yth.%20<%= encodeURIComponent(row.nama) %>,%0ASurat%20pengantar%20Anda%20dengan%20nomor%20<%= encodeURIComponent(row.nomor_surat) %>%20sudah%20selesai.%20Anda%20bisa%20mengambil%20di%20balai%20desa%20pukul%2008.00%20-%2015.00."
+                                                               class="text-teal-600 hover:text-teal-800 p-1 rounded hover:bg-teal-50"
+                                                               title="Kirim WA"
+                                                               target="_blank">
+                                                                <i class="fab fa-whatsapp"></i>
+                                                            </a>
+                                                        <% } else { %>
+                                                            <span class="text-gray-400 p-1" title="Nomor WA tidak tersedia">
+                                                                <i class="fab fa-whatsapp"></i>
+                                                            </span>
+                                                        <% } %>
                                                     <% } %>
                                                 </div>
                                             </td>
@@ -515,80 +526,90 @@
             </div>
             <form id="editSuratForm" class="p-6">
                 <input type="hidden" id="edit_id" name="id">
-                
+    
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                         <label for="edit_nama" class="block text-sm font-medium text-gray-700 mb-1">Nama Lengkap*</label>
-                        <input type="text" id="edit_nama" name="nama" required 
+                        <input type="text" id="edit_nama" name="nama" required
                                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gold-500">
                     </div>
-                    
+    
                     <div>
                         <label for="edit_tempat_tanggal_lahir" class="block text-sm font-medium text-gray-700 mb-1">Tempat, Tanggal Lahir*</label>
-                        <input type="text" id="edit_tempat_tanggal_lahir" name="tempat_tanggal_lahir" required 
+                        <input type="text" id="edit_tempat_tanggal_lahir" name="tempat_tanggal_lahir" required
                                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gold-500">
                     </div>
-                    
+    
                     <div>
                         <label for="edit_kewarganegaraan_agama" class="block text-sm font-medium text-gray-700 mb-1">Kewarganegaraan & Agama*</label>
-                        <input type="text" id="edit_kewarganegaraan_agama" name="kewarganegaraan_agama" required 
+                        <input type="text" id="edit_kewarganegaraan_agama" name="kewarganegaraan_agama" required
                                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gold-500">
                     </div>
-                    
+    
                     <div>
                         <label for="edit_pekerjaan" class="block text-sm font-medium text-gray-700 mb-1">Pekerjaan</label>
-                        <input type="text" id="edit_pekerjaan" name="pekerjaan" 
+                        <input type="text" id="edit_pekerjaan" name="pekerjaan"
                                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gold-500">
                     </div>
-                    
+    
                     <div>
                         <label for="edit_tempat_domisili" class="block text-sm font-medium text-gray-700 mb-1">Tempat Domisili*</label>
-                        <input type="text" id="edit_tempat_domisili" name="tempat_domisili" required 
+                        <input type="text" id="edit_tempat_domisili" name="tempat_domisili" required
                                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gold-500">
                     </div>
-                    
+    
                     <div>
                         <label for="edit_daerah_asal" class="block text-sm font-medium text-gray-700 mb-1">Daerah Asal*</label>
-                        <input type="text" id="edit_daerah_asal" name="daerah_asal" required 
+                        <input type="text" id="edit_daerah_asal" name="daerah_asal" required
                                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gold-500">
                     </div>
-                    
+    
                     <div>
                         <label for="edit_surat_bukti_diri" class="block text-sm font-medium text-gray-700 mb-1">NIK*</label>
-                        <input type="text" id="edit_surat_bukti_diri" name="surat_bukti_diri" required 
+                        <input type="text" id="edit_surat_bukti_diri" name="surat_bukti_diri" required
                                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gold-500">
                     </div>
-                    
+    
                     <div class="md:col-span-2">
                         <label for="edit_keperluan" class="block text-sm font-medium text-gray-700 mb-1">Keperluan*</label>
-                        <textarea id="edit_keperluan" name="keperluan" rows="2" required 
+                        <textarea id="edit_keperluan" name="keperluan" rows="2" required
                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gold-500"></textarea>
                     </div>
-                    
+    
                     <div class="md:col-span-2">
                         <label for="edit_tujuan" class="block text-sm font-medium text-gray-700 mb-1">Tujuan*</label>
-                        <textarea id="edit_tujuan" name="tujuan" rows="2" required 
+                        <textarea id="edit_tujuan" name="tujuan" rows="2" required
                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gold-500"></textarea>
                     </div>
-                    
+    
                     <div>
                         <label for="edit_status" class="block text-sm font-medium text-gray-700 mb-1">Status*</label>
-                        <select id="edit_status" name="status" required 
+                        <select id="edit_status" name="status" required
                                 class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gold-500">
                             <option value="Diproses">Diproses</option>
                             <option value="Selesai">Selesai</option>
                             <option value="Ditolak">Ditolak</option>
                         </select>
                     </div>
+    
+                    <div>
+                        <label for="edit_nomor_wa" class="block text-sm font-medium text-gray-700 mb-1">Nomor WhatsApp</label>
+                        <input type="text" id="edit_nomor_wa" name="nomor_wa"
+                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gold-500">
+                    </div>
                 </div>
-                
-                <div class="mt-6 flex justify-end space-x-3">
-                    <button type="button" id="cancelEditModal" class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-100">
-                        Batal
-                    </button>
-                    <button type="submit" class="px-4 py-2 bg-gold-600 text-white rounded-md hover:bg-gold-700">
-                        <i class="fas fa-save mr-2"></i> Simpan Perubahan
-                    </button>
+    
+                <div class="mt-6 flex justify-between items-center">
+                    <div id="whatsappButtonEditSurat">
+                        </div>
+                    <div class="space-x-3">
+                        <button type="button" id="cancelEditModal" class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-100">
+                            Batal
+                        </button>
+                        <button type="submit" class="px-4 py-2 bg-gold-600 text-white rounded-md hover:bg-gold-700">
+                            <i class="fas fa-save mr-2"></i> Simpan Perubahan
+                        </button>
+                    </div>
                 </div>
             </form>
         </div>
@@ -693,316 +714,360 @@
         </div>
     </footer>
 
-    <script>
-        // Fungsi untuk menampilkan notifikasi
-        function showNotification(message, type = 'success') {
-            const colors = {
-                success: 'bg-green-500',
-                error: 'bg-red-500',
-                warning: 'bg-yellow-500',
-                info: 'bg-blue-500'
-            };
-            
-            const icons = {
-                success: 'fa-check-circle',
-                error: 'fa-exclamation-circle',
-                warning: 'fa-exclamation-triangle',
-                info: 'fa-info-circle'
-            };
+   <script>
+    // Fungsi untuk menampilkan notifikasi
+    function showNotification(message, type = 'success') {
+        const colors = {
+            success: 'bg-green-500',
+            error: 'bg-red-500',
+            warning: 'bg-yellow-500',
+            info: 'bg-blue-500'
+        };
 
-            const notification = document.createElement('div');
-            notification.className = `fixed top-4 right-4 ${colors[type]} text-white px-4 py-2 rounded-md shadow-lg flex items-center animate-fade-in`;
-            notification.innerHTML = `
-                <i class="fas ${icons[type]} mr-2"></i>
-                <span>${message}</span>
-            `;
-            document.body.appendChild(notification);
-            
+        const icons = {
+            success: 'fa-check-circle',
+            error: 'fa-exclamation-circle',
+            warning: 'fa-exclamation-triangle',
+            info: 'fa-info-circle'
+        };
+
+        const notification = document.createElement('div');
+        notification.className = `fixed top-4 right-4 ${colors[type]} text-white px-4 py-2 rounded-md shadow-lg flex items-center animate-fade-in`;
+        notification.innerHTML = `
+            <i class="fas ${icons[type]} mr-2"></i>
+            <span>${message}</span>
+        `;
+        document.body.appendChild(notification);
+
+        setTimeout(() => {
+            notification.classList.add('opacity-0', 'transition-opacity', 'duration-300');
             setTimeout(() => {
-                notification.classList.add('opacity-0', 'transition-opacity', 'duration-300');
-                setTimeout(() => {
-                    notification.remove();
-                }, 300);
-            }, 3000);
+                notification.remove();
+            }, 300);
+        }, 3000);
+    }
+
+    // ===== HANDLE MODAL =====
+    document.addEventListener('DOMContentLoaded', function() {
+        // Elemen-elemen modal tambah surat
+        const addSuratBtn = document.getElementById('addSuratBtn');
+        const addSuratModal = document.getElementById('addSuratModal');
+        const closeAddModal = document.getElementById('closeAddModal');
+        const cancelAddModal = document.getElementById('cancelAddModal');
+        const addSuratForm = document.getElementById('addSuratForm');
+
+        // Elemen-elemen modal edit surat
+        const editSuratModal = document.getElementById('editSuratModal');
+        const closeEditModal = document.getElementById('closeEditModal');
+        const cancelEditModal = document.getElementById('cancelEditModal');
+        const editSuratForm = document.getElementById('editSuratForm');
+
+        // ===== TAMBAH SURAT =====
+        // Buka modal tambah surat
+        if (addSuratBtn) {
+            addSuratBtn.addEventListener('click', () => {
+                addSuratModal.classList.remove('hidden');
+
+                // Set tanggal otomatis saat modal tambah dibuka
+                const today = new Date();
+                const formattedDate = today.toLocaleDateString('id-ID', {
+                    weekday: 'long',
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                });
+                document.getElementById('display_tanggal').textContent = formattedDate;
+            });
         }
 
-        // ===== HANDLE MODAL =====
-        document.addEventListener('DOMContentLoaded', function() {
-            // Elements
-            const addSuratBtn = document.getElementById('addSuratBtn');
-            const addSuratModal = document.getElementById('addSuratModal');
-            const closeAddModal = document.getElementById('closeAddModal');
-            const cancelAddModal = document.getElementById('cancelAddModal');
-            const addSuratForm = document.getElementById('addSuratForm');
+        // Tutup modal tambah surat
+        const closeAddSuratModal = () => {
+            addSuratModal.classList.add('hidden');
+            if (addSuratForm) addSuratForm.reset(); // Reset form jika ada
+        };
 
-            const editSuratModal = document.getElementById('editSuratModal');
-            const closeEditModal = document.getElementById('closeEditModal');
-            const cancelEditModal = document.getElementById('cancelEditModal');
-            const editSuratForm = document.getElementById('editSuratForm');
+        if (closeAddModal) closeAddModal.addEventListener('click', closeAddSuratModal);
+        if (cancelAddModal) cancelAddModal.addEventListener('click', closeAddSuratModal);
 
-            // ===== TAMBAH SURAT =====
-            // Buka modal tambah
-            if (addSuratBtn) {
-                addSuratBtn.addEventListener('click', () => {
-                    addSuratModal.classList.remove('hidden');
-                    
-                    // Set tanggal otomatis
-                    const today = new Date();
-                    const formattedDate = today.toLocaleDateString('id-ID', {
-                        weekday: 'long',
-                        year: 'numeric',
-                        month: 'long',
-                        day: 'numeric'
+        // Submit form tambah surat
+        if (addSuratForm) {
+            addSuratForm.addEventListener('submit', async (e) => {
+                e.preventDefault(); // Mencegah submit form standar
+
+                const submitBtn = addSuratForm.querySelector('button[type="submit"]');
+                const originalText = submitBtn.innerHTML;
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Menyimpan...';
+                submitBtn.disabled = true;
+
+                try {
+                    // Validasi NIK (Nomor Induk Kependudukan)
+                    const nik = document.getElementById('new_surat_bukti_diri').value;
+                    if (!/^\d{16}$/.test(nik)) {
+                        throw new Error('NIK harus 16 digit angka');
+                    }
+
+                    // Data yang dikirim ke server
+                    const formData = {
+                        nama: document.getElementById('new_nama').value,
+                        tempat_tanggal_lahir: document.getElementById('new_tempat_tanggal_lahir').value,
+                        kewarganegaraan_agama: document.getElementById('new_kewarganegaraan_agama').value,
+                        pekerjaan: document.getElementById('new_pekerjaan').value,
+                        tempat_domisili: document.getElementById('new_tempat_domisili').value,
+                        daerah_asal: document.getElementById('new_daerah_asal').value,
+                        surat_bukti_diri: nik,
+                        keperluan: document.getElementById('new_keperluan').value,
+                        tujuan: document.getElementById('new_tujuan').value,
+                        jenis_surat: 'Surat Pengantar',
+                        status: 'Diproses',
+                        tanggal_permohonan: new Date().toISOString().split('T')[0]
+                    };
+
+                    // Validasi field yang wajib diisi
+                    const requiredFields = ['nama', 'tempat_tanggal_lahir', 'kewarganegaraan_agama',
+                                            'tempat_domisili', 'daerah_asal', 'surat_bukti_diri',
+                                            'keperluan', 'tujuan'];
+                    const missingFields = requiredFields.filter(field => !formData[field]);
+
+                    if (missingFields.length > 0) {
+                        throw new Error(`Harap isi: ${missingFields.join(', ')}`);
+                    }
+
+                    // Kirim data ke server menggunakan fetch API
+                    const response = await fetch('/api/surat-pengantar', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json'
+                        },
+                        body: JSON.stringify(formData)
                     });
-                    document.getElementById('display_tanggal').textContent = formattedDate;
-                });
-            }
 
-            // Tutup modal tambah
-            const closeAddSuratModal = () => {
-                addSuratModal.classList.add('hidden');
-                if (addSuratForm) addSuratForm.reset();
-            };
+                    const result = await response.json();
 
-            if (closeAddModal) closeAddModal.addEventListener('click', closeAddSuratModal);
-            if (cancelAddModal) cancelAddModal.addEventListener('click', closeAddSuratModal);
-
-            // Submit form tambah
-            if (addSuratForm) {
-                addSuratForm.addEventListener('submit', async (e) => {
-                    e.preventDefault();
-                    
-                    const submitBtn = addSuratForm.querySelector('button[type="submit"]');
-                    const originalText = submitBtn.innerHTML;
-                    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Menyimpan...';
-                    submitBtn.disabled = true;
-
-                    try {
-                        // Validasi NIK
-                        const nik = document.getElementById('new_surat_bukti_diri').value;
-                        if (!/^\d{16}$/.test(nik)) {
-                            throw new Error('NIK harus 16 digit angka');
-                        }
-
-                        const formData = {
-                            nama: document.getElementById('new_nama').value,
-                            tempat_tanggal_lahir: document.getElementById('new_tempat_tanggal_lahir').value,
-                            kewarganegaraan_agama: document.getElementById('new_kewarganegaraan_agama').value,
-                            pekerjaan: document.getElementById('new_pekerjaan').value,
-                            tempat_domisili: document.getElementById('new_tempat_domisili').value,
-                            daerah_asal: document.getElementById('new_daerah_asal').value,
-                            surat_bukti_diri: nik,
-                            keperluan: document.getElementById('new_keperluan').value,
-                            tujuan: document.getElementById('new_tujuan').value,
-                            jenis_surat: 'Surat Pengantar',
-                            status: 'Diproses',
-                            tanggal_permohonan: new Date().toISOString().split('T')[0]
-                        };
-
-                        // Validasi field required
-                        const requiredFields = ['nama', 'tempat_tanggal_lahir', 'kewarganegaraan_agama', 
-                                              'tempat_domisili', 'daerah_asal', 'surat_bukti_diri', 
-                                              'keperluan', 'tujuan'];
-                        const missingFields = requiredFields.filter(field => !formData[field]);
-                        
-                        if (missingFields.length > 0) {
-                            throw new Error(`Harap isi: ${missingFields.join(', ')}`);
-                        }
-
-                        const response = await fetch('/api/surat-pengantar', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'Accept': 'application/json'
-                            },
-                            body: JSON.stringify(formData)
-                        });
-
-                        const result = await response.json();
-
-                        if (!response.ok || !result.success) {
-                            throw new Error(result.message || 'Gagal menambahkan surat');
-                        }
-
-                        showNotification('Surat berhasil ditambahkan!');
-                        closeAddSuratModal();
-                        
-                        setTimeout(() => {
-                            window.location.reload();
-                        }, 1000);
-
-                    } catch (error) {
-                        console.error('Error:', error);
-                        showNotification(error.message, 'error');
-                    } finally {
-                        submitBtn.innerHTML = originalText;
-                        submitBtn.disabled = false;
+                    // Tangani respons dari server
+                    if (!response.ok || !result.success) {
+                        throw new Error(result.message || 'Gagal menambahkan surat');
                     }
-                });
-            }
 
-            // ===== EDIT SURAT =====
-            // Tutup modal edit
-            const closeEditSuratModal = () => {
-                editSuratModal.classList.add('hidden');
-                if (editSuratForm) editSuratForm.reset();
-            };
+                    showNotification('Surat berhasil ditambahkan!');
+                    closeAddSuratModal();
 
-            if (closeEditModal) closeEditModal.addEventListener('click', closeEditSuratModal);
-            if (cancelEditModal) cancelEditModal.addEventListener('click', closeEditSuratModal);
+                    // Reload halaman setelah berhasil menambahkan surat
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 1000);
 
-            // Submit form edit
-            if (editSuratForm) {
-                editSuratForm.addEventListener('submit', async (e) => {
-                    e.preventDefault();
-                    
-                    const submitBtn = editSuratForm.querySelector('button[type="submit"]');
-                    const originalText = submitBtn.innerHTML;
-                    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Menyimpan...';
-                    submitBtn.disabled = true;
-
-                    try {
-                        const id = document.getElementById('edit_id').value;
-                        const formData = {
-                            nama: document.getElementById('edit_nama').value,
-                            tempat_tanggal_lahir: document.getElementById('edit_tempat_tanggal_lahir').value,
-                            kewarganegaraan_agama: document.getElementById('edit_kewarganegaraan_agama').value,
-                            pekerjaan: document.getElementById('edit_pekerjaan').value,
-                            tempat_domisili: document.getElementById('edit_tempat_domisili').value,
-                            daerah_asal: document.getElementById('edit_daerah_asal').value,
-                            surat_bukti_diri: document.getElementById('edit_surat_bukti_diri').value,
-                            keperluan: document.getElementById('edit_keperluan').value,
-                            tujuan: document.getElementById('edit_tujuan').value,
-                            status: document.getElementById('edit_status').value
-                        };
-
-                        const response = await fetch(`/api/surat-pengantar/${id}`, {
-                            method: 'PUT',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'Accept': 'application/json'
-                            },
-                            body: JSON.stringify(formData)
-                        });
-
-                        const result = await response.json();
-
-                        if (!response.ok || !result.success) {
-                            throw new Error(result.message || 'Gagal menyimpan perubahan');
-                        }
-
-                        showNotification('Perubahan berhasil disimpan!');
-                        closeEditSuratModal();
-                        
-                        setTimeout(() => {
-                            window.location.reload();
-                        }, 1000);
-
-                    } catch (error) {
-                        console.error('Error:', error);
-                        showNotification(error.message, 'error');
-                    } finally {
-                        submitBtn.innerHTML = originalText;
-                        submitBtn.disabled = false;
-                    }
-                });
-            }
-
-            // ===== PENCARIAN & FILTER =====
-            const statusFilter = document.getElementById('statusFilter');
-            const perPage = document.getElementById('perPage');
-            const searchInput = document.getElementById('searchInput');
-            let searchTimeout;
-
-            // Fungsi untuk menerapkan filter dan pencarian
-            function applyFilters() {
-                const status = statusFilter.value;
-                const limit = perPage.value;
-                const search = searchInput.value.trim();
-                
-                let url = `/surat-pengantar?page=1&perPage=${limit}`;
-                
-                if (status !== 'semua') {
-                    url += `&status=${status}`;
+                } catch (error) {
+                    console.error('Error:', error);
+                    showNotification(error.message, 'error');
+                } finally {
+                    // Kembalikan tombol submit ke kondisi semula
+                    submitBtn.innerHTML = originalText;
+                    submitBtn.disabled = false;
                 }
-                
-                if (search) {
-                    url += `&search=${encodeURIComponent(search)}`;
-                }
-                
-                window.location.href = url;
-            }
-
-            // Event listeners untuk filter dan pencarian
-            if (statusFilter) {
-                statusFilter.addEventListener('change', applyFilters);
-            }
-
-            if (perPage) {
-                perPage.addEventListener('change', applyFilters);
-            }
-
-            if (searchInput) {
-                searchInput.addEventListener('input', function() {
-                    clearTimeout(searchTimeout);
-                    searchTimeout = setTimeout(applyFilters, 500);
-                });
-            }
-
-            // Set nilai awal filter
-            if (statusFilter) statusFilter.value = '<%= currentStatus || "semua" %>';
-            if (perPage) perPage.value = '<%= perPage || 10 %>';
-            if (searchInput) searchInput.value = '<%= currentSearch || "" %>';
-        });
-
-        // Fungsi untuk edit surat
-        async function editSurat(id) {
-            try {
-                const modal = document.getElementById('editSuratModal');
-                modal.classList.remove('hidden');
-                
-                // Tampilkan loading
-                const title = modal.querySelector('h3');
-                const originalTitle = title.textContent;
-                title.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Memuat data...';
-                
-                const response = await fetch(`/api/surat-pengantar/${id}`);
-                
-                if (!response.ok) {
-                    throw new Error(`Gagal mengambil data: ${response.status}`);
-                }
-                
-                const result = await response.json();
-                
-                if (!result.success || !result.data) {
-                    throw new Error('Data tidak ditemukan');
-                }
-                
-                const data = result.data;
-                
-                // Isi form edit
-                document.getElementById('edit_id').value = data.id;
-                document.getElementById('edit_nama').value = data.nama || '';
-                document.getElementById('edit_tempat_tanggal_lahir').value = data.tempat_tanggal_lahir || '';
-                document.getElementById('edit_kewarganegaraan_agama').value = data.kewarganegaraan_agama || '';
-                document.getElementById('edit_pekerjaan').value = data.pekerjaan || '';
-                document.getElementById('edit_tempat_domisili').value = data.tempat_domisili || '';
-                document.getElementById('edit_daerah_asal').value = data.daerah_asal || '';
-                document.getElementById('edit_surat_bukti_diri').value = data.surat_bukti_diri || '';
-                document.getElementById('edit_keperluan').value = data.keperluan || '';
-                document.getElementById('edit_tujuan').value = data.tujuan || '';
-                document.getElementById('edit_status').value = data.status || 'Diproses';
-                
-                // Kembalikan judul modal
-                title.textContent = originalTitle;
-                
-            } catch (error) {
-                console.error('Error:', error);
-                showNotification(error.message || 'Gagal memuat data surat', 'error');
-                document.getElementById('editSuratModal').classList.add('hidden');
-            }
+            });
         }
-    </script>
+
+        // ===== EDIT SURAT =====
+        // Tutup modal edit surat
+        const closeEditSuratModal = () => {
+            editSuratModal.classList.add('hidden');
+            if (editSuratForm) editSuratForm.reset(); // Reset form edit jika ada
+            const whatsappButtonContainerSurat = document.getElementById('whatsappButtonEditSurat');
+            if (whatsappButtonContainerSurat) {
+                whatsappButtonContainerSurat.innerHTML = ''; // Bersihkan tombol WA saat modal ditutup
+            }
+        };
+
+        if (closeEditModal) closeEditModal.addEventListener('click', closeEditSuratModal);
+        if (cancelEditModal) cancelEditModal.addEventListener('click', closeEditSuratModal);
+
+        // Submit form edit surat
+        if (editSuratForm) {
+            editSuratForm.addEventListener('submit', async (e) => {
+                e.preventDefault(); // Mencegah submit form standar
+
+                const submitBtn = editSuratForm.querySelector('button[type="submit"]');
+                const originalText = submitBtn.innerHTML;
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Menyimpan...';
+                submitBtn.disabled = true;
+
+                try {
+                    const id = document.getElementById('edit_id').value;
+                    const formData = {
+                        nama: document.getElementById('edit_nama').value,
+                        tempat_tanggal_lahir: document.getElementById('edit_tempat_tanggal_lahir').value,
+                        kewarganegaraan_agama: document.getElementById('edit_kewarganegaraan_agama').value,
+                        pekerjaan: document.getElementById('edit_pekerjaan').value,
+                        tempat_domisili: document.getElementById('edit_tempat_domisili').value,
+                        daerah_asal: document.getElementById('edit_daerah_asal').value,
+                        surat_bukti_diri: document.getElementById('edit_surat_bukti_diri').value,
+                        keperluan: document.getElementById('edit_keperluan').value,
+                        tujuan: document.getElementById('edit_tujuan').value,
+                        status: document.getElementById('edit_status').value,
+                        nomor_wa: document.getElementById('edit_nomor_wa').value // Data nomor WA dari form
+                    };
+
+                    // Kirim data ke server untuk update menggunakan fetch API
+                    const response = await fetch(`/api/surat-pengantar/${id}`, {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json'
+                        },
+                        body: JSON.stringify(formData)
+                    });
+
+                    const result = await response.json();
+
+                    // Tangani respons dari server
+                    if (!response.ok || !result.success) {
+                        throw new Error(result.message || 'Gagal menyimpan perubahan');
+                    }
+
+                    showNotification('Perubahan berhasil disimpan!');
+                    closeEditSuratModal();
+
+                    // Reload halaman setelah berhasil mengedit surat
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 1000);
+
+                } catch (error) {
+                    console.error('Error:', error);
+                    showNotification(error.message, 'error');
+                } finally {
+                    // Kembalikan tombol submit ke kondisi semula
+                    submitBtn.innerHTML = originalText;
+                    submitBtn.disabled = false;
+                }
+            });
+        }
+
+        // ===== PENCARIAN & FILTER =====
+        const statusFilter = document.getElementById('statusFilter');
+        const perPage = document.getElementById('perPage');
+        const searchInput = document.getElementById('searchInput');
+        let searchTimeout;
+
+        // Fungsi untuk menerapkan filter dan pencarian
+        function applyFilters() {
+            const status = statusFilter.value;
+            const limit = perPage.value;
+            const search = searchInput.value.trim();
+
+            let url = `/surat-pengantar?page=1&perPage=${limit}`;
+
+            if (status !== 'semua') {
+                url += `&status=${status}`;
+            }
+
+            if (search) {
+                url += `&search=${encodeURIComponent(search)}`;
+            }
+
+            window.location.href = url; // Redirect ke URL dengan parameter filter
+        }
+
+        // Event listeners untuk filter dan pencarian
+        if (statusFilter) {
+            statusFilter.addEventListener('change', applyFilters);
+        }
+
+        if (perPage) {
+            perPage.addEventListener('change', applyFilters);
+        }
+
+        if (searchInput) {
+            searchInput.addEventListener('input', function() {
+                clearTimeout(searchTimeout); // Hapus timeout sebelumnya jika ada
+                searchTimeout = setTimeout(applyFilters, 500); // Terapkan filter setelah 0.5 detik
+            });
+        }
+
+        // Set nilai awal filter dari data yang mungkin dikirim dari server
+        if (statusFilter) statusFilter.value = '<%= currentStatus || "semua" %>';
+        if (perPage) perPage.value = '<%= perPage || 10 %>';
+        if (searchInput) searchInput.value = '<%= currentSearch || "" %>';
+    });
+
+    // Fungsi untuk menampilkan modal edit surat dan mengisi datanya
+    async function editSurat(id) {
+        try {
+            const modal = document.getElementById('editSuratModal');
+            modal.classList.remove('hidden');
+
+            // Tampilkan loading saat mengambil data
+            const title = modal.querySelector('h3');
+            const originalTitle = title.textContent;
+            title.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Memuat data...';
+
+            // Ambil data surat dari server berdasarkan ID
+            const response = await fetch(`/api/surat-pengantar/${id}`);
+
+            if (!response.ok) {
+                throw new Error(`Gagal mengambil data: ${response.status}`);
+            }
+
+            const result = await response.json();
+
+            if (!result.success || !result.data) {
+                throw new Error('Data tidak ditemukan');
+            }
+
+            const data = result.data;
+
+            // Isi form edit dengan data yang diterima dari server
+            document.getElementById('edit_id').value = data.id;
+            document.getElementById('edit_nama').value = data.nama || '';
+            document.getElementById('edit_tempat_tanggal_lahir').value = data.tempat_tanggal_lahir || '';
+            document.getElementById('edit_kewarganegaraan_agama').value = data.kewarganegaraan_agama || '';
+            document.getElementById('edit_pekerjaan').value = data.pekerjaan || '';
+            document.getElementById('edit_tempat_domisili').value = data.tempat_domisili || '';
+            document.getElementById('edit_daerah_asal').value = data.daerah_asal || '';
+            document.getElementById('edit_surat_bukti_diri').value = data.surat_bukti_diri || '';
+            document.getElementById('edit_keperluan').value = data.keperluan || '';
+            document.getElementById('edit_tujuan').value = data.tujuan || '';
+            document.getElementById('edit_status').value = data.status || 'Diproses';
+            document.getElementById('edit_nomor_wa').value = data.nomor_wa || ''; // Isi nomor WhatsApp
+
+            // Tambahkan tombol WhatsApp jika status 'Selesai' dan nomor WA tersedia
+            const whatsappButtonContainerSurat = document.getElementById('whatsappButtonEditSurat');
+            if (whatsappButtonContainerSurat) {
+                whatsappButtonContainerSurat.innerHTML = ''; // Bersihkan tombol sebelumnya
+
+                if (data.status === 'Selesai' && data.nomor_wa) {
+                    let nomorWhatsAppSurat = data.nomor_wa;
+                    // Format nomor WhatsApp
+                    if (nomorWhatsAppSurat.includes('@s.whatsapp.net')) {
+                        nomorWhatsAppSurat = nomorWhatsAppSurat.split('@')[0];
+                    }
+                    if (nomorWhatsAppSurat.startsWith('0')) {
+                        nomorWhatsAppSurat = '+62' + nomorWhatsAppSurat.substring(1);
+                    } else if (!nomorWhatsAppSurat.startsWith('+')) {
+                        nomorWhatsAppSurat = '+62' + nomorWhatsAppSurat;
+                    }
+
+                    const whatsappLinkSurat = document.createElement('a');
+                    whatsappLinkSurat.href = `https://wa.me/${nomorWhatsAppSurat}?text=Yth.%20${encodeURIComponent(data.nama)},%0ASurat%20Pengantar%20Anda%20dengan%20nomor%20${encodeURIComponent(data.nomor_surat || '...')}%20sudah%20selesai.%20Anda%20bisa%20mengambilnya%20di%20kantor%20desa%20pada%20jam%20kerja.`;
+                    whatsappLinkSurat.className = 'inline-flex items-center px-3 py-1 rounded-md text-sm font-medium bg-green-100 text-green-800 hover:bg-green-200 mt-2';
+                    whatsappLinkSurat.title = 'Kirim WA';
+                    whatsappLinkSurat.innerHTML = '<i class="fab fa-whatsapp text-lg mr-2"></i> Kirim WA Pemberitahuan';
+
+                    whatsappButtonContainerSurat.appendChild(whatsappLinkSurat);
+                }
+            }
+
+            // Kembalikan judul modal ke semula
+            title.textContent = originalTitle;
+
+        } catch (error) {
+            console.error('Error:', error);
+            showNotification(error.message || 'Gagal memuat data surat', 'error');
+            document.getElementById('editSuratModal').classList.add('hidden');
+        }
+    }
+</script>
     <script>
         // Mobile sidebar toggle
         const mobileMenuButton = document.getElementById('mobileMenuButton');
