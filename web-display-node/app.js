@@ -429,6 +429,29 @@ app.get('/riwayat', async (req, res) => {
         res.status(500).send('Gagal mengambil data riwayat.');
     }
 });
+app.post('/riwayat/:id/delete', async (req, res) => {
+    try {
+        const query = (sql, values) => {
+            return new Promise((resolve, reject) => {
+                db.query(sql, values, (error, results, fields) => {
+                    if (error) {
+                        reject(error);
+                        return;
+                    }
+                    resolve([results, fields]);
+                });
+            });
+        };
+
+        await query('DELETE FROM activity_logs WHERE id = ?', [req.params.id]);
+        res.status(200).json({ success: true });
+
+    } catch (error) {
+        console.error('Gagal menghapus riwayat aktivitas:', error);
+        res.status(500).json({ success: false, message: 'Gagal menghapus data riwayat.' });
+    }
+});
+
 
 app.get('/statistik', (req, res) => {
     // Logika untuk menghitung total surat
@@ -1413,6 +1436,78 @@ app.get('/api/surat-pengantar/:id', (req, res) => {
         });
     });
 });
+
+app.put('/api/surat-pengantar/signatory/:id', express.json(), async (req, res) => {
+    try {
+        const suratPengantarId = req.params.id;
+        const { jabatan_penandatangan, jabatan_sebenarnya, nama_penandatangan } = req.body;
+
+        // Validasi input
+        if (!jabatan_penandatangan || !jabatan_sebenarnya || !nama_penandatangan) {
+            return res.status(400).json({
+                success: false,
+                message: "Semua field penandatangan harus diisi"
+            });
+        }
+
+        // Update database menggunakan callback style untuk konsistensi
+        const updateSignatory = () => new Promise((resolve, reject) => {
+            const sql = `
+                UPDATE surat SET
+                    jabatan_penandatangan = ?,
+                    jabatan_sebenarnya = ?,
+                    nama_penandatangan = ?,
+                    updated_at = NOW()
+                WHERE id = ?
+            `;
+            db.query(sql, [
+                jabatan_penandatangan,
+                jabatan_sebenarnya,
+                nama_penandatangan,
+                suratPengantarId
+            ], (err, result) => {
+                if (err) return reject(err);
+                resolve(result);
+            });
+        });
+
+        const result = await updateSignatory();
+
+        if (result.affectedRows === 0) {
+            return res.status(404).json({
+                success: false,
+                message: "Surat tidak ditemukan atau tidak ada perubahan"
+            });
+        }
+
+        // Catat aktivitas
+        try {
+            await logActivity(
+                req.session.userId,
+                'update_signatory',
+                'surat',
+                suratPengantarId,
+                `Memperbarui informasi penandatangan surat pengantar`
+            );
+        } catch (logError) {
+            console.error('Gagal mencatat aktivitas:', logError);
+        }
+
+        res.json({
+            success: true,
+            message: "Informasi penandatangan berhasil diperbarui"
+        });
+
+    } catch (error) {
+        console.error('Error updating signatory info:', error);
+        res.status(500).json({
+            success: false,
+            message: "Gagal memperbarui informasi penandatangan",
+            error: process.env.NODE_ENV === 'development' ? error.message : undefined
+        });
+    }
+});
+
 // Route Cetak Surat
 app.get('/cetak-surat/:id', (req, res) => {
     const suratId = req.params.id;
@@ -1906,6 +2001,112 @@ app.get('/api/surat-ku/:id', (req, res) => {
         });
     });
 });
+
+app.put('/surat-ku/:id', express.json(), async (req, res) => {
+    try {
+        const suratKUId = req.params.id;
+        const { jabatan_penandatangan, jabatan_sebenarnya, nama_penandatangan } = req.body;
+
+        // Update the database
+        const [result] = await db.query(`
+            UPDATE surat_keterangan_usaha SET
+                jabatan_penandatangan = ?,
+                jabatan_sebenarnya = ?,
+                nama_penandatangan = ?,
+                updated_at = NOW()
+            WHERE id = ?
+        `, [
+            jabatan_penandatangan,
+            jabatan_sebenarnya,
+            nama_penandatangan,
+            suratKUId
+        ]);
+
+        res.json({
+            success: true,
+            message: "Informasi penandatangan surat keterangan usaha berhasil diperbarui"
+        });
+
+    } catch (error) {
+        console.error('Error updating signatory info for surat keterangan usaha:', error);
+        res.status(500).json({
+            success: false,
+            message: "Gagal memperbarui informasi penandatangan surat keterangan usaha"
+        });
+    }
+});
+
+app.put('/api/surat-ku/signatory/:id', express.json(), async (req, res) => {
+    try {
+        const suratKUId = req.params.id;
+        const { jabatan_penandatangan, jabatan_sebenarnya, nama_penandatangan } = req.body;
+
+        // Validasi input
+        if (!jabatan_penandatangan || !jabatan_sebenarnya || !nama_penandatangan) {
+            return res.status(400).json({
+                success: false,
+                message: "Semua field penandatangan harus diisi"
+            });
+        }
+
+        // Update database menggunakan callback style untuk konsistensi
+        const updateSignatory = () => new Promise((resolve, reject) => {
+            const sql = `
+                UPDATE surat_ku SET
+                    jabatan_penandatangan = ?,
+                    jabatan_sebenarnya = ?,
+                    nama_penandatangan = ?,
+                    updated_at = NOW()
+                WHERE id = ?
+            `;
+            db.query(sql, [
+                jabatan_penandatangan,
+                jabatan_sebenarnya,
+                nama_penandatangan,
+                suratKUId
+            ], (err, result) => {
+                if (err) return reject(err);
+                resolve(result);
+            });
+        });
+
+        const result = await updateSignatory();
+
+        if (result.affectedRows === 0) {
+            return res.status(404).json({
+                success: false,
+                message: "Surat tidak ditemukan atau tidak ada perubahan"
+            });
+        }
+
+        // Catat aktivitas
+        try {
+            await logActivity(
+                req.session.userId,
+                'update_signatory',
+                'surat_ku',
+                suratKUId,
+                `Memperbarui informasi penandatangan surat keterangan usaha`
+            );
+        } catch (logError) {
+            console.error('Gagal mencatat aktivitas:', logError);
+        }
+
+        res.json({
+            success: true,
+            message: "Informasi penandatangan berhasil diperbarui"
+        });
+
+    } catch (error) {
+        console.error('Error updating signatory info:', error);
+        res.status(500).json({
+            success: false,
+            message: "Gagal memperbarui informasi penandatangan",
+            error: process.env.NODE_ENV === 'development' ? error.message : undefined
+        });
+    }
+});
+
 // Route Cetak Surat KU
 app.get('/cetak-surat-ku/:id', (req, res) => {
     const suratKuId = req.params.id;
@@ -2643,6 +2844,111 @@ app .get('/api/surat-kbi/:id', (req, res) => {
             data: suratData
         });
     });
+});
+
+app.put('/surat-kbi/:id', express.json(), async (req, res) => {
+    try {
+        const suratKBIId = req.params.id;
+        const { jabatan_penandatangan, jabatan_sebenarnya, nama_penandatangan } = req.body;
+
+        // Update the database
+        const [result] = await db.query(`
+            UPDATE surat_keterangan_beda_identitas SET
+                jabatan_penandatangan = ?,
+                jabatan_sebenarnya = ?,
+                nama_penandatangan = ?,
+                updated_at = NOW()
+            WHERE id = ?
+        `, [
+            jabatan_penandatangan,
+            jabatan_sebenarnya,
+            nama_penandatangan,
+            suratKBIId
+        ]);
+
+        res.json({
+            success: true,
+            message: "Informasi penandatangan surat keterangan beda identitas berhasil diperbarui"
+        });
+
+    } catch (error) {
+        console.error('Error updating signatory info for surat keterangan beda identitas:', error);
+        res.status(500).json({
+            success: false,
+            message: "Gagal memperbarui informasi penandatangan surat keterangan beda identitas"
+        });
+    }
+});
+
+app.put('/api/surat-kbi/signatory/:id', express.json(), async (req, res) => {
+    try {
+        const suratKBIId = req.params.id;
+        const { jabatan_penandatangan, jabatan_sebenarnya, nama_penandatangan } = req.body;
+
+        // Validasi input
+        if (!jabatan_penandatangan || !jabatan_sebenarnya || !nama_penandatangan) {
+            return res.status(400).json({
+                success: false,
+                message: "Semua field penandatangan harus diisi"
+            });
+        }
+
+        // Update database menggunakan callback style untuk konsistensi
+        const updateSignatory = () => new Promise((resolve, reject) => {
+            const sql = `
+                UPDATE surat_kbi SET
+                    jabatan_penandatangan = ?,
+                    jabatan_sebenarnya = ?,
+                    nama_penandatangan = ?,
+                    updated_at = NOW()
+                WHERE id = ?
+            `;
+            db.query(sql, [
+                jabatan_penandatangan,
+                jabatan_sebenarnya,
+                nama_penandatangan,
+                suratKBIId
+            ], (err, result) => {
+                if (err) return reject(err);
+                resolve(result);
+            });
+        });
+
+        const result = await updateSignatory();
+
+        if (result.affectedRows === 0) {
+            return res.status(404).json({
+                success: false,
+                message: "Surat tidak ditemukan atau tidak ada perubahan"
+            });
+        }
+
+        // Catat aktivitas
+        try {
+            await logActivity(
+                req.session.userId,
+                'update_signatory',
+                'surat_kbi',
+                suratKBIId,
+                `Memperbarui informasi penandatangan surat keterangan beda identitas`
+            );
+        } catch (logError) {
+            console.error('Gagal mencatat aktivitas:', logError);
+        }
+
+        res.json({
+            success: true,
+            message: "Informasi penandatangan berhasil diperbarui"
+        });
+
+    } catch (error) {
+        console.error('Error updating signatory info:', error);
+        res.status(500).json({
+            success: false,
+            message: "Gagal memperbarui informasi penandatangan",
+            error: process.env.NODE_ENV === 'development' ? error.message : undefined
+        });
+    }
 });
 
 // Route Cetak Surat Keterangan Beda Identitas

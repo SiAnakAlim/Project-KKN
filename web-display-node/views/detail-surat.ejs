@@ -39,12 +39,15 @@
 <body class="bg-gray-50">
     <div class="min-h-screen flex flex-col animate-fade-in">
         <!-- Header -->
-        <nav class="bg-gradient-to-r from-gold-600 to-gold-700 p-4 text-white flex justify-between items-center shadow-lg">
-            <span class="text-xl font-semibold tracking-wide">Detail Surat</span>
-            <div class="flex items-center space-x-3">
-                <span class="text-sm font-medium">User</span>
-                <div class="h-8 w-8 rounded-full bg-gold-500 flex items-center justify-center shadow-inner">
-                    <i class="fas fa-user text-white text-sm"></i>
+        <nav class="bg-gradient-to-r from-gold-600 to-gold-500 p-4 text-white shadow-lg">
+            <div class="container mx-auto flex justify-between items-center">
+                <div class="flex items-center space-x-3 ml">
+                    <span class="text-xl font-bold tracking-wide">Detail surat pengantar</span>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <div class="hidden md:block bg-gold-700 px-3 py-1 rounded-full text-sm font-medium animate-pulse-slow">
+                        <i class="fas fa-circle text-xs mr-1"></i> Online
+                    </div>
                 </div>
             </div>
         </nav>
@@ -252,51 +255,137 @@
                     </div>
                 </div>
             </div>
-        </div>
+            <!-- Informasi Penandatangan -->
+<div class="bg-white rounded-xl shadow-xl overflow-hidden border border-gray-200 mt-6 max-w-6xl mx-auto">
+    <div class="bg-white px-6 py-4 border-b border-gray-200">
+        <h2 class="text-lg font-semibold text-gray-800 flex items-center">
+            <i class="fas fa-pen-fancy text-gold-600 mr-2"></i>
+            Informasi Penandatangan
+        </h2>
     </div>
 
-    <script>
-        // Download PDF
-        function downloadPdf(pdfFile) {
-            const downloadLink = document.createElement('a');
-            downloadLink.href = `/public/pdf/${pdfFile}`;
-            downloadLink.download = pdfFile;
-            document.body.appendChild(downloadLink);
-            downloadLink.click();
-            document.body.removeChild(downloadLink);
-            
-            // Show toast notification
-            showToast('File sedang diunduh...', 'bg-gold-500');
-        }
+    <div class="p-6">
+        <form id="signatoryForm" class="space-y-5" data-surat-id="<%= surat.id %>">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label for="jabatan_penandatangan" class="block text-sm font-medium text-gray-700 mb-1">
+                        Jabatan Penandatangan
+                    </label>
+                    <div class="relative">
+                        <input type="text" id="jabatan_penandatangan" name="jabatan_penandatangan"
+                            value="<%= surat.jabatan_penandatangan || 'a.n Kepala Desa Kebondalem Kidul' %>"
+                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gold-500 focus:border-gold-500 transition-all"
+                            placeholder="a.n Kepala Desa Kebondalem Kidul">
+                        <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-gray-400">
+                            <i class="fas fa-user-tie"></i>
+                        </div>
+                    </div>
+                </div>
 
-        // Print PDF
-        function printPdf(pdfFile) {
-            const pdfWindow = window.open(`/public/pdf/${pdfFile}`, '_blank');
-            pdfWindow.onload = function() {
-                pdfWindow.print();
-            };
-            
-            // Show toast notification
-            showToast('Membuka dokumen untuk dicetak...', 'bg-green-500');
-        }
+                <div>
+                    <label for="jabatan_sebenarnya" class="block text-sm font-medium text-gray-700 mb-1">
+                        Jabatan Sebenarnya
+                    </label>
+                    <div class="relative">
+                        <input type="text" id="jabatan_sebenarnya" name="jabatan_sebenarnya"
+                            value="<%= surat.jabatan_sebenarnya || 'Sekretaris Desa' %>"
+                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gold-500 focus:border-gold-500 transition-all"
+                            placeholder="Sekretaris Desa">
+                        <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-gray-400">
+                            <i class="fas fa-id-card"></i>
+                        </div>
+                    </div>
+                </div>
 
-        // Show toast notification
-        function showToast(message, bgColor) {
-            const toast = document.createElement('div');
-            toast.className = `fixed bottom-6 right-6 ${bgColor} text-white px-4 py-2 rounded-md shadow-lg flex items-center animate-fade-in`;
-            toast.innerHTML = `
-                <i class="fas fa-info-circle mr-2"></i>
-                <span>${message}</span>
-            `;
-            document.body.appendChild(toast);
+                <div class="md:col-span-2">
+                    <label for="nama_penandatangan" class="block text-sm font-medium text-gray-700 mb-1">
+                        Nama Penandatangan
+                    </label>
+                    <div class="relative">
+                        <input type="text" id="nama_penandatangan" name="nama_penandatangan"
+                            value="<%= surat.nama_penandatangan || 'DARU PURNOMO' %>"
+                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gold-500 focus:border-gold-500 transition-all"
+                            placeholder="DARU PURNOMO">
+                        <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-gray-400">
+                            <i class="fas fa-signature"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex justify-end space-x-3 pt-4 border-t border-gray-200">
+                <button type="button" onclick="resetForm()"
+                    class="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-lg transition-all flex items-center">
+                    <i class="fas fa-undo mr-2"></i> Reset
+                </button>
+                <button type="submit"
+                    class="px-4 py-2 bg-gold-600 hover:bg-gold-700 text-white rounded-lg shadow-md transition-all flex items-center hover:shadow-lg">
+                    <i class="fas fa-save mr-2"></i> Simpan Perubahan
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
             
-            setTimeout(() => {
-                toast.classList.add('opacity-0', 'transition-opacity', 'duration-300');
-                setTimeout(() => {
-                    document.body.removeChild(toast);
-                }, 300);
-            }, 3000);
-        }
-    </script>
-</body>
-</html>
+            <script>
+                document.getElementById('signatoryForm').addEventListener('submit', async function(e) {
+                    e.preventDefault();
+            
+                    const form = this;
+                    const suratId = form.dataset.suratId;
+                    const formData = {
+                        jabatan_penandatangan: document.getElementById('jabatan_penandatangan').value,
+                        jabatan_sebenarnya: document.getElementById('jabatan_sebenarnya').value,
+                        nama_penandatangan: document.getElementById('nama_penandatangan').value
+                    };
+            
+                    try {
+                        const response = await fetch(`/api/surat-pengantar/signatory/${suratId}`, {
+                            method: 'PUT',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify(formData)
+                        });
+            
+                        const result = await response.json();
+            
+                        if (response.ok) {
+                            showToast('Perubahan berhasil disimpan!', 'bg-green-500');
+                            setTimeout(() => location.reload(), 1500);
+                        } else {
+                            showToast('Gagal menyimpan perubahan: ' + (result.message || ''), 'bg-red-500');
+                        }
+                    } catch (error) {
+                        showToast('Terjadi kesalahan: ' + error.message, 'bg-red-500');
+                        console.error('Error:', error);
+                    }
+                });
+            
+                // Show toast notification
+                function showToast(message, bgColor) {
+                    const toast = document.createElement('div');
+                    toast.className = `fixed bottom-6 right-6 ${bgColor} text-white px-4 py-2 rounded-md shadow-lg flex items-center animate-fade-in`;
+                    toast.innerHTML = `
+                        <i class="fas fa-info-circle mr-2"></i>
+                        <span>${message}</span>
+                    `;
+                    document.body.appendChild(toast);
+            
+                    setTimeout(() => {
+                        toast.classList.add('opacity-0', 'transition-opacity', 'duration-300');
+                        setTimeout(() => {
+                            document.body.removeChild(toast);
+                        }, 300);
+                    }, 3000);
+                }
+            
+                function resetForm() {
+                    // Reset ke nilai default
+                    document.getElementById('jabatan_penandatangan').value = 'a.n Kepala Desa Kebondalem Kidul';
+                    document.getElementById('jabatan_sebenarnya').value = 'Sekretaris Desa';
+                    document.getElementById('nama_penandatangan').value = 'DARU PURNOMO';
+            
+                    showToast('Form telah direset ke nilai default', 'bg-blue-500');
+                }
+            </script>

@@ -3,7 +3,7 @@ const pino = require("pino");
 const mysql = require('mysql');
 require('dotenv').config();
 
-// Koneksi ke database
+// Database connection
 const dbConn = mysql.createConnection({
     host: process.env.DB_HOST || 'localhost',
     user: process.env.DB_USER || 'root',
@@ -13,27 +13,53 @@ const dbConn = mysql.createConnection({
 
 dbConn.connect(err => {
     if (err) {
-        console.error('❌ Error menghubungkan ke database:', err);
+        console.error('❌ Error connecting to database:', err);
         throw err;
     }
-    console.log('✅ Database Terhubung!');
+    console.log('✅ Database Connected!');
 });
-async function sendBotNotification(sock, jenisSurat, nomorSurat, nama, nomorWaPengirim) {
-    const botNumber = sock.user.id.split(':')[0] + '@s.whatsapp.net'; // Get bot's own number
-    
-    let message = `📄 *SURAT BARU BERHASIL DIBUAT*\n\n`;
-    message += `Jenis Surat\t: ${jenisSurat}\n`;
-    message += `Nomor Surat\t: ${nomorSurat}\n`;
-    message += `Nama\t\t: ${nama}\n`;
-    message += `No. WA\t\t: ${nomorWaPengirim}\n`;
-    message += `Waktu\t\t: ${new Date().toLocaleString()}\n\n`;
-    message += `Mohon cek website untuk verifikasi lebih lanjut.`;
 
+// Improved notification function
+async function sendBotNotification(sock, jenisSurat, nomorSurat, nama, nomorWaPengirim) {
     try {
+        // Get the bot's own number (the number that scanned the QR code)
+        const botNumber = sock.user.id.split('@')[0] + '@s.whatsapp.net';
+        
+        // Format the notification message
+        const currentDate = new Date();
+        const formattedDate = currentDate.toLocaleString('id-ID', {
+            weekday: 'long',
+            day: 'numeric',
+            month: 'long',
+            year: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+
+        const message = `📢 *NOTIFIKASI SURAT BARU* 📢
+
+📄 *Jenis Surat*: ${jenisSurat}
+🆔 *Nomor Surat*: ${nomorSurat}
+👤 *Nama Pemohon*: ${nama}
+📱 *Nomor WA*: ${nomorWaPengirim}
+⏰ *Waktu Pembuatan*: ${formattedDate}
+
+ℹ️ *Tindakan*: 
+1. Cek kelengkapan data di database
+2. Verifikasi dokumen pendukung
+3. Proses cetak surat
+
+🔍 *Untuk memeriksa*:
+- Login ke admin dashboard
+- Atau cek langsung di database`;
+
+        // Send message to the bot's own number
         await sock.sendMessage(botNumber, { text: message });
-        console.log(`Notifikasi berhasil dikirim ke bot: ${jenisSurat} - ${nomorSurat}`);
+        console.log(`📤 Notification sent to bot: ${jenisSurat} - ${nomorSurat}`);
+        
     } catch (error) {
-        console.error('Gagal mengirim notifikasi ke bot:', error);
+        console.error('❌ Failed to send bot notification:', error);
+        // You might want to implement a retry mechanism here
     }
 }
 
@@ -89,11 +115,25 @@ async function startBot() {
 
         try {
             if (currentState.step === 0) {
-                if (messageText.toLowerCase() === "halo" || messageText.toLowerCase() === "hai") {
-                    await sock.sendMessage(senderNumber, { text: `👋 *Halo! Saya SojiwanBot!* Terimakasih telah menghubungi saya via WhatsApp. Saya siap membantu kebutuhan surat Anda!` });
-                    await sock.sendMessage(senderNumber, { text: `📜 Ketik *menu* untuk melihat daftar layanan yang tersedia.` });
+                // Simple case-insensitive check for common greetings
+                const greeting = messageText.trim().toLowerCase();
+                const validGreetings = ['halo', 'hai', 'hi', 'hello'];
+                
+                if (validGreetings.includes(greeting)) {
+                    // Send welcome message
+                    await sock.sendMessage(senderNumber, {
+                        text: `👋 *Halo! Saya BonKidBot!*\n\nTerima kasih telah menghubungi kami. Saya siap membantu pengurusan surat Anda.\n\nKetik *menu* untuk melihat layanan yang tersedia.`
+                    });
+                    
+                    // Move to next step
                     currentState.step = 1;
+                } else {
+                    // Friendly prompt for invalid input
+                    await sock.sendMessage(senderNumber, {
+                        text: `Hai! Untuk memulai, silakan ketik *halo* atau *hai* ya.\n\nContoh:\n"halo"\n"hai"`
+                    });
                 }
+            
             }else if (currentState.step === 1) {
                 if (messageText.toLowerCase() === "menu") {
                     const menuText = `*Menu Layanan Surat:*
@@ -141,12 +181,24 @@ async function startBot() {
                 } else {
                     await sock.sendMessage(senderNumber, { text: "Pilihan tidak valid. Silakan ketik angka 1, 2, 3, 4, atau 5, atau ketik 'menu'." });
                 }
-            } else if (currentState.step === 3) { // Langkah Surat Pengantar
+            }else if (currentState.step === 3) { // Langkah Surat Pengantar - Nama
                 if (/\d/.test(messageText)) {
-                    await sock.sendMessage(senderNumber, { text: "Nama tidak boleh mengandung angka. Silakan masukkan nama yang valid." });
+                    await sock.sendMessage(senderNumber, { 
+                        text: "⚠️ *Format Nama Tidak Valid*\nNama tidak boleh mengandung angka. Contoh nama yang benar:\n- Budi Santoso\n- Siti Aminah" 
+                    });
+                } else if (messageText.length < 3) {
+                    await sock.sendMessage(senderNumber, { 
+                        text: "⚠️ *Nama Terlalu Pendek*\nNama harus minimal 3 karakter. Silakan masukkan nama lengkap Anda." 
+                    });
+                } else if (!/^[a-zA-Z\s]+$/.test(messageText)) {
+                    await sock.sendMessage(senderNumber, { 
+                        text: "⚠️ *Format Nama Tidak Valid*\nNama hanya boleh mengandung huruf dan spasi. Contoh:\n- Ahmad Fauzi\n- Dewi Lestari" 
+                    });
                 } else {
                     currentState.data.nama = messageText.toUpperCase();
-                    await sock.sendMessage(senderNumber, { text: "2. Tempat, Tanggal Lahir (Format: Garut, 15 September 2001):" });
+                    await sock.sendMessage(senderNumber, { 
+                        text: "📝 *Tempat, Tanggal Lahir*\nFormat: [Kota], [Tanggal] [Bulan] [Tahun]\nContoh:\nGarut, 15 September 2001\nJakarta, 5 Mei 1990" 
+                    });
                     currentState.step = 4;
                 }
             } else if (currentState.step === 4) {
@@ -167,10 +219,18 @@ async function startBot() {
                 } else {
                     await sock.sendMessage(senderNumber, { text: "Format kewarganegaraan dan agama salah. Contoh: Indonesia / Islam" });
                 }
-            } else if (currentState.step === 6) {
-                currentState.data.pekerjaan = messageText;
-                await sock.sendMessage(senderNumber, { text: "5. Tempat Domisili:" });
-                currentState.step = 7;
+            } else if (currentState.step === 6) { // Pekerjaan
+                if (/\d/.test(messageText)) {
+                    await sock.sendMessage(senderNumber, { 
+                        text: "⚠️ *Format Pekerjaan Tidak Valid*\nPekerjaan tidak boleh mengandung angka. Contoh:\n- Pedagang\n- Guru\n- PNS" 
+                    });
+                } else {
+                    currentState.data.pekerjaan = messageText;
+                    await sock.sendMessage(senderNumber, { 
+                        text: "🏠 *Tempat Domisili*\nMasukkan alamat tempat tinggal Anda saat ini.\nContoh:\nJl. Merdeka No. 10, RT 01/RW 05, Desa Kebondalem" 
+                    });
+                    currentState.step = 7;
+                }
             } else if (currentState.step === 7) {
                 currentState.data.tempat_domisili = messageText;
                 await sock.sendMessage(senderNumber, { text: "6. Daerah Asal:" });
@@ -401,10 +461,22 @@ async function startBot() {
                 currentState.data.lama_usaha = messageText;
                 await sock.sendMessage(senderNumber, { text: "8. Nama Bank:" });
                 currentState.step = 107;
-            } else if (currentState.step === 107) {
-                currentState.data.nama_bank = messageText;
-                await sock.sendMessage(senderNumber, { text: "9. Alamat Bank:" });
-                currentState.step = 108;
+            }  else if (currentState.step === 107) { // Nama Bank
+                if (/\d/.test(messageText)) {
+                    await sock.sendMessage(senderNumber, { 
+                        text: "⚠️ *Format Nama Bank Tidak Valid*\nNama bank tidak boleh mengandung angka. Contoh:\n- BRI\n- BCA\n- Bank Mandiri\n- BNI" 
+                    });
+                } else if (messageText.length < 2) {
+                    await sock.sendMessage(senderNumber, { 
+                        text: "⚠️ *Nama Bank Terlalu Pendek*\nMasukkan nama bank yang valid (minimal 2 karakter)." 
+                    });
+                } else {
+                    currentState.data.nama_bank = messageText;
+                    await sock.sendMessage(senderNumber, { 
+                        text: "📍 *Alamat Bank*\nMasukkan alamat lengkap bank tempat Anda memiliki rekening.\nContoh:\nJl. Sudirman No. 45, Jakarta Pusat" 
+                    });
+                    currentState.step = 108;
+                }
             } else if (currentState.step === 108) {
                 currentState.data.alamat_bank = messageText;
             
@@ -595,52 +667,95 @@ async function startBot() {
             }
             else if (currentState.step === 200) { // Langkah SKTM
                 if (/\d/.test(messageText)) {
-                    await sock.sendMessage(senderNumber, { text: "Nama tidak boleh mengandung angka. Silakan masukkan nama yang valid." });
+                    await sock.sendMessage(senderNumber, { 
+                        text: "⚠️ Nama tidak boleh mengandung angka.\nSilakan masukkan nama lengkap yang valid (hanya huruf).\nContoh: ANDI SETIAWAN" 
+                    });
+                } else if (messageText.length < 3) {
+                    await sock.sendMessage(senderNumber, { 
+                        text: "⚠️ Nama terlalu pendek.\nSilakan masukkan nama lengkap minimal 3 karakter." 
+                    });
                 } else {
                     currentState.data.nama = messageText.toUpperCase();
-                    await sock.sendMessage(senderNumber, { text: "2. No. KK:" });
+                    await sock.sendMessage(senderNumber, { 
+                        text: "2. No. KK (16 digit angka):\nContoh: 3273010101010001" 
+                    });
                     currentState.step = 201;
                 }
             } else if (currentState.step === 201) {
-                currentState.data.no_kk = messageText;
-                await sock.sendMessage(senderNumber, { text: "3. NIK:" });
-                currentState.step = 202;
+                const kkRegex = /^\d{16}$/;
+                if (!kkRegex.test(messageText)) {
+                    await sock.sendMessage(senderNumber, { 
+                        text: "⚠️ Format No. KK tidak valid.\nHarus terdiri dari 16 digit angka.\nContoh: 3273010101010001" 
+                    });
+                } else {
+                    currentState.data.no_kk = messageText;
+                    await sock.sendMessage(senderNumber, { 
+                        text: "3. NIK (16 digit angka):\nContoh: 3273010101010001" 
+                    });
+                    currentState.step = 202;
+                }
             } else if (currentState.step === 202) {
                 const nikRegex = /^\d{16}$/;
-                if (nikRegex.test(messageText)) {
-                    currentState.data.nik = messageText;
-                    await sock.sendMessage(senderNumber, { text: "4. Tempat, Tanggal Lahir (Format: Garut, 15 September 2001):" });
-                    currentState.step = 203;
+                if (!nikRegex.test(messageText)) {
+                    await sock.sendMessage(senderNumber, { 
+                        text: "⚠️ Format NIK tidak valid.\nHarus terdiri dari 16 digit angka.\nContoh: 3273010101010001" 
+                    });
                 } else {
-                    await sock.sendMessage(senderNumber, { text: "NIK harus 16 digit angka." });
+                    currentState.data.nik = messageText;
+                    await sock.sendMessage(senderNumber, { 
+                        text: "4. Tempat, Tanggal Lahir (Format: Kota/Kabupaten, Tanggal Bulan Tahun):\nContoh: Garut, 15 September 2001\n\nPastikan:\n- Nama tempat diawali huruf kapital\n- Tanggal tanpa angka 0 di depan (1 bukan 01)\n- Nama bulan lengkap" 
+                    });
+                    currentState.step = 203;
                 }
             } else if (currentState.step === 203) {
-                const ttlRegex = /^[A-Za-z\s]+, \d{1,2} [A-Za-z]+ \d{4}$/;
-                if (ttlRegex.test(messageText)) {
-                    currentState.data.tempat_tanggal_lahir = messageText;
-                    await sock.sendMessage(senderNumber, { text: "5. Jenis Kelamin (L/P):" });
-                    currentState.step = 204;
+                const ttlRegex = /^[A-Z][a-zA-Z\s]+, \d{1,2} [A-Z][a-z]+ \d{4}$/;
+                if (!ttlRegex.test(messageText)) {
+                    await sock.sendMessage(senderNumber, { 
+                        text: "⚠️ Format tempat dan tanggal lahir salah.\nPastikan format:\n- Nama tempat diawali huruf kapital\n- Tanggal tanpa angka 0 di depan (1 bukan 01)\n- Nama bulan lengkap diawali huruf kapital\n\nContoh yang benar:\nGarut, 15 September 2001\n\nContoh yang salah:\nGarut, 15 sept 2001\ngarut, 15 September 2001\nGarut, 05 September 2001" 
+                    });
                 } else {
-                    await sock.sendMessage(senderNumber, { text: "Format tempat dan tanggal lahir salah. Contoh: Garut, 15 September 2001" });
+                    currentState.data.tempat_tanggal_lahir = messageText;
+                    await sock.sendMessage(senderNumber, { 
+                        text: "5. Jenis Kelamin:\nKetik *L* untuk Laki-laki\nKetik *P* untuk Perempuan" 
+                    });
+                    currentState.step = 204;
                 }
             } else if (currentState.step === 204) {
-                if (messageText.toLowerCase() === 'l' || messageText.toLowerCase() === 'p') {
-                    currentState.data.jenis_kelamin = messageText.toUpperCase();
-                    await sock.sendMessage(senderNumber, { text: "6. Alamat:" });
-                    currentState.step = 205;
+                const jkInput = messageText.toUpperCase();
+                if (jkInput !== 'L' && jkInput !== 'P') {
+                    await sock.sendMessage(senderNumber, { 
+                        text: "⚠️ Jenis kelamin tidak valid.\nSilakan ketik:\n*L* untuk Laki-laki\n*P* untuk Perempuan\n\nContoh: L" 
+                    });
                 } else {
-                    await sock.sendMessage(senderNumber, { text: "Jenis kelamin harus L atau P." });
+                    currentState.data.jenis_kelamin = jkInput;
+                    await sock.sendMessage(senderNumber, { 
+                        text: "6. Alamat lengkap (RT/RW, Desa/Kelurahan, Kecamatan):\nContoh: RT 01 RW 05, Desa Sukamulya, Kecamatan Tarogong" 
+                    });
+                    currentState.step = 205;
                 }
             } else if (currentState.step === 205) {
-                currentState.data.alamat = messageText;
-                await sock.sendMessage(senderNumber, { text: "7. Nomor HP:" });
-                currentState.step = 206;
-            } // ===================== SURAT SKTM (200-215) =====================
-            else if (currentState.step === 206) {
-                currentState.data.nomor_hp = messageText;
-            
-                const dataPreview = `✅ *Konfirmasi Data Anda:*
-            
+                if (messageText.length < 10) {
+                    await sock.sendMessage(senderNumber, { 
+                        text: "⚠️ Alamat terlalu pendek.\nSilakan masukkan alamat lengkap minimal 10 karakter termasuk RT/RW, Desa/Kelurahan, dan Kecamatan.\nContoh: RT 01 RW 05, Desa Sukamulya, Kecamatan Tarogong" 
+                    });
+                } else {
+                    currentState.data.alamat = messageText;
+                    await sock.sendMessage(senderNumber, { 
+                        text: "7. Nomor HP (awali dengan 08 atau 62, 10-13 digit):\nContoh: 081234567890 atau 6281234567890" 
+                    });
+                    currentState.step = 206;
+                }
+            } else if (currentState.step === 206) {
+                const hpRegex = /^(08\d{8,11}|62\d{9,12})$/;
+                if (!hpRegex.test(messageText)) {
+                    await sock.sendMessage(senderNumber, { 
+                        text: "⚠️ Format nomor HP tidak valid.\nPastikan:\n- Awali dengan 08 (10-13 digit) atau 62 (11-14 digit)\n- Hanya mengandung angka\n\nContoh yang benar:\n081234567890\n6281234567890\n\nContoh yang salah:\n81234567890 (tanpa 0/62)\n0812345678 (terlalu pendek)\n0812-3456-7890 (ada tanda -)" 
+                    });
+                } else {
+                    currentState.data.nomor_hp = messageText.startsWith('62') ? '62' + messageText.substring(2) : '62' + messageText.substring(1);
+                    
+                    const dataPreview = `✅ *Konfirmasi Data Anda:*
+                        
             1. *Nama Lengkap* : ${currentState.data.nama}
             2. *No. KK* : ${currentState.data.no_kk}
             3. *NIK* : ${currentState.data.nik}
@@ -654,9 +769,10 @@ async function startBot() {
             *ya* - Untuk melanjutkan
             *tidak* - Untuk membatalkan
             *edit* - Untuk mengubah data tertentu`;
-            
-                await sock.sendMessage(senderNumber, { text: dataPreview });
-                currentState.step = 207;
+                    
+                    await sock.sendMessage(senderNumber, { text: dataPreview });
+                    currentState.step = 207;
+                }
             } else if (currentState.step === 207) {
                 const pilihan = messageText.toLowerCase();
             
@@ -820,11 +936,15 @@ async function startBot() {
             // ===================== SURAT KBI (300-315) =====================
             else if (currentState.step === 306) {
                 const nikRegex = /^\d{16}$/;
-                if (nikRegex.test(messageText)) {
+                if (!nikRegex.test(messageText)) {
+                    await sock.sendMessage(senderNumber, { 
+                        text: "⚠️ Format NIK tidak valid.\nHarus terdiri dari 16 digit angka.\nContoh: 3273010101010001\n\nSilakan masukkan kembali NIK Anda:" 
+                    });
+                } else {
                     currentState.data.nik = messageText;
-            
+                    
                     const dataPreview = `✅ *Konfirmasi Data Anda:*
-            
+                        
             1. *Nama Lengkap* : ${currentState.data.nama}
             2. *Tertera* : ${currentState.data.tertera}
             3. *No. Rekening* : ${currentState.data.norek}
@@ -839,12 +959,10 @@ async function startBot() {
             *ya* - Untuk melanjutkan
             *tidak* - Untuk membatalkan
             *edit* - Untuk mengubah data tertentu`;
-            
+                    
                     await sock.sendMessage(senderNumber, { text: dataPreview });
                     currentState.step = 307;
-                } else {
-                    await sock.sendMessage(senderNumber, { text: "⚠️ NIK yang Anda masukkan tidak valid. Pastikan NIK terdiri dari 16 digit angka." });
-                }
+                } 
             } else if (currentState.step === 307) {
                 const pilihan = messageText.toLowerCase();
             
@@ -1004,59 +1122,117 @@ async function startBot() {
             }
 
             else if (currentState.step === 400) { // Langkah Cek Status
-                const nomorSurat = messageText;
+                const nomorSurat = messageText.trim().toUpperCase();
+                
+                // Validate the input first
+                if (!nomorSurat || nomorSurat.length < 5) {
+                    await sock.sendMessage(senderNumber, { 
+                        text: `⚠️ *Format Nomor Surat Tidak Valid*\n\nNomor surat harus mengandung:\n- Kode surat (SKTM/SKBI/dll)\n- Nomor registrasi\n- Tahun\n\nContoh: *SKTM/012/2023*\n\nSilakan masukkan kembali nomor surat Anda:`
+                    });
+                    return; // Stay on step 400 for re-entry
+                }
             
                 const query = `
-                    SELECT nama, status, jenis_surat
-                    FROM surat
-                    WHERE nomor_surat = ?
-                    UNION
-                    SELECT nama, status, jenis_surat
-                    FROM surat_ku
-                    WHERE nomor_surat = ?
-                    UNION
-                    SELECT nama, status, jenis_surat
-                    FROM surat_sktm
-                    WHERE nomor_surat = ?
-                    UNION
-                    SELECT nama, status, jenis_surat
-                    FROM surat_kbi
-                    WHERE nomor_surat = ?
+                    SELECT nama, status, jenis_surat, tanggal_permohonan, 
+                           CASE 
+                               WHEN table_name = 'surat' THEN nomor_surat
+                               WHEN table_name = 'surat_ku' THEN nomor_surat
+                               WHEN table_name = 'surat_sktm' THEN nomor_surat
+                               WHEN table_name = 'surat_kbi' THEN nomor_surat
+                           END AS nomor_surat
+                    FROM (
+                        SELECT 'surat' as table_name, nama, status, jenis_surat, tanggal_permohonan, nomor_surat
+                        FROM surat
+                        WHERE nomor_surat LIKE ?
+                        UNION
+                        SELECT 'surat_ku' as table_name, nama, status, jenis_surat, tanggal_permohonan, nomor_surat
+                        FROM surat_ku
+                        WHERE nomor_surat LIKE ?
+                        UNION
+                        SELECT 'surat_sktm' as table_name, nama, status, jenis_surat, tanggal_permohonan, nomor_surat
+                        FROM surat_sktm
+                        WHERE nomor_surat LIKE ?
+                        UNION
+                        SELECT 'surat_kbi' as table_name, nama, status, jenis_surat, tanggal_permohonan, nomor_surat
+                        FROM surat_kbi
+                        WHERE nomor_surat LIKE ?
+                    ) AS combined_tables
+                    LIMIT 1
                 `;
             
-                dbConn.query(query, [nomorSurat, nomorSurat, nomorSurat, nomorSurat], async (err, results) => {
+                // Use LIKE with wildcards for more flexible matching
+                const searchPattern = `%${nomorSurat}%`;
+                
+                dbConn.query(query, [searchPattern, searchPattern, searchPattern, searchPattern], async (err, results) => {
                     if (err) {
                         console.error('Error saat mengecek status surat:', err);
-                        await sock.sendMessage(senderNumber, { text: '⚠️ Terjadi kesalahan saat mengecek status surat. Silakan coba lagi nanti.' });
+                        await sock.sendMessage(senderNumber, { 
+                            text: `🛑 *Gagal Memeriksa Status*\n\nTerjadi kesalahan sistem saat memeriksa status surat Anda.\n\nSilakan coba lagi nanti atau hubungi admin desa.`
+                        });
                     } else if (results.length > 0) {
-                        const { nama, status, jenis_surat } = results[0];
-                        let statusText = '';
-                        let emoji = '';
-            
-                        if (status === 'Diproses') {
-                            emoji = '⏳';
-                            statusText = `*${emoji} Diproses*. Harap menunggu atau Anda bisa ke Balai Desa untuk mengecek langsung.`;
-                        } else if (status === 'Selesai') {
-                            emoji = '✅';
-                            statusText = `*${emoji} Selesai*. Anda bisa mengambilnya di Balai Desa pada jam kerja.`;
-                        } else if (status === 'Ditolak') {
-                            emoji = '❌';
-                            statusText = `*${emoji} Ditolak*. Kami tidak dapat membuat surat Anda karena alasan tertentu.`;
-                        }
+                        const { nama, status, jenis_surat, tanggal_permohonan, nomor_surat } = results[0];
+                        
+                        // Format the request date nicely
+                        const formattedDate = new Date(tanggal_permohonan).toLocaleDateString('id-ID', {
+                            weekday: 'long',
+                            day: 'numeric',
+                            month: 'long',
+                            year: 'numeric'
+                        });
+                        
+                        // Status details with emojis and actions
+                        let statusDetails = {
+                            'Diproses': {
+                                emoji: '⏳',
+                                message: 'masih dalam proses pembuatan',
+                                action: 'Harap menunggu 1-3 hari kerja\nAnda bisa ke Balai Desa untuk mengecek langsung'
+                            },
+                            'Selesai': {
+                                emoji: '✅',
+                                message: 'sudah siap diambil',
+                                action: 'Silakan ambil di Balai Desa pada jam kerja (08:00-15:00)'
+                            },
+                            'Ditolak': {
+                                emoji: '❌',
+                                message: 'tidak dapat diproses',
+                                action: 'Hubungi admin desa untuk informasi lebih lanjut'
+                            }
+                        };
+                        
+                        const statusInfo = statusDetails[status] || {
+                            emoji: '❓',
+                            message: 'tidak diketahui',
+                            action: 'Hubungi admin desa untuk konfirmasi'
+                        };
             
                         await sock.sendMessage(senderNumber, {
-                            text: `
-            *Nomor Surat Ditemukan!*
+                            text: `✨ *INFORMASI STATUS SURAT* ✨
             
-            Nama\t\t: ${nama}
-            Jenis Surat\t: ${jenis_surat}
-            Status\t\t: ${statusText}
-                            `,
+            📄 *Nomor Surat*: ${nomor_surat}
+            👤 *Atas Nama*: ${nama}
+            📋 *Jenis Surat*: ${jenis_surat}
+            📅 *Tanggal Permohonan*: ${formattedDate}
+            🔄 *Status*: ${statusInfo.emoji} ${statusInfo.message}
+            ℹ️ *Keterangan*: ${statusInfo.action}
+            
+            ${status === 'Selesai' ? '✅ *SURAT SUDAH SIAP* ✅\nPastikan anda mengambil di jam kerja.' : ''}
+            
+            🏡 *Lokasi Pengambilan*:
+            Balai Desa
+            Jam Kerja: Senin-Jumat, 08:00-15:00
+            
+            📌 *Untuk kembali ke menu utama*, ketik: *menu*`
                         });
+            
                     } else {
-                        await sock.sendMessage(senderNumber, { text: 'Nomor surat tidak ditemukan. Harap masukkan nomor surat yang valid.' });
+                        await sock.sendMessage(senderNumber, { 
+                            text: `🔍 *Nomor Surat Tidak Ditemukan*\n\nNomor surat *${nomorSurat}* tidak terdaftar dalam sistem.\n\nPeriksa kembali nomor surat Anda atau hubungi admin desa jika Anda yakin ini kesalahan sistem.\n\nUntuk mencoba lagi, ketik: *cek status*\nUntuk kembali ke menu, ketik: *menu*`
+                        });
                     }
-                    currentState.step = 1; // Kembali ke menu utama
+                    
+                    // Reset to main menu but keep track they came from status check
+                    currentState.lastAction = 'status_check';
+                    currentState.step = 1;
                 });
             }
             } catch (error) {

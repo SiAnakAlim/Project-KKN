@@ -170,9 +170,12 @@
         }
     
         .tanggal-ttd {
-            margin-right: 10px;
-            margin-bottom: 60px;
-        }
+       margin-top: 15mm;
+       margin-bottom: 5px;
+       text-align: right;
+       font-size: 12pt;
+       margin-right: 65px;
+   }
     
         .ttd-kanan {
             text-align: center;
@@ -254,9 +257,9 @@
             }
     
             body {
+                background-color: white !important;
                 margin: 0 !important;
                 padding: 0 !important;
-                -webkit-print-color-adjust: exact;
             }
     
             .paper {
@@ -338,15 +341,28 @@
             <p style="margin-top: 10px;">Demikian surat keterangan ini dibuat dengan sebenarnya, semoga menjadikan periksa dan dapat dipergunakan sebagaimana mestinya.</p>
         </div>
 
-        <div class="signature-block">
-            <div class="signature-container">
-                <div class="ttd-kanan">
-                    <p class="tanggal-ttd">Kebondalem Kidul, <%= new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) %></p>
-                    <p>a.n Kepala Desa Kebondalem Kidul</p>
-                    <p>Sekretaris Desa</p>
-                    <div style="height: 60px;"></div>
-                    <p class="signature-name">DARU PURNOMO</p>
-                </div>
+        <div class="tanggal-ttd">
+            Kebondalem Kidul, <%= new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) %>
+        </div>
+        <div class="signature-container">
+            <div class="ttd-kanan" style="text-align: right;">
+                <% if (suratKBI.jabatan_penandatangan) { %>
+                    <p class="an-kepala-desa" style="margin-bottom: 5px; margin-top: -3px; margin-right: 3px;">
+                        <%= suratKBI.jabatan_penandatangan %>
+                    </p>
+                <% } %>
+                
+                <% if (suratKBI.jabatan_sebenarnya) { %>
+                    <p class="sekretaris-desa" style="margin-bottom: 80px; margin-top: -2px; margin-right: 60px;">
+                        <%= suratKBI.jabatan_sebenarnya %>
+                    </p>
+                <% } %>
+                
+                <% if (suratKBI.nama_penandatangan) { %>
+                    <p class="nama-penandatangan" style="margin-top: 70px; margin-right: 32px;">
+                        <strong><u><%= suratKBI.nama_penandatangan %></u></strong>
+                    </p>
+                <% } %>
             </div>
         </div>
 

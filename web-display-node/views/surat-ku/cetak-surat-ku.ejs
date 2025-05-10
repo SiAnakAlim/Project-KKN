@@ -124,26 +124,40 @@
         }
     
         /* Tanda Tangan */
-        .signature-container {
-            width: 100%;
-            margin-top: 50px;
-            text-align: right;
-        }
-    
-        .signature-place-date {
-            margin-bottom: 5px;
-        }
-    
-        .signature-name {
-            margin-top: 60px;
-            text-decoration: underline;
-            font-weight: bold;
-        }
-    
-        .signature-title {
-            margin: 5px 0;
-            font-size: 14px;
-        }
+      .signature-container {
+    width: 100%;
+ 
+    text-align: right;
+}
+
+.signature-place-date {
+    margin-bottom: 60px;
+    font-size: 14px;
+}
+
+.signature-info {
+    display: inline-block;
+    text-align: center;
+    margin-right: 30px;
+}
+
+.signature-title {
+    margin: 0;
+    font-size: 14px;
+}
+
+.signature-name {
+    margin-top: 60px;
+    text-decoration: underline;
+    font-weight: bold;
+    font-size: 16px;
+}
+.tanggal-ttd {
+       margin-top: 7mm;
+       text-align: right;
+       font-size: 12pt;
+       margin-right: 15px;
+   }
     
         /* Tombol */
         .no-print {
@@ -273,13 +287,29 @@
             <p style="margin-top: 25px; margin-bottom: 0;">Demikian kepada yang berkepentingan harap menjadikan maklum.</p>
         </div>
 
-        <div class="signature-container" style="margin-top: 30px;">
-            <div class="signature-place-date" style="margin-right: 10px;">
-                Kebondalem Kidul, <%= new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) %>
+        <div class="tanggal-ttd">
+            Kebondalem Kidul, <%= new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) %>
+        </div>
+        <div class="signature-container">
+            <div class="ttd-kanan" style="text-align: right;">
+                <% if (suratKU.jabatan_penandatangan) { %>
+                    <p class="an-kepala-desa" style="margin-bottom: 5px; margin-top: -3px; margin-right: 3px;">
+                        <%= suratKU.jabatan_penandatangan %>
+                    </p>
+                <% } %>
+                
+                <% if (suratKU.jabatan_sebenarnya) { %>
+                    <p class="sekretaris-desa" style="margin-bottom: 80px; margin-top: -2px; margin-right: 60px;">
+                        <%= suratKU.jabatan_sebenarnya %>
+                    </p>
+                <% } %>
+                
+                <% if (suratKU.nama_penandatangan) { %>
+                    <p class="nama-penandatangan" style="margin-top: 70px; margin-right: 32px;">
+                        <strong><u><%= suratKU.nama_penandatangan %></u></strong>
+                    </p>
+                <% } %>
             </div>
-            <div class="signature-title" style="margin-right: 20px;">Plt. Kepala Desa Kebondalem Kidul</div>
-            <div style="height: 27px;"></div> <!-- Space for signature -->
-            <div class="signature-name" style="margin-right: 50px;">DARU PURNOMO</div>
         </div>
 
         <div class="no-print">

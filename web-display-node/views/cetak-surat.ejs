@@ -6,7 +6,6 @@
     <title>Cetak Surat Pengantar</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
-        
         /* Global Styles */
         body {
             font-family: "Times New Roman", serif;
@@ -34,51 +33,51 @@
             border-bottom: 2px solid black;
             margin: 10px 0;
         }
-       /* Header */
-.header {
-    text-align: center;
-    margin-bottom: 30px; /* Jarak lebih besar */
-}
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 30px; /* Jarak lebih besar */
+        }
 
-.logo {
-    width: 80px; /* Ukuran logo */
-    position: absolute;
-    left: 40px;
-    top: 40px;
-}
+        .logo {
+            width: 80px; /* Ukuran logo */
+            position: absolute;
+            left: 40px;
+            top: 40px;
+        }
 
-.header h3 {
-    margin: 5px 0; /* Jarak sama untuk semua baris */
-    font-size: 20px;
-    font-weight: normal;
-}
+        .header h3 {
+            margin: 5px 0; /* Jarak sama untuk semua baris */
+            font-size: 20px;
+            font-weight: normal;
+        }
 
-.header h2 {
-    font-size: 24px;
-    font-weight: bold;
-    margin: 5px 0; /* Jarak sama seperti h3 */
-    letter-spacing: 1px; /* Spasi ganda antar kata */
-    word-spacing: 5px;
-}
+        .header h2 {
+            font-size: 24px;
+            font-weight: bold;
+            margin: 5px 0; /* Jarak sama seperti h3 */
+            letter-spacing: 1px; /* Spasi ganda antar kata */
+            word-spacing: 5px;
+        }
 
-.header p {
-    margin: 2px 0;
-    font-size: 13px;
-}
+        .header p {
+            margin: 2px 0;
+            font-size: 13px;
+        }
 
-.header .line {
-    width: 100%;
-    height: 2px;
-    background-color: black;
-    margin-top: 10px;
-    margin-bottom: 15px;
-}
+        .header .line {
+            width: 100%;
+            height: 2px;
+            background-color: black;
+            margin-top: 10px;
+            margin-bottom: 15px;
+        }
 
-.kode-desa {
-    text-align: left;
-    font-size: 14px;
-    margin-top: 10px;
-}
+        .kode-desa {
+            text-align: left;
+            font-size: 14px;
+            margin-top: 10px;
+        }
 
 
         /* Judul Surat */
@@ -86,7 +85,7 @@
             text-align: center;
             margin-top: 30px;
             margin-bottom: 20px;
-            
+
         }
 
         .judul-surat h3 {
@@ -115,68 +114,85 @@
         }
 
         .list-item {
-    margin-bottom: 8px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: flex-start; /* Align items to top */
+        }
+
+        .label {
+            width: 200px;
+            text-align: left;
+            flex-shrink: 0; /* Prevent label from shrinking */
+        }
+
+        .value {
+            flex-grow: 1;
+            position: relative;
+            padding-right: 50px;
+            padding-left: 15px; /* Jarak setelah titik dua */
+            margin-top: -1px; /* Naikkan sedikit isi value */
+        }
+        .value strong {
+            font-weight: bold;
+            display: inline;
+            white-space: normal;
+            word-break: break-word;
+            vertical-align: top; /* Pastikan teks sejajar atas */
+        }
+        .lk-pr {
+            position: absolute;
+            right: 10px;
+            top: -1px; /* Naikkan Lk/Pr sedikit */
+            font-weight: normal;
+            white-space: nowrap;
+        }
+
+        /* Tanda Tangan */
+         /* Tanda Tangan */
+         .signature-block {
+            margin-top: 60px;
+            font-size: 14px;
+            width: 100%;
+        }
+    
+        .signature-container {
     display: flex;
-    align-items: flex-start; /* Align items to top */
-}
-
-.label {
-    width: 200px;
-    text-align: left;
-    flex-shrink: 0; /* Prevent label from shrinking */
-}
-
-.value {
-        flex-grow: 1;
-        position: relative;
-        padding-right: 50px;
-        padding-left: 15px; /* Jarak setelah titik dua */
-        margin-top: -1px; /* Naikkan sedikit isi value */
-    }
-    .value strong {
-        font-weight: bold;
-        display: inline;
-        white-space: normal;
-        word-break: break-word;
-        vertical-align: top; /* Pastikan teks sejajar atas */
-    }
-    .lk-pr {
-        position: absolute;
-        right: 10px;
-        top: -1px; /* Naikkan Lk/Pr sedikit */
-        font-weight: normal;
-        white-space: nowrap;
-    }
-
-   /* Tanda Tangan */
-.signature-block {
-    margin-top: 40px;
-    font-size: 14px;
+    justify-content: flex-end;
     width: 100%;
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
 }
-
-
-.signature-container {
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
-    margin-top: -10px;
-}
-
-.pemegang-ttd, .kepala-desa-ttd {
-    flex-basis: 45%;
-    text-align: center;
-}
-
-.kepala-desa-ttd {
+    
+        .tanggal-ttd {
+    margin-top: 15mm;
+    margin-bottom: 5px;
     text-align: right;
+    font-size: 12pt;
+    margin-right: 76px;
 }
-
-
-
+    
+.ttd-kanan {
+    text-align: right;
+    width: 300px;
+}
+    
+        .ttd-kanan p {
+            margin: 3px 0;
+        }
+    
+        .signature-name {
+            text-decoration: underline;
+            font-weight: bold;
+            font-size: 14px;
+            margin-top: 80px;
+        }
+    
+        .signature-line {
+            width: 200px;
+            height: 1px;
+            border-top: 1px solid black;
+            margin: 0 auto;
+            position: relative;
+            top: -20px;
+        }
 
         /* Tombol Download & Back */
         .button-container {
@@ -199,85 +215,84 @@
             background-color: #0056b3;
         }
         .ttd-kanan {
-    text-align: right; 
-    width: 40%; /* Supaya tidak mepet kanan */
-    margin-left: auto;
-    margin-right: 70px; /* Bisa disesuaikan */
-}
+            text-align: right;
+            width: 300px; /* Lebar yang sesuai */
+            margin-left: auto;
+            margin-right: 65px; /* Sejajar dengan tanggal */
+        }
 
-.ttd-kanan p:nth-child(2), /* "Sekretaris Desa" */
-.ttd-kanan p:last-child {  /* "DARU PURNOMO" */
-    text-indent: -40px; /* Geser lebih ke kiri */
-}
+        .ttd-kanan p:nth-child(2), /* "Sekretaris Desa" */
+        .ttd-kanan p:last-child {  /* Nama Penandatangan */
+            text-indent: 0; /* Hilangkan indentasi negatif jika ada */
+        }
 
-.tanggal-ttd{
-    text-align: right;
-    margin-right: 68px;
-}
-.sekretaris{
-    margin-right: 60px;
-    margin-top: -12px;
-}
-.daru-purnomo{
-    margin-right: 43px;
-    text-decoration: underline;
-    margin-top: 13px;
-}
-.signature-name{
-    text-decoration: underline;
-    font-weight: bold;
-}
-/* Style untuk tombol elegan */
-.no-print button {
-    padding: 12px 24px;
-    border: none;
-    border-radius: 6px;
-    font-size: 16px;
-    cursor: pointer;
-    margin: 0 10px;
-    transition: all 0.3s ease;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-}
+   
+        .sekretaris{
+            margin-right: 0;
+            margin-top: -5px;
+            margin-bottom: 80px;
+        }
+        .daru-purnomo{
+            margin-right: 0;
+            text-decoration: underline;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        .signature-name{
+            text-decoration: underline;
+            font-weight: bold;
+        }
+        /* Style untuk tombol elegan */
+        .no-print button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 0 10px;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
 
-.btn-save {
-    background-color: #ffc107;
-    color: black;
-}
+        .btn-save {
+            background-color: #ffc107;
+            color: black;
+        }
 
-.btn-save:hover {
-    background-color: #e0a800;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
-}
-    
-    .btn-preview {
-        background-color: #17a2b8;
-        color: white;
-    }
-    
-    .btn-print {
-        background-color: #28a745;
-        color: white;
-    }
-    
-    .btn-back {
-        background-color: #6c757d;
-        color: white;
-    }
-    
-    .no-print button:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 8px rgba(0,0,0,0.15);
-    }
-    
-    .no-print button:active {
-        transform: translateY(0);
-    }
-/* Hanya untuk tampilan di browser, tidak akan muncul di PDF */
-@media screen {
+        .btn-save:hover {
+            background-color: #e0a800;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+
+        .btn-preview {
+            background-color: #17a2b8;
+            color: white;
+        }
+
+        .btn-print {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .btn-back {
+            background-color: #6c757d;
+            color: white;
+        }
+
+        .no-print button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+
+        .no-print button:active {
+            transform: translateY(0);
+        }
+        /* Hanya untuk tampilan di browser, tidak akan muncul di PDF */
+        @media screen {
             .no-print {
                 display: block;
                 text-align: center;
@@ -292,9 +307,9 @@
             }
         }
         .btn-save {
-    background-color: #ffc107;
-    color: black;
-}
+            background-color: #ffc107;
+            color: black;
+        }
     </style>
 </head>
 <body>
@@ -312,7 +327,7 @@
         
         <div class="judul-surat">
             <h3 style="font-size: 22px; font-weight: bold; margin-bottom: 5px;">SURAT KETERANGAN / PENGANTAR</h3>
-            <p style="font-weight: bold;">Nomor : 474  / ......... / 05</p>
+            <p style="font-weight: bold;">Nomor : 474  / ......... / 05 / 2025</p>
         </div>
         <div class="content">
             <p style="text-indent: 25px;">Yang bertanda tangan di bawah ini, menerangkan bahwa:</p>
@@ -348,39 +363,38 @@
             </ol>
             <p>Demikian untuk menjadikan maklum bagi yang berkepentingan.</p>
         </div>
-        <!-- Tanggal di atas Kepala Desa -->
-<div class="tanggal-ttd">
-    Kebondalem Kidul, <%= new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) %>
-</div>
-
-<!-- Bagian tanda tangan -->
-<div class="signature-container">
-    <div class="pemegang-ttd">
-        <p>Tanda tangan pemegang</p>
-        <br><br><br><br><br><br>
-        <span class="signature-name"><%= surat.nama ? surat.nama.toUpperCase() : '' %></span>
-    </div>
-    <div class="ttd-kanan">
-        <p>a.n Kepala Desa Kebondalem Kidul</p>
-        <p class="sekretaris">Sekretaris Desa</p>
-        <br><br><br><br> <!-- Jarak tanda tangan -->
-        <p class="daru-purnomo"><strong>DARU PURNOMO</strong></p>
-    </div>
-    
-    
-</div>
+        <div class="tanggal-ttd">
+            Kebondalem Kidul, <%= new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) %>
+        </div>
+        <div class="signature-container">
+            <div class="ttd-kanan">
+                <% if (surat.jabatan_penandatangan) { %>
+                    <p class="an-kepala-desa" style="margin-bottom: 5px; margin-top: -3px; margin-right: 3px;">
+                        <%= surat.jabatan_penandatangan %>
+                    </p>
+                <% } %>
+            
+                <% if (surat.jabatan_sebenarnya) { %>
+                    <p class="sekretaris-desa" style="margin-bottom: 80px; margin-top: -2px; margin-right: 60px;">
+                        <%= surat.jabatan_sebenarnya %>
+                    </p>
+                <% } %>
+            
+                <% if (surat.nama_penandatangan) { %>
+                    <p class="nama-penandatangan" style="margin-top: 70px; margin-right: 25px;">
+                        <strong><u><%= surat.nama_penandatangan %></u></strong>
+                    </p>
+                <% } %>
+            </div>
+        </div>
 
         
 <div class="no-print" style="text-align: center; margin-top: 30px;">
-    <button class="btn-preview" onclick="previewPdf('<%= surat.id %>')">
-        <i class="fas fa-eye"></i> Preview
-    </button>
+    
     <button class="btn-print" onclick="window.print()">
         <i class="fas fa-print"></i> Cetak
     </button>
-    <button class="btn-save" onclick="savePdf('<%= surat.id %>')">
-        <i class="fas fa-save"></i> Simpan
-    </button>
+
     <button class="btn-back" onclick="window.history.back()">
         <i class="fas fa-arrow-left"></i> Kembali
     </button>
