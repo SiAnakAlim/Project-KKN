@@ -1,34 +1,58 @@
-# SojiwanBot : Otomatisasi Surat Desa dengan WhatsApp Bot & Web
+# 🏘️ BonkidBot : Otomatisasi Surat Desa dengan WhatsApp Bot & Web 
 
-![Logo](web-display-node/public/image/logokebondalem-fix.png) <!-- Logo project -->
+![Logo](web-display-node/public/image/logokebondalem-fix.png) 
+*Aplikasi Pelayanan Surat Desa Digital*
 
-**SojiwanBot** adalah sebuah project yang menggabungkan **WhatsApp Bot** dengan **Website** untuk menghasilkan surat-surat resmi desa, seperti surat pengantar dan surat keterangan belum menikah. Project ini bertujuan untuk memudahkan warga desa dalam mengajukan dan mengelola surat-surat penting secara digital.
-
----
-
-## 🚀 Fitur
-
-Berikut adalah fitur-fitur utama yang tersedia dalam project ini:
-
-- **WhatsApp Bot**: Warga dapat mengajukan permohonan surat melalui WhatsApp.
-- **Website Display**: Admin dapat melihat dan mengelola permohonan surat melalui website.
-- **Otomatisasi Surat**: Surat-surat resmi dapat dihasilkan secara otomatis berdasarkan data yang diinput.
+**BonkidBot** adalah solusi digital terintegrasi yang menggabungkan **WhatsApp Bot** dengan **Website Admin** untuk mempermudah proses pembuatan dan pengelolaan surat-surat resmi desa secara otomatis. Dengan BonkidBot, warga bisa mengajukan surat kapan saja melalui WhatsApp, sementara admin desa dapat memproses permohonan melalui dashboard web yang user-friendly.
 
 ---
 
-## 🛠️ Teknologi yang Digunakan
+## ✨ Fitur Unggulan
 
-Berikut adalah teknologi yang digunakan dalam pengembangan project ini:
+### 🤖 WhatsApp Bot
+- 📲 Pengajuan surat langsung via WhatsApp
+- ⏳ Tracking status permohonan real-time
+- 🔔 Notifikasi otomatis ketika surat selesai
+- 📄 Panduan penggunaan melalui menu interaktif
 
-- **Node.js**: Untuk menjalankan aplikasi backend.
-- **Express.js**: Framework untuk membuat API.
-- **MySQL**: Database untuk menyimpan data.
-- **EJS**: Template engine untuk membuat tampilan HTML.
-- **Baileys**: Library untuk membuat WhatsApp Bot.
+### 💻 Website Admin
+- 📊 Dashboard statistik permohonan surat
+- 🖨️ Generate surat otomatis (PDF)
+- 🔍 Sistem pencarian dan filter data
+- 📈 Riwayat aktivitas terperinci
+- 👥 Manajemen user dan hak akses
+
+### 📑 Jenis Surat yang Tersedia
+- Surat Pengantar
+- Surat Keterangan Tidak Mampu (SKTM)
+- Surat Keterangan Usaha
+- Surat Keterangan Beda Identitas
+- Dan lain-lain
 
 ---
 
-## 🖥️ Cara Instalasi
+## 🛠️ Tech Stack
+
+### Backend
+![Node.js](https://img.shields.io/badge/-Node.js-339933?logo=node.js&logoColor=white)
+![Express.js](https://img.shields.io/badge/-Express.js-000000?logo=express&logoColor=white)
+![MySQL](https://img.shields.io/badge/-MySQL-4479A1?logo=mysql&logoColor=white)
+
+### Frontend
+![EJS](https://img.shields.io/badge/-EJS-000000?logo=ejs&logoColor=white)
+![Tailwind CSS](https://img.shields.io/badge/-Tailwind_CSS-38B2AC?logo=tailwind-css&logoColor=white)
+
+### WhatsApp Integration
+![Baileys](https://img.shields.io/badge/-Baileys-25D366?logo=whatsapp&logoColor=white)
+
+---
+
+## 🚀 Panduan Instalasi
+
+### Prasyarat
+- Node.js v16+
+- MySQL 8+
+- XAMPP (untuk server lokal)
 
 Berikut adalah langkah-langkah untuk menjalankan project ini di komputer lokal Anda:
 
@@ -76,7 +100,7 @@ node app.js
 
 - WhatsApp Bot: Scan QR code yang muncul di terminal.
 
-- Website Display: Buka browser dan akses http://localhost:3001.
+- Website Display: Buka browser dan akses http://localhost:3000.
 
 *pastikan xampp bagian apache dan mysql dalam kondisi start
 
@@ -105,13 +129,4 @@ Nama: Aryamukti Satria Hendrayana
 Email: aryamuktisatria@gmail.com
 
 ---
-
-### **Cara Menggunakan**
-1. Copy-paste kode di atas ke dalam file baru bernama `README.md`.
-2. Simpan file tersebut di root folder repository GitHub Anda (`Project-KKN`).
-3. Commit dan push file `README.md` ke GitHub:
-   ```bash
-   git add README.md
-   git commit -m "Menambahkan README.md"
-   git push origin master
 
