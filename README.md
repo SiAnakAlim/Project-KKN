@@ -17,7 +17,7 @@
 
 ### 💻 Website Admin
 - 📊 Dashboard statistik permohonan surat
-- 🖨️ Generate surat otomatis (PDF)
+- 🖨️ Generate surat otomatis 
 - 🔍 Sistem pencarian dan filter data
 - 📈 Riwayat aktivitas terperinci
 - 👥 Manajemen user dan hak akses
